@@ -52,6 +52,7 @@ $('#signDob').on('click', async function() {
                 }
             })
             const firstAttesetation = cbor.decodeFirst(masterSig.response.attestationObject, { bigInt: true, preferWeb: true }).then(o => {
+                // cf. https://www.w3.org/TR/webauthn/images/fido-attestation-structures.svg
                 const authDataArray =  Object.values(o.authData)
                 // const rpIdHash = authDataArray.slice(0,32) // First 32 bytes = rpIdHash
                 const flags = authDataArray[32] // 33rd byte = flags (ED, AT, 0, 0, 0, UV, 0, UP). AT+UV+UP=69
@@ -72,6 +73,8 @@ $('#signDob').on('click', async function() {
                  * 01 02 03 26 20 01 21 58 20 <key> 22 58 20 <key>
                  * a.k.a. (in decimal)
                  * 1 2 3 38 32 1 33 88 32 <key> 34 88 32 <key>
+                 * 
+                 * cf. https://www.w3.org/TR/webauthn/#sctn-encoded-credPubKey-examples
                  */
                 
                 let edByteSet = (flags >= 128)
