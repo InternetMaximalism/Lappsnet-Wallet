@@ -51,7 +51,48 @@ $('#signDob').on('click', async function() {
                     challenge: buffer.Buffer.from('Master Key Generation'.toString('base64'))
                 }
             })
-            console.log(masterSig)
+            const firstAttesetation = cbor.decodeFirst(masterSig.response.attestationObject, { bigInt: true, preferWeb: true }).then(o => {
+                const authDataArray =  Object.values(o.authData)
+                // const rpIdHash = authDataArray.slice(0,32) // First 32 bytes = rpIdHash
+                const flags = authDataArray[32] // 33rd byte = flags (ED, AT, 0, 0, 0, UV, 0, UP). AT+UV+UP=69
+                // const counter = authDataArray.slice(33,37) // Bytes 34-37 = counter
+                // const aaguid = authDataArray.slice(37,53) // Bytes 38-53 = AAGUID manufacturer-set id (can be all 0s)
+                const l = authDataArray[53]*255+authDataArray[54] // 54,55th byte = length L
+                // const credId = authDataArray.slice(55,56+l) // 56th-56+lth byte = credentialID
+                let publicKey
+
+                /* COSE_Key follows format:
+                 * 1, 2 (kty: EC2 key type)
+                 * 3, -7 (alg: ES256)
+                 * -1: 1 (crv: P-256)
+                 * -2: x (x-coordinate 32 bytes)
+                 * -3: y (y-coordinate 32 bytes)
+                 * 
+                 * i.e. (in hex)
+                 * 01 02 03 26 20 01 21 58 20 <key> 22 58 20 <key>
+                 * a.k.a. (in decimal)
+                 * 1 2 3 38 32 1 33 88 32 <key> 34 88 32 <key>
+                 */
+                
+                let edByteSet = (flags >= 128)
+                if (edByteSet) {
+                    // remainder is COSE_Key (variable length) + Extensions (CBOR map)
+                    // must parse
+                    alert('Webauthn Extension Data not yet implemented')
+                } else {
+                    // remainder is COSE_Key
+                    let remainder = authDataArray.slice(56+l)
+                    publicKey = {
+                        "1": remainder[1],
+                        "3": remainder[3],
+                        "-1": remainder[5],
+                        "-2": remainder.slice(9,41),
+                        "-3": remainder.slice(43,75)
+                    }
+                    console.log(JSON.stringify(publicKey))
+                }
+            })
+            //sessionStorage.setItem('MasterPK', masterSig.)
         } catch (err) {
             console.error(err)
         }
