@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sign in to IntMedium</title>
+    <link rel='stylesheet' href='/css/style.css' />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://bundle.run/buffer@6.0.3" type="text/javascript"></script>
+  </head>
+  <body>
+    <h1>IntMedium Signin</h1>
+    <p>What do you want to do?</p>
+    <ul id="loginPrompt">
+      <li id="createNewAccount">Create an account</li>
+      <li id="chooseDifferentAccount">Sign into a different account</li>
+    </ul>
+    <ul id="loginConfirmation">
+      <li id="continueWithAccount">Sign in with account <code id="userAddr"></code></li>
+      <li id="chooseDifferentAccount">Sign into a different account</li>
+    </ul>
+    <ul id="deviceSelection">
+      <li id="familiarAccount">I have used the account on this device before</li>
+      <li id="unfamiliarAccount">I have never logged into that account on this device</li>
+    </ul>
+    <form id="dobForm" action="#">
+      <legend>Generate a master key using your date of birth. This data is not sent anywhere.</legend>
+      <input id="dobInput" type="date">
+      <div id="signDob">Sign with device</div>
+    </form>
+    <script src="/js/auth.js" type="text/javascript"></script>
+  </body>
+</html>
