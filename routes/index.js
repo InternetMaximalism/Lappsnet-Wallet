@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/auth', function(req, res, next) {
-  res.render('auth/auth');
+  res.render('auth/auth', { title: 'IntMedium Auth '});
 });
 
 module.exports = router;
