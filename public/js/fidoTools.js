@@ -1,4 +1,34 @@
-const { locals } = require("../../app")
+/* Takes username, challenge (base64) and creates an attestation */
+async function makeAttestation (username, challenge, timeout) {
+  try {
+    const optionsObject = {
+      publicKey: {
+        rp: {
+          id: window.location.hostname,
+          name: 'IntMedium Identity'
+        },
+        user: {
+          id: buffer.Buffer.from(username),
+          name: username,
+          displayName: username,
+        },
+        pubKeyCredParams: [
+          { type: 'public-key', alg: -7 },
+          { type: 'public-key', alg: -257 }
+        ],
+        challenge: buffer.Buffer.from(challenge),
+        timeout: timeout
+      }
+    }
+    const attestation = await navigator.credentials.create(optionsObject)
+
+    return { attestation, optionsObject }
+
+  } catch (err) {
+    console.error(err)
+    alert(err)
+  }
+}
 
 async function getNewKey () {
   try {
