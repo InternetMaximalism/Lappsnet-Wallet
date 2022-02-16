@@ -11,6 +11,7 @@ const pool = new Pool({
       CREATE TABLE IF NOT EXISTS "users" (
         "username" VARCHAR(100) UNIQUE NOT NULL,
         "credId" VARCHAR(1000),
+        "pubKeyBytes" VARCHAR(256),
         PRIMARY KEY ("username")
       )
     `,
@@ -20,7 +21,7 @@ const pool = new Pool({
     text: `
     CREATE TABLE IF NOT EXISTS "challenges" (
       "username" VARCHAR(100) NOT NULL,
-      "challenge" VARCHAR(64) NOT NULL,
+      "challenge" VARCHAR(100) NOT NULL,
       "exipration" VARCHAR(30) NOT NULL,
       PRIMARY KEY ("challenge"),
       FOREIGN KEY ("username") REFERENCES "users" [ "username" ]
