@@ -3,6 +3,10 @@ $('#loginConfirmation').hide()
 $('#deviceSelection').hide()
 $('#dobForm').hide()
 
+if (!PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+    alert('Your browser does not support biometric authentication.')
+}
+
 /* Initial state: Check for intMediumAddress in localStorage
  * and show relevant prompt/confirmation.
  */
