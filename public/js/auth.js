@@ -90,7 +90,7 @@ $('#signDob').on('click', async function() {
                         "3": remainder[3],
                         "-1": remainder[5],
                         "-2": remainder.slice(9,41),
-                        "-3": remainder.slice(43,75)
+                        "-3": remainder.slice(44,76)
                     }
                     console.log(JSON.stringify(publicKey))
                 }
