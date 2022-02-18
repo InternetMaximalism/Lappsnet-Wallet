@@ -1,6 +1,7 @@
 <%- include('../head.ejs') %>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://bundle.run/buffer@6.0.3" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hexagon/base64@1/dist/base64.min.js"></script>
     <script src='https://unpkg.com/bignumber.js'></script>
     <script src='https://unpkg.com/cbor-web'></script>
   </head>
@@ -15,9 +16,9 @@
           <div id="loginPrompt">
             <p>You are not currently signed into IntMedium.</p>
             <ul>
-              <li id="createNewAccount">Create a new account</li>
-              <li id="chooseDifferentAccount">Sign into a different account</li>
-              <li id="recoverAccount">Recover account from a different device</li>
+              <li class="btn btn-primary m-1" id="createNewAccount">Create a new account</li>
+              <li class="btn btn-primary m-1" id="chooseDifferentAccount">Sign into a different account</li>
+              <li class="btn btn-secondary m-1" id="recoverAccount">Recover account from backup</li>
             </ul>
           </div>
 
@@ -27,15 +28,18 @@
               <p>You are currently signed in as <code id="userName"></code></p>
               <li id="continueWithAccount">Continue as <code id="userName"></code></li>
               <li id="chooseDifferentAccount">Sign into a different account</li>
-              <li id="recoverAccount">Recover account from a different device</li>
+              <li id="recoverAccount">Recover account from backup</li>
             </ul>
           </div>
       
           <!-- Register new account -->
           <div id="accountRegistrationForm">
             <legend>Request a unique username.</legend>
-            <input id="newUsernameInput" type="text">
-            <div id="registerAccount">Create account</div>
+            <input id="newUsernameInput" name="username" type="text">
+            <button class="btn btn-disabled" type="button" id="registerAccount">
+              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="registerAccountSpinner"></span>
+              Create account
+            </button>
           </div>
       
           <!-- Switch to different account -->
