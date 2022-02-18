@@ -4,6 +4,7 @@ $('#deviceSelection').hide()
 $('#accountRegistrationForm').hide()
 $('#switchAccountForm').hide()
 $('#recoverAccountForm').hide()
+$('#registerAccountSpinner').hide()
 
 /* This code block causes issues on mobile!
 if (!PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
@@ -28,6 +29,15 @@ if (!userCredId) {
     displayLoginConf()
 }
 
+function displayLoginPrompt () {
+    $('#loginPrompt').show()
+}
+
+function displayLoginConf () {
+    $('#userName').text(userName)
+    $('#loginConf').show()
+}
+
 /* Subflow: User chooses to create a new account.
  *
  */
@@ -37,22 +47,21 @@ $('#createNewAccount').on('click', function() {
 })
 
 $('#registerAccount').on('click', async function() {
+    if ($('#registerAccount').attr('class').includes('btn-disabled')) {
+        return
+    }
     try {
         // Request auth to server
         const { username, challenge, timeout }
-            = await submitRegistrationRequest()
+            = await submitRegistrationRequest($('#newUsernameInput').val())
         // Sign attestationRequest
         const { attestation, optionsObject }
             = await makeAttestation(username, challenge, timeout)
-        // Submit result to server
-        const { credId, userName }
+        // Submit result to server, store credId, username if successful
+        const registration
             = await submitAttestationToServer(attestation, optionsObject)
-        // Store credId, userName
-
-        // Generate pk & address from (userName, credId)
-
-        // Store userAddress
-
+        // Generate pk & address from (userName, credId) and store userAddress
+        generatePk(registration)
         // callback (if any)
 
     } catch (err) {
@@ -77,50 +86,56 @@ $('#chooseDifferentAccount').on('click', function() {
     $('#switchAccountForm').show()
 })
 
-function displayLoginPrompt () {
-    $('#loginPrompt').show()
-}
+$('#newUsernameInput').on('change', function() {
+    // Show spinner
+    $('#registerAccountSpinner').show()
+    checkUsernameAvailability($('#newUsernameInput').val())
+})
 
-function displayLoginConf () {
-    $('#userName').text(userName)
-    $('#loginConf').show()
-}
-
-function checkUsernameAvailability () {
+function checkUsernameAvailability (username) {
     // Query server for username availability on each input
     $.post('/api/checkUsername', {
-        username: $('newUsernameInput').val(),
-        function (res) {
-            if (res.status === 200) {
-                // Show username as available
-
-            } else if (res.status === 500) {
-                // Show server error
-                console.log(`Server responded with ${res.status}`)
-                return alert(`Server error`)
-            } else {
-                // Show username as unavailable
-                console.log(`Server responded with ${res.status}`)
-                return alert(`Username unavailable`)
-            }
+        username: username
+    },
+    function (res) {
+        console.log(res)
+        if (res.available === true) {
+            // Show username as available
+            $('#registerAccount').removeClass('btn-disabled btn-danger').addClass('btn-success')
+            $('#registerAccountSpinner').hide()
         }
+        return
+    })
+    .fail(function (res) {
+        // Show username as unavailable
+        $('#registerAccount').removeClass('btn-disabled btn-success').addClass('btn-danger')
+        $('#registerAccountSpinner').hide()
+        console.log(`Username unavailable`)
+        return
     })
 }
 
-async function submitRegistrationRequest () {
+async function submitRegistrationRequest (username) {
     try {
-        $.post('/api/registerUsername', {
-            username: $('newUsernameInput').val(),
+        if (!$('#registerAccount').attr('class').includes('btn-success')) {
+            // If not btn-success, don't waste time querying
+            return
+        }
+        return new Promise((resolve, reject) => {
+            $.post('/api/registerUsername', {
+                username
+            },
             function (res) {
-                if (res.status === 200) {
+                if (res.username === username) {
                     // Return JSON data
-                    return jQuery.parseJSON(res)
+                    console.log(res)
+                    resolve(res)
                 } else {
                     // Show server error
                     console.log(`Server responded with ${res.status}`)
-                    return alert(`Server error`)
+                    reject()
                 }
-            }
+            })
         })
     } catch (err) {
         console.error(err)
@@ -130,23 +145,28 @@ async function submitRegistrationRequest () {
 
 async function submitAttestationToServer (attestation, optionsObject) {
     try {
-        $.post('/api/postAttestation', {
-            attestation,
-            optionsObject
-        },
-        function (res) {
-            if (res.status === 200) {
-                // Success, store username, credId in localStorage
-                localStorage.setItem('IntMaxUsername', username)
-                localStorage.setItem('IntMaxCredId', )
-            } else if (res.status === 404) {
-                // Expired or invalid challenge
-
-            } else {
-                // Show server error
-                console.log(`Server responded with ${res.status}`)
-                return alert(`Server error`)
-            }
+        return new Promise((resolve, reject) => {
+            console.log(attestation)
+            $.post('/api/postAttestation', {
+                attestationObject: base64.fromArrayBuffer(attestation.response.attestationObject, true),
+                clientDataJSON: base64.fromArrayBuffer(attestation.response.clientDataJSON)
+            },
+            function (res) {
+                if (res.username && res.credId) {
+                    // Success, store username, credId in localStorage
+                    localStorage.setItem('IntMaxUsername', res.username)
+                    localStorage.setItem('IntMaxCredId', res.credId)
+                    resolve(res)
+                } else {
+                    // Show server error
+                    console.log(`Server responded invalid data`)
+                    reject()
+                }
+            })
+            .fail(function (res) {
+                console.error(`Server returned error`)
+                reject()
+            })
         })
     } catch (err) {
         console.error(err)
