@@ -16,13 +16,13 @@ async function makeAttestation (username, challenge, timeout) {
           { type: 'public-key', alg: -7 },
           { type: 'public-key', alg: -257 }
         ],
-        challenge: buffer.Buffer.from(challenge),
+        challenge: base64.toArrayBuffer(challenge, true),
         timeout: timeout
       }
     }
     const attestation = await navigator.credentials.create(optionsObject)
 
-    return { attestation, optionsObject }
+    return { attestation: attestation, optionsObject }
 
   } catch (err) {
     console.error(err)
@@ -30,18 +30,18 @@ async function makeAttestation (username, challenge, timeout) {
   }
 }
 
-async function getNewKey () {
+async function getNewKey (username, credId) {
   try {
-    const masterSig = await navigator.credentials.create({
+    const masterSig = await navigator.credentials.get({
         publicKey: {
             rp: {
                 id: window.location.hostname,
                 name: 'IntMedium Identity'
             },
             user: {
-                id: buffer.Buffer.from('IntMediumUser'),
-                name: 'user@intmedium.xyz',
-                displayName: 'dummyUser'
+                id: buffer.Buffer.from(username),
+                name: username,
+                displayName: username
             },
             pubKeyCredParams: [
                 { type: 'public-key', alg: -7 },
@@ -49,7 +49,7 @@ async function getNewKey () {
             ],
             // Challenge reuse is okay because we don't use this in a way that can get replay attacked
             // localStorage is more of a problem, but this is for testnet
-            challenge: buffer.Buffer.from('Master Key Generation'.toString('base64'))
+            challenge: buffer.Buffer.from(credId)
         }
     })
     storeCredentialId(masterSig.response.attestationObject)
