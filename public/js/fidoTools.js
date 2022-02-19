@@ -1,5 +1,5 @@
 /* Create (username, credId) pair: 
-   Takes username, challenge (base64) and creates an attestation */
+   Takes username, challenge (base64) and creates an attestation. */
 async function makeAttestation (username, challenge, timeout) {
   try {
     const optionsObject = {
@@ -32,7 +32,8 @@ async function makeAttestation (username, challenge, timeout) {
 }
 
 /* Generates a NEW private key from (username, credId) pair.
-   Returns an error if the same private key was created before. */
+   Returns an error if the same private key was created before.
+   Use RSA only for deterministic and unique signature */
 async function generateNewPk ({ username, credId }) {
   try {
     navigator.credentials.create({
@@ -47,7 +48,6 @@ async function generateNewPk ({ username, credId }) {
                 displayName: username.concat('PRIVATEKEY')
             },
             pubKeyCredParams: [
-                { type: 'public-key', alg: -7 },
                 { type: 'public-key', alg: -257 }
             ],
             // Don't create a new keypair for an existing (account, credId) pair!
@@ -60,7 +60,8 @@ async function generateNewPk ({ username, credId }) {
         }
     })
     .then(masterSig => {
-      return storePk(masterSig.attestationObject)
+      console.log(`Created PK: ${decodeFidoResponse(masterSig.response.attestationObject)}`)
+      return storePk(masterSig.response.attestationObject)
     })
     .catch(err => {
       console.error(err)
