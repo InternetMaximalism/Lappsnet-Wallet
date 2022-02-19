@@ -35,7 +35,7 @@ if (!userCredId) {
 
 /* Subflow: User chooses to create a new account.
  * Show username registration form.
- * Clicking create leads to private key gen form.
+ * Clicking create leads to private key gen form & keygen.
  */
 $('#createNewAccount').on('click', function() {
     $('#loginPrompt').hide()
@@ -57,7 +57,13 @@ $('#registerAccount').on('click', async function() {
         const registration
             = await submitAttestationToServer(attestation, optionsObject)
         // show private key generation / signing prompt
-        showPrivKeyPrompt()
+        $('#accountRegistrationForm').hide()
+        $('#privKeyPrompt').show()
+        // If not signing transaction
+        $('#privKeyGenCase').show()
+        // If signing transaction
+        // $('#privKeyTxCase').show()
+
         // callback (if any)
 
     } catch (err) {
@@ -65,15 +71,6 @@ $('#registerAccount').on('click', async function() {
         alert(err)
     }
 })
-
-function showPrivKeyPrompt() {
-    $('#accountRegistrationForm').hide()
-    $('#privKeyPrompt').show()
-    // If not signing transaction
-    $('#privKeyGenCase').show()
-    // If signing transaction
-    // $('#privKeyTxCase').show()
-}
 
 $('#privKeyButton').on('click', function(tx = null) {
         // Generate pk & address from (userName, credId) and store userAddress
