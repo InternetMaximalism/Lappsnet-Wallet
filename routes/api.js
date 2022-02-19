@@ -103,7 +103,7 @@ router.post('/postAttestation', async (req, res, next) => {
       'INSERT INTO "Users"(username, "credId", "pubKeyBytes") VALUES ($1, $2, $3)',
       [ rows[0].username, base64url(Buffer.from(credentialId)), base64url(Buffer.from(credentialPublicKey)) ]
     )
-    return res.status(200).json({ username: req.body.username, credId: base64url(Buffer.from(credentialId)) });
+    return res.status(200).json({ username: rows[0].username, credId: base64url(Buffer.from(credentialId)) });
 
   } catch (err) {
     console.error(err)
