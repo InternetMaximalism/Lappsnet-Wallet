@@ -5,6 +5,9 @@ $('#accountRegistrationForm').hide()
 $('#switchAccountForm').hide()
 $('#recoverAccountForm').hide()
 $('#registerAccountSpinner').hide()
+$('#privKeyPrompt').hide()
+$('#privKeyGenCase').hide()
+$('#privKeyTxCase').hide()
 
 /* This code block causes issues on mobile!
 if (!PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
@@ -17,12 +20,12 @@ if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
 }
 
 /* Initial state: Check for intMediumAddress, intMediumUsername, intMediumCredId
- * in localStorage and show relevant prompt/confirmation.
+ * in window.localStorage and show relevant prompt/confirmation.
  */
 
-let userAddress = localStorage.getItem('intMediumAddress')
-let userName = localStorage.getItem('intMediumUsername')
-let userCredId = localStorage.getItem('intMediumCredId')
+let userAddress = window.localStorage.getItem('intMediumAddress')
+let userName = window.localStorage.getItem('intMediumUsername')
+let userCredId = window.localStorage.getItem('intMediumCredId')
 if (!userCredId) {
     displayLoginPrompt()
 } else {
@@ -60,14 +63,31 @@ $('#registerAccount').on('click', async function() {
         // Submit result to server, store credId, username if successful
         const registration
             = await submitAttestationToServer(attestation, optionsObject)
-        // Generate pk & address from (userName, credId) and store userAddress
-        generatePk(registration)
+        // show private key generation / signing prompt
+        showPrivKeyPrompt()
         // callback (if any)
 
     } catch (err) {
         console.error(err)
         alert(err)
     }
+})
+
+function showPrivKeyPrompt() {
+    $('#accountRegistrationForm').hide()
+    $('#privKeyPrompt').show()
+    // If not signing transaction
+    $('#privKeyGenCase').show()
+    // If signing transaction
+    // $('#privKeyTxCase').show()
+}
+
+$('#privKeyButton').on('click', function(tx = null) {
+        // Generate pk & address from (userName, credId) and store userAddress
+        generateNewPk({
+            username: window.localStorage.getItem('IntMediumUsername'),
+            credId: window.localStorage.getItem('IntMediumCredId')
+        })
 })
 
 /* Subflow displayLoginConfirmation-1: User signs in with current account.
@@ -152,10 +172,12 @@ async function submitAttestationToServer (attestation, optionsObject) {
                 clientDataJSON: base64.fromArrayBuffer(attestation.response.clientDataJSON)
             },
             function (res) {
+                console.log(`${res.username} ${res.credId}`)
                 if (res.username && res.credId) {
-                    // Success, store username, credId in localStorage
-                    localStorage.setItem('IntMaxUsername', res.username)
-                    localStorage.setItem('IntMaxCredId', res.credId)
+                    // Success, store username, credId in window.localStorage
+                    console.log('Storing username and credId to window.localStorage...')
+                    window.localStorage.setItem('IntMediumUsername', res.username)
+                    window.localStorage.setItem('IntMediumCredId', res.credId)
                     resolve(res)
                 } else {
                     // Show server error

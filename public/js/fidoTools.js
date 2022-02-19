@@ -1,4 +1,5 @@
-/* Takes username, challenge (base64) and creates an attestation */
+/* Create (username, credId) pair: 
+   Takes username, challenge (base64) and creates an attestation */
 async function makeAttestation (username, challenge, timeout) {
   try {
     const optionsObject = {
@@ -30,7 +31,49 @@ async function makeAttestation (username, challenge, timeout) {
   }
 }
 
-async function getNewKey (username, credId) {
+/* Generates a NEW private key from (username, credId) pair.
+   Returns an error if the same private key was created before. */
+async function generateNewPk ({ username, credId }) {
+  try {
+    navigator.credentials.create({
+        publicKey: {
+            rp: {
+                id: window.location.hostname,
+                name: 'IntMedium Identity'
+            },
+            user: {
+                id: buffer.Buffer.from(username.concat('PRIVATEKEY')),
+                name: username.concat('PRIVATEKEY'),
+                displayName: username.concat('PRIVATEKEY')
+            },
+            pubKeyCredParams: [
+                { type: 'public-key', alg: -7 },
+                { type: 'public-key', alg: -257 }
+            ],
+            // Don't create a new keypair for an existing (account, credId) pair!
+            excludeCredentials: [
+                { type: 'public-key', id: base64.toArrayBuffer(credId, true) }
+            ],
+            // Challenge reuse is okay because we don't use this in a way that can get replay attacked
+            // window.localStorage is more of a problem, but this is for testnet
+            challenge: base64.toArrayBuffer(credId, true)
+        }
+    })
+    .then(masterSig => {
+      return storePk(masterSig.attestationObject)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+  } catch (err) {
+    console.log('Account may already exist, try signing in instead')
+    console.error(err)
+    alert(err)
+  }
+}
+
+/* Gets private key from username and credId */
+async function getPk ({ username, credId }) {
   try {
     const masterSig = await navigator.credentials.get({
         publicKey: {
@@ -49,7 +92,7 @@ async function getNewKey (username, credId) {
             ],
             // Challenge reuse is okay because we don't use this in a way that can get replay attacked
             // localStorage is more of a problem, but this is for testnet
-            challenge: buffer.Buffer.from(credId)
+            challenge: base64.toArrayBuffer(credId, true)
         }
     })
     storeCredentialId(masterSig.response.attestationObject)
@@ -68,10 +111,10 @@ async function getSig () {
       publicKey: {
           rpId: window.location.hostname,
           // Challenge reuse is okay because we don't use this in a way that can get replay attacked
-          // localStorage is more of a problem, but this is for testnet
+          // window.localStorage is more of a problem, but this is for testnet
           challenge: buffer.Buffer.from('Master Key Generation'.toString('base64')),
           allowCredentials: [{
-            id: localStorage.getItem('IntMaxCredentialId'),
+            id: window.localStorage.getItem('IntMediumCredentialId'),
             type: 'public-key',
             transpoarts: ['usb', 'ble', 'nfc', 'internal']
           }]
@@ -87,10 +130,10 @@ async function getSig () {
   }
 }
 
-function storeCredentialId (fidoCBOR) {
+function storePk (fidoCBOR) {
   const decoded = decodeFidoResponse(fidoCBOR)
-  localStorage.setItem('IntMaxCredentialID', decoded.credId)
-  return 
+  console.log(`Key loaded: ${decoded.publicKey}`)
+  return window.localStorage.setItem('IntMediumPk', decoded.publicKey)
 }
 
 function decodeFidoResponse (fidoCBOR) {
