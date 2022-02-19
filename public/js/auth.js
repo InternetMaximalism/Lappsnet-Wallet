@@ -20,29 +20,22 @@ if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
 }
 
 /* Initial state: Check for intMediumAddress, intMediumUsername, intMediumCredId
- * in window.localStorage and show relevant prompt/confirmation.
+ * in window.localStorage and show correct prompt/confirmation.
  */
 
 let userAddress = window.localStorage.getItem('intMediumAddress')
 let userName = window.localStorage.getItem('intMediumUsername')
 let userCredId = window.localStorage.getItem('intMediumCredId')
 if (!userCredId) {
-    displayLoginPrompt()
-} else {
-    displayLoginConf()
-}
-
-function displayLoginPrompt () {
     $('#loginPrompt').show()
-}
-
-function displayLoginConf () {
+} else {
     $('#userName').text(userName)
     $('#loginConf').show()
 }
 
 /* Subflow: User chooses to create a new account.
- *
+ * Show username registration form.
+ * Clicking create leads to private key gen form.
  */
 $('#createNewAccount').on('click', function() {
     $('#loginPrompt').hide()
@@ -91,7 +84,8 @@ $('#privKeyButton').on('click', function(tx = null) {
 })
 
 /* Subflow displayLoginConfirmation-1: User signs in with current account.
- *
+ * If signing TX, continue to sign TX UI.
+ * Otherwise, callback.
  */
 $('#continueWithAccount').on('click', function() {
     alert('Sign in with this account')
@@ -99,6 +93,8 @@ $('#continueWithAccount').on('click', function() {
 
 /* Subflow displayLoginPrompt-2: User chooses sign into different account.
  * Subflow for displayLoginConfirmation-2 as well.
+ * Show username selection input.
+ * Signing in leads to TX signing or callback.
  */
 $('#chooseDifferentAccount').on('click', function() {
     $('#loginPrompt').hide()
@@ -111,87 +107,3 @@ $('#newUsernameInput').on('change', function() {
     $('#registerAccountSpinner').show()
     checkUsernameAvailability($('#newUsernameInput').val())
 })
-
-function checkUsernameAvailability (username) {
-    // Query server for username availability on each input
-    $.post('/api/checkUsername', {
-        username: username
-    },
-    function (res) {
-        console.log(res)
-        if (res.available === true) {
-            // Show username as available
-            $('#registerAccount').removeClass('btn-disabled btn-danger').addClass('btn-success')
-            $('#registerAccountSpinner').hide()
-        }
-        return
-    })
-    .fail(function (res) {
-        // Show username as unavailable
-        $('#registerAccount').removeClass('btn-disabled btn-success').addClass('btn-danger')
-        $('#registerAccountSpinner').hide()
-        console.log(`Username unavailable`)
-        return
-    })
-}
-
-async function submitRegistrationRequest (username) {
-    try {
-        if (!$('#registerAccount').attr('class').includes('btn-success')) {
-            // If not btn-success, don't waste time querying
-            return
-        }
-        return new Promise((resolve, reject) => {
-            $.post('/api/registerUsername', {
-                username
-            },
-            function (res) {
-                if (res.username === username) {
-                    // Return JSON data
-                    console.log(res)
-                    resolve(res)
-                } else {
-                    // Show server error
-                    console.log(`Server responded with ${res.status}`)
-                    reject()
-                }
-            })
-        })
-    } catch (err) {
-        console.error(err)
-        alert(err)
-    }
-}
-
-async function submitAttestationToServer (attestation, optionsObject) {
-    try {
-        return new Promise((resolve, reject) => {
-            console.log(attestation)
-            $.post('/api/postAttestation', {
-                attestationObject: base64.fromArrayBuffer(attestation.response.attestationObject, true),
-                clientDataJSON: base64.fromArrayBuffer(attestation.response.clientDataJSON)
-            },
-            function (res) {
-                console.log(`${res.username} ${res.credId}`)
-                if (res.username && res.credId) {
-                    // Success, store username, credId in window.localStorage
-                    console.log('Storing username and credId to window.localStorage...')
-                    window.localStorage.setItem('IntMediumUsername', res.username)
-                    window.localStorage.setItem('IntMediumCredId', res.credId)
-                    resolve(res)
-                } else {
-                    // Show server error
-                    console.log(`Server responded invalid data`)
-                    reject()
-                }
-            })
-            .fail(function (res) {
-                console.error(`Server returned error`)
-                reject()
-            })
-        })
-    } catch (err) {
-        console.error(err)
-        alert(err)
-    }
-}
