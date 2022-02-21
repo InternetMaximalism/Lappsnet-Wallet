@@ -73,7 +73,6 @@ $('#registerAccount').on('click', async function() {
         if (params.get('signTx')) {
             return $('#signTxForm').show()
         }
-        alert('Invalid query parameters')
 
     } catch (err) {
         console.error(err)
