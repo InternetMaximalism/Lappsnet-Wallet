@@ -1,8 +1,16 @@
 <%- include('./head.ejs') %>
   </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <p><a href="/auth">Sign in</a></p>
+  <body class="h-100">
+    <div class="container h-100">
+      <div class="row h-100">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4 align-self-center">
+          <h1><%= title %></h1>
+          <p>Welcome to <%= title %></p>
+          <a href="/auth?connect=true" style="color: white;"><p class="btn btn-primary">Sign in to connect wallet</p></a>
+          <a href="/auth?signtx=true" style="color: white;"><p class="btn btn-primary">Sign in and sign transaction</p></a>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
