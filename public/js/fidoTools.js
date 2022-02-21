@@ -43,15 +43,15 @@ async function generateNewPk ({ username, credId }) {
                 name: 'IntMedium Identity'
             },
             user: {
-                id: buffer.Buffer.from(username.concat('PRIVATEKEY')),
-                name: username.concat('PRIVATEKEY'),
-                displayName: username.concat('PRIVATEKEY')
+                id: buffer.Buffer.from(username),
+                name: username,
+                displayName: username
             },
             pubKeyCredParams: [
                 { type: 'public-key', alg: -257 }
             ],
             // Don't create a new keypair for an existing (account, credId) pair!
-            excludeCredentials: [
+            allowCredentials: [
                 { type: 'public-key', id: base64.toArrayBuffer(credId, true) }
             ],
             // Challenge reuse is okay because we don't use this in a way that can get replay attacked
@@ -60,6 +60,7 @@ async function generateNewPk ({ username, credId }) {
         }
     })
     .then(masterSig => {
+      console.log(masterSig)
       console.log(`Created PK: ${decodeFidoResponse(masterSig.response.attestationObject)}`)
       return storePk(masterSig.response.attestationObject)
     })
@@ -76,7 +77,7 @@ async function generateNewPk ({ username, credId }) {
 /* Gets private key from username and credId */
 async function getPk ({ username, credId }) {
   try {
-    const masterSig = await navigator.credentials.get({
+    navigator.credentials.get({
         publicKey: {
             rp: {
                 id: window.location.hostname,
@@ -88,7 +89,6 @@ async function getPk ({ username, credId }) {
                 displayName: username
             },
             pubKeyCredParams: [
-                { type: 'public-key', alg: -7 },
                 { type: 'public-key', alg: -257 }
             ],
             // Challenge reuse is okay because we don't use this in a way that can get replay attacked
@@ -96,9 +96,16 @@ async function getPk ({ username, credId }) {
             challenge: base64.toArrayBuffer(credId, true)
         }
     })
-    storeCredentialId(masterSig.response.attestationObject)
-    crypto.subtle.digest('SHA-256', masterSig).then(hash => {
-      console.log(`Hash: ${hash.toString('hex')}`) // To be used as private key?
+    .then(masterSig => {
+      console.log(masterSig)
+      console.log(`Created PK: ${decodeFidoResponse(masterSig.response.signature)}`)
+      crypto.subtle.digest('SHA-256', masterSig.response.signature).then(hash => {
+        console.log(`Hash: ${hash.toString('hex')}`) // To be used as private key?
+        return window.localStorage.setItem('IntMediumPk', hash.toString('hex'))
+      })
+    })
+    .catch(err => {
+      console.error(err)
     })
   } catch (err) {
     console.error(err)

@@ -23,13 +23,14 @@ if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
  * in window.localStorage and show correct prompt/confirmation.
  */
 
-let userAddress = window.localStorage.getItem('intMediumAddress')
-let userName = window.localStorage.getItem('intMediumUsername')
-let userCredId = window.localStorage.getItem('intMediumCredId')
+let userAddress = window.localStorage.getItem('IntMediumAddress')
+let userName = window.localStorage.getItem('IntMediumUsername')
+let userCredId = window.localStorage.getItem('IntMediumCredId')
 if (!userCredId) {
     $('#loginPrompt').show()
-} else {
-    $('#userName').text(userName)
+} else if (userName) {
+    $('#userName-1').text(userName)
+    $('#userName-2').text(userName)
     $('#loginConf').show()
 }
 
@@ -74,7 +75,7 @@ $('#registerAccount').on('click', async function() {
 
 $('#privKeyButton').on('click', function(tx = null) {
         // Generate pk & address from (userName, credId) and store userAddress
-        generateNewPk({
+        getPk({
             username: window.localStorage.getItem('IntMediumUsername'),
             credId: window.localStorage.getItem('IntMediumCredId')
         })
@@ -85,7 +86,11 @@ $('#privKeyButton').on('click', function(tx = null) {
  * Otherwise, callback.
  */
 $('#continueWithAccount').on('click', function() {
-    alert('Sign in with this account')
+    // Generate pk & address from (userName, credId) and store userAddress
+    getPk({
+        username: window.localStorage.getItem('IntMediumUsername'),
+        credId: window.localStorage.getItem('IntMediumCredId')
+    })
 })
 
 /* Subflow displayLoginPrompt-2: User chooses sign into different account.
