@@ -91,6 +91,10 @@ async function getPk ({ username, credId }) {
             pubKeyCredParams: [
                 { type: 'public-key', alg: -257 }
             ],
+            // Don't create a new keypair for an existing (account, credId) pair!
+            allowCredentials: [
+                { type: 'public-key', id: base64.toArrayBuffer(credId, true) }
+            ],
             // Challenge reuse is okay because we don't use this in a way that can get replay attacked
             // localStorage is more of a problem, but this is for testnet
             challenge: base64.toArrayBuffer(credId, true)
