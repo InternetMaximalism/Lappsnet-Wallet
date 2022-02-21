@@ -56,19 +56,10 @@ router.post('/registerUsername', async (req, res, next) => {
 /* POST attestationObject (credId registration) */
 router.post('/postAttestation', async (req, res, next) => {
   try {
-    const decodedClientDataJSON = JSON.parse(base64url.decode(req.body.clientDataJSON))
-
-    // Validate clientDataJSON
-    if (decodedClientDataJSON.type !== 'webauthn.create') throw Error('Something wrong with clientDataJSON')
-    if (decodedClientDataJSON.origin !== process.env.AUTH_FQDN) {
-      console.error(`Expected FQDN ${process.env.AUTH_FQDN} in clientDataJSON, got ${decodedClientDataJSON.origin}`)
-      throw Error('FQDN in clientDataJSON does not match auth server')
-    }
-
     // Look up challenge
     const { rows } = await db.query(
       'SELECT * FROM "Challenges" WHERE challenge = $1',
-      [ decodedClientDataJSON.challenge ]
+      [ req.body.challenge ]
     )
     // If expired or DNE, return error message
     if (rows.length === 0) {
@@ -81,29 +72,12 @@ router.post('/postAttestation', async (req, res, next) => {
       return res.status(404).send()
     }
 
-    // Parse and validate attestation
-    const decodedAttestationObj = await cbor.decodeFirst(
-            base64url.toBuffer(req.body.attestationObject),
-            { bigInt: true, preferWeb: true }
-    )
-    const { authData } = decodedAttestationObj
-    // Check if rpIdHash matches sha256(rpId)
-    if (Buffer.from(authData.slice(0, 32)).toString('hex') !== crypto.createHash('sha256').update(process.env.RPID).digest('hex')) {
-      throw Error(`rpId does not match! Expected ${authData.slice(0, 32)}, got ${crypto.createHash('sha256').update(process.env.RPID)}}`)
-    }
-    // const flags = authData[32]
-    // const signCount = (authData[33] << 24) | (authData[34] << 16) | (authData[35] << 8) | authData[36]
-    // const aaguid = authData.slice(37, 53)
-    const credentialIdLength = (authData[53] << 8) + authData[54]
-    const credentialId = authData.slice(55, 55 + credentialIdLength)
-    const credentialPublicKey = authData.slice(55 + credentialIdLength)
-
     // register user and credId
     await db.query(
-      'INSERT INTO "Users"(username, "credId", "pubKeyBytes") VALUES ($1, $2, $3)',
-      [ rows[0].username, base64url(Buffer.from(credentialId)), base64url(Buffer.from(credentialPublicKey)) ]
+      'INSERT INTO "Users"(username, "credId") VALUES ($1, $2)',
+      [ rows[0].username, req.body.credId ]
     )
-    return res.status(200).json({ username: rows[0].username, credId: base64url(Buffer.from(credentialId)) });
+    return res.status(200).json({ username: rows[0].username, credId: req.body.credId });
 
   } catch (err) {
     console.error(err)
