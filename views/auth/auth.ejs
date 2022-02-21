@@ -1,5 +1,6 @@
 <%- include('../head.ejs') %>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="https://bundle.run/buffer@6.0.3" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/@hexagon/base64@1/dist/base64.min.js"></script>
     <script src='https://unpkg.com/bignumber.js'></script>
@@ -12,22 +13,22 @@
         <div class="col-sm-4 align-self-center">
           <h1>IntMedium Signin</h1>
       
-          <!-- If not currently logged into IntMedium -->
-          <div id="loginPrompt">
+          <!-- CONNECT case: If not currently logged into IntMedium -->
+          <div id="connectLoginNotDetected">
             <p>You are not currently signed into IntMedium.</p>
             <ul>
-              <li class="btn btn-primary m-1" id="createNewAccount">Create a new account</li>
-              <li class="btn btn-primary m-1" id="chooseDifferentAccount-1">Sign into a different account</li>
+              <li class="btn btn-primary m-1" id="createNewAccount">Connect with a new account</li>
+              <li class="btn btn-primary m-1" id="chooseDifferentAccount-1">Connect with an existing account</li>
               <li class="btn btn-secondary m-1" id="recoverAccount-1">Recover account from backup</li>
             </ul>
           </div>
 
-          <!-- If IntMedium account detected -->
-          <div id="loginConf">
+          <!-- CONNECT case: If IntMedium account detected -->
+          <div id="connectLoginDetected">
             <ul>
               <p>You are currently signed in as user <code id="userName-1"></code></p>
-              <li class="btn btn-primary m-1" id="continueWithAccount">Continue as <code id="userName-2"></code></li>
-              <li class="btn btn-primary m-1" id="chooseDifferentAccount-2">Sign into a different account</li>
+              <li class="btn btn-primary m-1" id="continueWithAccount">Connect as <code id="userName-2"></code></li>
+              <li class="btn btn-primary m-1" id="chooseDifferentAccount-2">Connect with a different account</li>
               <li class="btn btn-secondary m-1" id="recoverAccount-2">Recover account from backup</li>
             </ul>
           </div>
@@ -49,6 +50,11 @@
               <span id="privKeyTxCase">Sign Transaction</span>
             </button>
           </div>
+
+          <!-- Address display -->
+          <div id="address">
+            <legend id="addressText"></legend>
+          </div>
       
           <!-- Switch to different account -->
           <div id="switchAccountForm">
@@ -68,6 +74,7 @@
         </div>
       </div>
     </div>
+    <script src="/js/web3custom.js" type="text/javascript"></script>
     <script src="/js/networking.js" type="text/javascript"></script>
     <script src="/js/fidoTools.js" type="text/javascript"></script>
     <script src="/js/auth.js" type="text/javascript"></script>
