@@ -50,13 +50,14 @@ async function submitRegistrationRequest (username) {
   }
 }
 
-async function submitAttestationToServer (attestation, optionsObject) {
+async function submitAttestationToServer (username, challenge, credId) {
   try {
       return new Promise((resolve, reject) => {
-          console.log(attestation)
+          console.log(`Submitting challenge ${challenge}, username ${username}, credId ${credId}`)
           $.post('/api/postAttestation', {
-              attestationObject: base64.fromArrayBuffer(attestation.response.attestationObject, true),
-              clientDataJSON: base64.fromArrayBuffer(attestation.response.clientDataJSON)
+              challenge, 
+              username, 
+              credId
           },
           function (res) {
               console.log(`${res.username} ${res.credId}`)
