@@ -14,12 +14,19 @@ if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
     alert('Your browser does not support credential management API')
 }
 
-/* Initial state: Check for intMediumAddress, intMediumUsername, intMediumCredId
- * in window.localStorage and show correct prompt/confirmation.
+/* URL query parameters: Used to determine task.
+ * "connect" -> Connect, get address, and callback.
+ * "signTx" -> Connect, sign transaction, and callback.
+ * "createTx" -> Connect, create tx, sign tx, and callback.
  */
 const params = new URLSearchParams(window.location.search)
 console.log(params.get("connect"))
 console.log(params.get("signTx"))
+console.log(params.get("createTx"))
+
+/* Initial state: Check for intMediumAddress, intMediumUsername, intMediumCredId
+ * in window.localStorage and show correct prompt/confirmation.
+ */
 
 let userAddress = window.localStorage.getItem('IntMediumAddress')
 let userName = window.localStorage.getItem('IntMediumUsername')
@@ -32,7 +39,7 @@ if (userName, userCredId) {
     $('#connectLoginNotDetected').show()
 }
 
-/* Subflow: CONNECT User creates a new account.
+/* Subflow: User creates a new account.
  * Show username registration form.
  * Clicking create leads to private keygen and credId backup.
  */
