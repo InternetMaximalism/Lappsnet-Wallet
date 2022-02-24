@@ -9,71 +9,178 @@
   <body class="h-100">
     <div class="container-sm h-100">
       <div class="row h-100">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4 align-self-center">
-          <h1>IntMedium Signin</h1>
-      
-          <!-- CONNECT case: If not currently logged into IntMedium -->
-          <div id="connectLoginNotDetected">
-            <p>You are not currently signed into IntMedium.</p>
-            <ul>
-              <li class="btn btn-primary m-1" id="createNewAccount">Connect with a new account</li>
-              <li class="btn btn-primary m-1" id="chooseDifferentAccount-1">Connect with an existing account</li>
-              <li class="btn btn-secondary m-1" id="recoverAccount-1">Recover account from backup</li>
-            </ul>
-          </div>
+        <div class="col-sm-12 align-self-center">
+          <div class="jumbotron">
+            <h1>IntMedium Signin</h1>
+        
+            <!-- If not currently logged into IntMedium -->
+            <div id="connectLoginNotDetected">
+              <p>You are not currently signed into IntMedium.</p>
+              <ul>
+                <li class="btn btn-success m-1 createNewAccount"><span class="actionType"></span> with a new account</li><br>
+                <li class="btn btn-success m-1 recoverAccount">Recover account</li><br>
+              </ul>
+            </div>
+  
+            <!-- If IntMedium account detected -->
+            <div id="connectLoginDetected">
+              <ul>
+                <p>You are currently signed in as user <code id="userName-1"></code>, address <code id="address-1"></code></p>
+                <li class="btn btn-success m-1 continueWithAccount"><span class="actionType"></span> as current user</li><br>
+                <li class="btn btn-warning m-1 chooseDifferentAccount"><span class="actionType"></span> with a different account</li><br>
+                <li class="btn btn-warning m-1 createNewAccount"><span class="actionType"></span> with a new account</li><br>
+                <li class="btn btn-warning m-1 signOut">Sign out</li>
+              </ul>
+            </div>
+        
+            <!-- Register new account -->
+            <div id="accountRegistrationForm">
+              <legend>Request a unique username.</legend>
+              <input id="newUsernameInput" name="username" type="text">
+              <button class="btn btn-disabled" type="button" id="registerAccount">
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="registerAccountSpinner"></span>
+                Create account
+              </button>
+            </div>
+  
+            <!-- Private key prompt -->
+            <div id="privKeyPrompt">
+              <button class="btn btn-primary" type="button" id="privKeyButton">
+                <span id="privKeyGenCase">Create Address</span>
+                <span id="privKeyTxCase">Sign Transaction</span>
+              </button>
+            </div>
+  
+            <!-- Address display -->
+            <div id="address">
+              <legend id="addressText"></legend>
+            </div>
+        
+            <!-- Switch to different account -->
+            <div id="switchAccountForm">
+              <legend>Enter username of account to log into.</legend>
+              <input id="altUsernameInput" type="text">
+              <div id="logIntoAccount">Log into account</div>
+            </div>
 
-          <!-- CONNECT case: If IntMedium account detected -->
-          <div id="connectLoginDetected">
-            <ul>
-              <p>You are currently signed in as user <code id="userName-1"></code></p>
-              <li class="btn btn-primary m-1" id="continueWithAccount">Connect as <code id="userName-2"></code></li>
-              <li class="btn btn-primary m-1" id="chooseDifferentAccount-2">Connect with a different account</li>
-              <li class="btn btn-secondary m-1" id="recoverAccount-2">Recover account from backup</li>
-            </ul>
-          </div>
-      
-          <!-- Register new account -->
-          <div id="accountRegistrationForm">
-            <legend>Request a unique username.</legend>
-            <input id="newUsernameInput" name="username" type="text">
-            <button class="btn btn-disabled" type="button" id="registerAccount">
-              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="registerAccountSpinner"></span>
-              Create account
-            </button>
-          </div>
+            <!-- Logout conf modal -->
+            <div class="modal" id="logoutModal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Sign out?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>You MUST back up your account before signing out, otherwise you WILL lose funds.</p>
+                    <p>Your key:</p>
+                    <button type="button" class="btn btn-primary backUpKey">Show Key</button>
+                    <code id="backUpKeyText"></code>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger logOutBtn">Log out</button>
+                    <button type="button" class="btn btn-secondary cancelBackup" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <!-- Private key prompt -->
-          <div id="privKeyPrompt">
-            <button class="btn btn-primary" type="button" id="privKeyButton">
-              <span id="privKeyGenCase">Create Address</span>
-              <span id="privKeyTxCase">Sign Transaction</span>
-            </button>
-          </div>
+            <!-- Recovery modal -->
+            <div class="modal" id="recoverModal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Enter recovery key</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Paste your recovery key below and press button</p>
+                    <input type="text" id="recoveryKeyInput"></input>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary recoverBtn">Recover</button>
+                    <button type="button" class="btn btn-secondary cancelRecovery" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <!-- Address display -->
-          <div id="address">
-            <legend id="addressText"></legend>
-          </div>
-      
-          <!-- Switch to different account -->
-          <div id="switchAccountForm">
-            <legend>Enter username of account to log into.</legend>
-            <input id="altUsernameInput" type="text">
-            <div id="logIntoAccount">Log into account</div>
-          </div>
+            <!-- Sign message modal -->
+            <div class="modal" id="signMessageModal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Sign message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Sign the below message to complete the action.</p>
+                    <p>Do NOT sign the message if it looks complicated!</p>
+                    <textarea id="signMessageInput" disabled></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary signMessageBtn">Sign & Return</button>
+                    <button type="button" class="btn btn-secondary cancelSignMessage" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <!-- Recover account -->      
-          <div id="recoverAccountForm">
-            <p>Recover using credential</p>
-            <input id="recoverWithCred" type="text">
-            <p>Recover using private key</p>
-            <input id="recoverWithPk" type="text">
-            <div id="recoverAccount-3">Recover account</div>
+            <!-- Sign transaction modal -->
+            <div class="modal" id="signTxModal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Sign transaction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Sign the below transaction?</p>
+                    <p>Make sure the transaction is what you intended!</p>
+                    <input type="text" id="signTxInput"></input>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary signTxBtn">Sign & Send</button>
+                    <button type="button" class="btn btn-secondary cancelSignTx" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Create transaction modal -->
+            <div class="modal" id="createTxModal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Create transaction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Create your own transaction below.</p>
+                    <input type="text" id="createTxInput"></input>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary createTxBtn">Sign & Send</button>
+                    <button type="button" class="btn btn-secondary cancelCreateTx" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+          </div>
       </div>
     </div>
+    <script src="/js/newAccount.js" type="text/javascript"></script>
     <script src="/js/web3custom.js" type="text/javascript"></script>
     <script src="/js/networking.js" type="text/javascript"></script>
     <script src="/js/fidoTools.js" type="text/javascript"></script>

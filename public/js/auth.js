@@ -8,7 +8,11 @@ $('#registerAccountSpinner').hide()
 $('#privKeyPrompt').hide()
 $('#privKeyGenCase').hide()
 $('#privKeyTxCase').hide()
-$('#address').hide()
+$('#logoutModal').hide()
+$('#recoverModal').hide()
+$('#signMessageModal').hide()
+$('#signTxModal').hide()
+$('#createTxModal').hide()
 
 if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
     alert('Your browser does not support credential management API')
@@ -19,72 +23,77 @@ if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
  * "signTx" -> Connect, sign transaction, and callback.
  * "createTx" -> Connect, create tx, sign tx, and callback.
  */
+function escapeHTML (string) {
+    return string.replace(/&/g, '&amp;')
+                 .replace(/</g, '&lt;')
+                 .replace(/>/g, '&gt;')
+                 .replace(/"/g, '&quot;')
+                 .replace(/'/g, '&#x27;')
+                 .replace(/`/g, '&#x60')
+}
 const params = new URLSearchParams(window.location.search)
 console.log(params.get("connect"))
 console.log(params.get("signTx"))
 console.log(params.get("createTx"))
 
-/* Initial state: Check for intMediumAddress, intMediumUsername, intMediumCredId
- * in window.localStorage and show correct prompt/confirmation.
+/* Show different text based on query param.
+ * Connect is default & highest priority.
+ * Make transaction is lowest priority.
+ */
+$('.actionType').text('Connect')
+if (params.get("createTx") === "true") {
+    $('.actionType').text('Make transaction')
+}
+if (params.get("signTx") === "true") {
+    $('.actionType').text('Sign')
+}
+if (params.get("connect") === "true") {
+    $('.actionType').text('Connect')
+}
+
+/* Initial state: Check for intMediumPrivateKey, intMediumAddress, intMediumUsername,
+ * intMediumCredId in window.localStorage and show correct prompt/confirmation.
  */
 
+let userPk = window.localStorage.getItem('IntMediumPrivateKey')
 let userAddress = window.localStorage.getItem('IntMediumAddress')
 let userName = window.localStorage.getItem('IntMediumUsername')
-let userCredId = window.localStorage.getItem('IntMediumCredId')
-if (userName, userCredId) {
+// let userCredId = window.localStorage.getItem('IntMediumCredId')
+if (userName) {
     $('#userName-1').text(userName)
     $('#userName-2').text(userName)
+}
+if (userPk && userAddress) {
+    console.log('pk and address detected')
+    $('#address-1').text(userAddress)
     $('#connectLoginDetected').show()
 } else {
+    window.localStorage.clear()
     $('#connectLoginNotDetected').show()
 }
 
-/* Subflow: User creates a new account.
- * Show username registration form.
- * Clicking create leads to private keygen and credId backup.
+/* Cases to cover:
+ * User is logged in -> (A) Create new account,
+ *                      (B) Recover acccount,
+ *                      (C) Continue with current account
+ * User is signed out-> (A) Create new account,
+ *                      (B) Recover account,
  */
-$('#createNewAccount').on('click', function() {
+
+/* (A) User creates a new account.
+ * Show username registration form.
+ * Handled by newAccounts.js
+ */
+$('.createNewAccount').on('click', function() {
+    // If currently logged in, log out first
+    if (window.localStorage.getItem('IntMediumPrivateKey')) {
+        return logOutConf()
+    }
+    // If not logged in, get rid of localStorage and proceed
+    window.localStorage.clear()
     $('#connectLoginDetected').hide()
     $('#connectLoginNotDetected').hide()
     $('#accountRegistrationForm').show()
-})
-
-$('#registerAccount').on('click', async function() {
-    if ($('#registerAccount').attr('class').includes('btn-disabled')) {
-        return
-    }
-    try {
-        // Request auth to server
-        const { username, challenge, timeout }
-            = await submitRegistrationRequest($('#newUsernameInput').val())
-        // Sign attestationRequest
-        const { credId, publicKey }
-            = await makeAttestation(username, challenge, timeout)
-        // Submit credId for storage on server. localStore credId, username if successful
-        // We actually do not send the public key to server, as we want to use as private key
-        const registration
-            = await submitAttestationToServer(username, challenge, credId)
-        // show private key generation / signing prompt
-        $('#accountRegistrationForm').hide()
-        const shortenedKey =buffer.Buffer.from(base64.toArrayBuffer(publicKey, true).slice(0,32))
-        let { address } = web3js.eth.accounts.privateKeyToAccount('0x'.concat(shortenedKey.toString('hex')))
-        localStorage.setItem('IntMediumAddress', address)
-        $('#addressText').text(localStorage.getItem('IntMediumAddress'))
-        $('#address').show()
-
-        // If not signing transaction
-        if (params.get('connect') && !params.get('signTx')) {
-            return alert('callback triggered')
-        }
-        // If signing transaction
-        if (params.get('signTx')) {
-            return $('#signTxForm').show()
-        }
-
-    } catch (err) {
-        console.error(err)
-        alert(err)
-    }
 })
 
 $('#privKeyButton').on('click', function(tx = null) {
@@ -95,38 +104,148 @@ $('#privKeyButton').on('click', function(tx = null) {
         })
 })
 
-/* Subflow displayLoginConfirmation-1: User signs in with current account.
+/* (B) Recover account from backup
+ * Back up is private key
+ * Also used to log into other account
+ * To be implemented
+ */
+$('.recoverAccount').on('click', function() {
+    recoverModal()
+})
+
+$('.chooseDifferentAccount').on('click', function() {
+    logOutConf()
+})
+
+function logOutConf () {
+    // Show modal
+    $('#logoutModal').show()
+    $('.backUpKey').show()
+}
+
+// If log out confirmed, clear localStorage & show fresh login prompt
+$('.logOutBtn').on('click', function() {
+    localStorage.clear()
+    $('#connectLoginDetected').hide()
+    $('#logoutModal').hide()
+    $('#connectLoginNotDetected').show()
+})
+
+$('.cancelBackup').on('click', function() {
+    $('#logoutModal').hide()
+    $('#backUpKeyText').hide()
+})
+
+// If recover selected, show backup modal
+$('.backUpKey').on('click', function() {
+    // Show key in modal
+    $('#backUpKeyText').show()
+    $('#backUpKeyText').text(window.localStorage.getItem('IntMediumPrivateKey'))
+    // Hide button
+    $('.backUpKey').hide()
+})
+
+function recoverModal () {
+    // Show modal
+    $('#recoverModal').show()
+}
+
+$('.recoverBtn').on('click', function() {
+    // Check key is hex, 64 bytes or '0x' prefix + 64 bytes
+    console.log('Checking key')
+    let keyInput = $('#recoveryKeyInput').val().trim()
+    if (
+          ( keyInput.slice(0,2) === '0x' &&
+            keyInput.length === 66) &&
+            /[0-9A-Fa-f]{6}/g.test(keyInput.slice(2,66)
+          )
+        || 
+          ( keyInput.slice(0,2) !== '0x' && 
+            keyInput.length === 64 &&
+            /[0-9A-Fa-f]{6}/g.test(keyInput))
+        ) {
+
+    } else {
+        console.error('Key format is wrong')
+        return alert('Key format invalid: must be 32 bytes hex, with or without 0x prefix')
+    }
+    
+    // Get address
+    let split = keyInput.split('0x')
+    let { address } = web3js.eth.accounts.privateKeyToAccount('0x'.concat(split[split.length-1]))
+    // Store private key and address
+    window.localStorage.setItem('IntMediumPrivateKey', '0x'.concat(split[split.length-1]))
+    window.localStorage.setItem('IntMediumAddress', address)
+    // Hide modal, show account
+    $('#recoverModal').hide()
+    $('#connectLoginNotDetected').hide()
+    $('#connectLoginDetected').show()
+    // Callback
+    alert('callback')
+})
+
+$('.cancelRecovery').on('click', function() {
+    $('#recoverModal').hide()
+})
+
+/* (C) User signs in with current account.
  * If signing TX, continue to sign TX UI.
  * Otherwise, callback.
  */
-$('#continueWithAccount').on('click', function() {
-    // Generate pk & address from (userName, credId) and store userAddress
-    getPk({
-        username: window.localStorage.getItem('IntMediumUsername'),
-        credId: window.localStorage.getItem('IntMediumCredId')
-    })
+$('.continueWithAccount').on('click', function() {
+    // If query is to connect, show nonce to sign
+    if (params.get('connect') === 'true') {
+        $('#signMessageInput').val(escapeHTML(params.get("nonce")))
+        $('#signMessageModal').show()
+        return
+    }
+    // If query is to signTx, show TX to sign
+    if (params.get('signTx') === 'true') {
+        $('#signTxInput').val(escapeHTML(params.get("txData")))
+        $('#signTxModal').show()
+        return
+    }
+    // If query is to createTx, show txBuilder
+    if (params.get('createTx') === 'true') {
+        alert('show tx builder form')
+        return
+    }
+    // If no query, tell user no action was specified
+    alert('No callback orders were given. Specify connect, signTx, or createTx in the query with relevant arguments')
 })
 
-$('#chooseDifferentAccount-1').on('click', function() {
-    localStorage.clear()
-    $('#connectLoginDetected').hide()
-    $('#connectLoginNotDetected').show()
+$('.signMessageBtn').on('click', function() {
+    // Sign the message with private key
+    const signature = web3js.eth.accounts.sign($('#signMessageInput').val(), window.localStorage.getItem('IntMediumPrivateKey'))
+    // Send the message to callback URL for auth
+    const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
+    sendAddress(callbackUrl, signature)
+    $('#signMessageModal').hide()
+    alert('callback to dapp with address done')
 })
 
-/* Subflow displayLoginPrompt-2: User chooses sign into different account.
- * Subflow for displayLoginConfirmation-2 as well.
- * Show username selection input.
- * Signing in leads to TX signing or callback.
- */
-
-$('#chooseDifferentAccount-2').on('click', function() {
-    localStorage.clear()
-    $('#connectLoginDetected').hide()
-    $('#connectLoginNotDetected').show()
+$('$signTxBtn').on('click', function() {
+    // Sign the transaction with private key
+    web3js.eth.accounts.signTransaction(
+        $('#signTxInput').val(),
+        window.localStorage.getItem('IntMediumPrivateKey'),
+        (err, result) => {
+            sendTransaction(callbackUrl, transaction)
+            $('#signTxModal').hide()
+            alert('callback to dapp with signed tx done')
+        })
 })
 
-$('#newUsernameInput').on('change', function() {
-    // Show spinner
-    $('#registerAccountSpinner').show()
-    checkUsernameAvailability($('#newUsernameInput').val())
+$('.cancelSignMessage').on('click', function() {
+    $('#signMessageModal').hide()
+})
+$('.cancelSignTx').on('click', function() {
+    $('#signTxModal').hide()
+})
+$('.cancelCreateTx').on('click', function() {
+    $('#createTxModal').hide()
+})
+
+$('.signOut').on('click', function() {
+    logOutConf()
 })
