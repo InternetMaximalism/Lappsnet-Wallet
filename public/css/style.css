@@ -6,3 +6,9 @@ body {
 a {
   color: #00B7FF;
 }
+
+.jumbotron {
+  box-shadow: 0 0 10px teal;
+  max-width: 640px;
+  margin: 0 auto;
+}
