@@ -1,3 +1,8 @@
+$('#newUsernameInput').on('change', function() {
+  // Show spinner
+  $('#registerAccountSpinner').show()
+  checkUsernameAvailability($('#newUsernameInput').val())
+})
 
 function checkUsernameAvailability (username) {
   // Query server for username availability on each input
@@ -81,5 +86,18 @@ async function submitAttestationToServer (username, challenge, credId) {
   } catch (err) {
       console.error(err)
       alert(err)
+  }
+}
+
+async function sendAddress (url, signature) {
+  try {
+    return new Promise((resolve, reject) => {
+      $.post(url, {
+        signature,
+        publicAddress: window.localStorage.getItem('IntMediumAddress')
+      })
+    })
+  } catch (err) {
+    console.error(err)
   }
 }
