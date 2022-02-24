@@ -28,7 +28,12 @@ async function createNewAccount () {
 
     // If not signing transaction
     if (params.get('connect')) {
-        return alert('trigger callback')
+      // Sign the message with private key
+      const signature = web3js.eth.accounts.sign($('#signMessageInput').val(), window.localStorage.getItem('IntMediumPrivateKey'))
+      // Send the message to callback URL for auth
+      const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
+      sendAddress(callbackUrl, signature)
+        return alert('callback done')
     }
     // If signing transaction
     if (params.get('signTx')) {
