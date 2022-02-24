@@ -224,7 +224,7 @@ $('.signMessageBtn').on('click', function() {
     alert('callback to dapp with address done')
 })
 
-$('$signTxBtn').on('click', function() {
+$('.signTxBtn').on('click', function() {
     // Sign the transaction with private key
     web3js.eth.accounts.signTransaction(
         $('#signTxInput').val(),

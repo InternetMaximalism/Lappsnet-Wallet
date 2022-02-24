@@ -96,6 +96,9 @@ async function sendAddress (url, signature) {
         signature,
         publicAddress: window.localStorage.getItem('IntMediumAddress')
       })
+      .then((result) => {
+          console.log('Callback sent to URL')
+      })
     })
   } catch (err) {
     console.error(err)
