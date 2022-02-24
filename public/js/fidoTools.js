@@ -1,5 +1,6 @@
 /* Create (username, credId) pair: 
-   Takes username, challenge (base64) and creates an attestation. */
+   Takes username, challenge (base64) and creates an attestation.
+   The credential public key is used as IntMedium account private key. */
 async function makeAttestation (username, challenge, timeout) {
   try {
     const optionsObject = {
@@ -34,50 +35,7 @@ async function makeAttestation (username, challenge, timeout) {
   }
 }
 
-/* Generates a NEW private key from (username, credId) pair.
-   Returns an error if the same private key was created before.
-   Use RSA only for deterministic and unique signature */
-async function generateNewPk ({ username, credId }) {
-  try {
-    navigator.credentials.create({
-        publicKey: {
-            rp: {
-                id: window.location.hostname,
-                name: 'IntMedium Identity'
-            },
-            user: {
-                id: buffer.Buffer.from(username),
-                name: username,
-                displayName: username
-            },
-            pubKeyCredParams: [
-                { type: 'public-key', alg: -257 }
-            ],
-            // Don't create a new keypair for an existing (account, credId) pair!
-            allowCredentials: [
-                { type: 'public-key', id: base64.toArrayBuffer(credId, true) }
-            ],
-            // Challenge reuse is okay because we don't use this in a way that can get replay attacked
-            // window.localStorage is more of a problem, but this is for testnet
-            challenge: base64.toArrayBuffer(credId, true)
-        }
-    })
-    .then(masterSig => {
-      console.log(masterSig)
-      console.log(`Created PK: ${decodeFidoResponse(masterSig.response.attestationObject)}`)
-      return storePk(masterSig.response.attestationObject)
-    })
-    .catch(err => {
-      console.error(err)
-    })
-  } catch (err) {
-    console.log('Account may already exist, try signing in instead')
-    console.error(err)
-    alert(err)
-  }
-}
-
-/* Gets private key from username and credId */
+/* Gets credential public key given username, credId */
 async function getPk ({ username, credId }) {
   try {
     navigator.credentials.get({
@@ -96,7 +54,11 @@ async function getPk ({ username, credId }) {
             ],
             // Don't create a new keypair for an existing (account, credId) pair!
             allowCredentials: [
-                { type: 'public-key', id: base64.toArrayBuffer(credId, true) }
+                {
+                  type: 'public-key',
+                  id: base64.toArrayBuffer(credId, true),
+                  transports: ['usb', 'nfc', 'ble', 'internal']
+                }
             ],
             // Challenge reuse is okay because we don't use this in a way that can get replay attacked
             // localStorage is more of a problem, but this is for testnet
@@ -118,37 +80,6 @@ async function getPk ({ username, credId }) {
     console.error(err)
     alert(err)
   }
-}
-
-async function getSig () {
-  try {
-    const getSig = await navigator.credentials.get({
-      publicKey: {
-          rpId: window.location.hostname,
-          // Challenge reuse is okay because we don't use this in a way that can get replay attacked
-          // window.localStorage is more of a problem, but this is for testnet
-          challenge: buffer.Buffer.from('Master Key Generation'.toString('base64')),
-          allowCredentials: [{
-            id: window.localStorage.getItem('IntMediumCredentialId'),
-            type: 'public-key',
-            transpoarts: ['usb', 'ble', 'nfc', 'internal']
-          }]
-      }
-    })
-    console.log(JSON.stringify(getSig.response.assertionObject, null, 2))
-    crypto.subtle.digest('SHA-256', getSig).then(hash => {
-      console.log(`Hash: ${hash.toString('hex')}`) // To be used as private key?
-    })
-  } catch (err) {
-    console.error(err)
-    alert(err)
-  }
-}
-
-function storePk (fidoCBOR) {
-  const decoded = decodeFidoResponse(fidoCBOR)
-  console.log(`Key loaded: ${decoded.publicKey}`)
-  return window.localStorage.setItem('IntMediumPk', decoded.publicKey)
 }
 
 /* decodes FIDO attestation object and returns credId, publicKey */
@@ -196,10 +127,10 @@ async function decodeFidoResponse (fidoCBOR) {
                 "-2": remainder.slice(9,41),
                 "-3": remainder.slice(44,76)
             }
-            console.log(`Public key: ${base64.fromArrayBuffer(remainder, true)}`)
+            console.log(`Public key: ${base64.fromArrayBuffer(remainder.slice(9, 41), true)}`)
             console.log(`Credential ID: ${base64.fromArrayBuffer(credId, true)}`)
             resolve({
-              credId: base64.fromArrayBuffer(credId, true), publicKey: base64.fromArrayBuffer(remainder, true)
+              credId: base64.fromArrayBuffer(credId, true), publicKey: base64.fromArrayBuffer(remainder.slice(9, 41), true)
             })
         }
       })
