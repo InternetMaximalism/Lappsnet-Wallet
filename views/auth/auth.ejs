@@ -158,7 +158,9 @@
                       <pre><code class="codeBlock" id="signTxInput"></code></pre>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-primary signTxBtn">Sign & Send</button>
+                      <button type="button" class="btn btn-primary signTxBtn">
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="signTxSpinner"></span>
+                        Sign & Send</button>
                       <button type="button" class="btn btn-secondary cancelSignTx" data-bs-dismiss="modal">Cancel</button>
                     </div>
                   </div>
@@ -244,7 +246,10 @@
                       </form>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-primary createTxBtn">Sign & Send</button>
+                      <button type="button" class="btn btn-primary createTxBtn">
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="createTxSpinner"></span>
+                        Sign & Send
+                      </button>
                       <button type="button" class="btn btn-secondary cancelCreateTx" data-bs-dismiss="modal">Cancel</button>
                     </div>
                   </div>

@@ -12,6 +12,7 @@ $('#logoutModal').hide()
 $('#recoverModal').hide()
 $('#signMessageModal').hide()
 $('#signTxModal').hide()
+$('#signTxSpinner').hide()
 $('#createTxModal').hide()
 $('#createTxTokenContractForm').hide()
 $('#createTxFromAddressForm').hide()
@@ -19,6 +20,7 @@ $('#createTxToAddressForm').hide()
 $('#createTxValueForm').hide()
 $('#createTxDataForm').hide()
 $('#createTxGasLimitForm').hide()
+$('#signTxSpinner').hide()
 $('#successBanner').hide()
 $('#errorBanner').hide()
 
@@ -253,6 +255,8 @@ $('.signMessageBtn').on('click', function() {
 })
 
 $('.signTxBtn').on('click', function() {
+    $('#signTxSpinner').show()
+    $('#signTxBtn').attr('disabled', true)
     $('#errorBanner').hide()
     // Sign the transaction with private key
     let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
@@ -265,6 +269,9 @@ $('.signTxBtn').on('click', function() {
             if (err) {
                 $('#errorText').text(err)
                 $('#errorBanner').show()
+                $('#signTxSpinner').hide()
+                $('#signTxBtn').attr('disabled', false)
+                $('#signTxModal').hide()
                 return console.error(err)
             }
             web3js.eth.sendSignedTransaction(result.rawTransaction,
@@ -272,6 +279,9 @@ $('.signTxBtn').on('click', function() {
                     if (err) {
                         $('#errorText').text(err)
                         $('#errorBanner').show()
+                        $('#signTxSpinner').hide()
+                        $('#signTxBtn').attr('disabled', false)
+                        $('#signTxModal').hide()
                         return console.error(err)
                     }
                     // Update balance in UI
@@ -284,6 +294,8 @@ $('.signTxBtn').on('click', function() {
                       })
                 })
             sendTransaction(callbackUrl, result)
+            $('#signTxSpinner').hide()
+            $('#signTxBtn').attr('disabled', false)
             $('#signTxModal').hide()
             window.close()
         })
@@ -320,11 +332,16 @@ $('#createTxType').change(function() {
 
 $('.createTxBtn').on('click', async function() {
     try {
+        $('#createTxSpinner').show()
+        $('#createTxBtn').attr('disabled', true)
         $('#errorBanner').hide()
         // Create the transaction based on txType
         let option = $('option:selected').val()
         if (!["1", "2", "3"].includes(option)) {
             // txType not selected
+            $('#createTxModal').hide()
+            $('#createTxSpinner').hide()
+            $('#createTxBtn').attr('disabled', false)
             return console.error('Select valid transaction type')
         }
         let tx = {}
@@ -348,14 +365,18 @@ $('.createTxBtn').on('click', async function() {
                     { "name": "", "type": "bool"}
                 ]
             }]
-            let value = $('#createTxValue').val()
+            let value = $('#createTxValue').val().toString()
+            console.log(value)
             let contract = new web3js.eth.Contract(abi, $('#createTxTokenContract').val())
             let transaction = contract.methods.transfer($('#createTxToAddress').val(), web3js.utils.toWei(value))
 
-            let gastimate = await transaction.estimateGas({ gas: 5000000, from: localStorage.getItem('IntMediumAddress') })
+            let gastimate = await transaction.estimateGas({ gas: "5000000", from: localStorage.getItem('IntMediumAddress') })
             if (gastimate === 5000000) {
                 $('#errorText').text('Contract would run out of gas')
                 $('#errorBanner').show()
+                $('#createTxModal').hide()
+                $('#createTxSpinner').hide()
+                $('#createTxBtn').attr('disabled', false)
                 return console.error(err)
             }
 
@@ -365,12 +386,18 @@ $('.createTxBtn').on('click', async function() {
                 data: transaction.encodeABI(),
                 gas: web3js.utils.toBN(gastimate)
             }
+            console.log(contract)
+            console.log(transaction)
+            console.log(options)
             let signedTx = await web3js.eth.accounts.signTransaction(options, window.localStorage.getItem('IntMediumPrivateKey'))
+            console.log(signedTx)
             let receipt = await web3js.eth.sendSignedTransaction(signedTx.rawTransaction)
+            console.log(receipt)
             $('#successBanner').show()
             
             // Update ESAT balance in UI
-            let newBalance = web3js.eth.getBalance(userAddress, "pending")
+            let newBalance = await web3js.eth.getBalance(userAddress, "pending")
+            console.log(newBalance)
             $('#esatBalance').text(web3js.utils.fromWei(newBalance))
 
             // Callback with transaction data IF callback is defined
@@ -380,10 +407,15 @@ $('.createTxBtn').on('click', async function() {
                 sendTransaction(callbackUrl, receipt)
             }
             $('#createTxModal').hide()
+            $('#createTxSpinner').hide()
+            $('#createTxBtn').attr('disabled', false)
             return
         }
 
         if (option === "3") {
+            $('#createTxModal').hide()
+            $('#createTxSpinner').hide()
+            $('#createTxBtn').attr('disabled', false)
             return console.log('Contract invocations not yet implemented')
         }
     
@@ -420,11 +452,16 @@ $('.createTxBtn').on('click', async function() {
                     sendTransaction(callbackUrl, result)
                 }
             })
+        $('#createTxSpinner').hide()
+        $('#createTxBtn').attr('disabled', false)
         $('#createTxModal').hide()
 
     } catch (err) {
         $('#errorText').text(err)
         $('#errorBanner').show()
+        $('#createTxSpinner').hide()
+        $('#createTxBtn').attr('disabled', false)
+        $('#createTxModal').hide()
         console.error(err)
     }
 })
