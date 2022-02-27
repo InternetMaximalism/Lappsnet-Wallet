@@ -50,7 +50,13 @@ ul {
   text-decoration: underline;
 }
 
-.strongBtn:hover {
+.navBtn {
+  font-weight: bold;
+  color: lightsteelblue;
+  text-decoration: underline;
+}
+
+.strongBtn:hover, .navBtn:hover {
   color: skyblue;
 }
 
