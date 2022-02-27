@@ -104,3 +104,18 @@ async function sendAddress (url, signature) {
     console.error(err)
   }
 }
+
+async function sendTransaction (url, transaction) {
+    try {
+        return new Promise((resolve, reject) => {
+            $.post(url, {
+                signedTx: transaction
+            })
+            .then((result) => {
+                console.log('Signed TX sent to URL')
+            })
+        })
+    } catch (err) {
+        console.error(err)
+    }
+}
