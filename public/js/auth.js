@@ -199,9 +199,9 @@ $('.continueWithAccount').on('click', function() {
         $('#signMessageModal').show()
         return
     }
-    // If query is to signTx, show TX to sign
+    // If query is to signTx, decode tx to string and show TX to sign
     if (params.get('signTx') === 'true') {
-        $('#signTxInput').val(escapeHTML(params.get("txData")))
+        $('#signTxInput').val(JSON.stringify(base64.toString(escapeHTML(params.get("txData")), true), null, 2))
         $('#signTxModal').show()
         return
     }
@@ -227,10 +227,11 @@ $('.signMessageBtn').on('click', function() {
 $('.signTxBtn').on('click', function() {
     // Sign the transaction with private key
     web3js.eth.accounts.signTransaction(
-        $('#signTxInput').val(),
+        base64.toString(escapeHTML(params.get("txData"))),
         window.localStorage.getItem('IntMediumPrivateKey'),
         (err, result) => {
-            sendTransaction(callbackUrl, transaction)
+            if (err) return console.error(err)
+            sendTransaction(callbackUrl, result)
             $('#signTxModal').hide()
             alert('callback to dapp with signed tx done')
         })

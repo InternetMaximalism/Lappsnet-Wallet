@@ -93,7 +93,7 @@ async function sendAddress (url, signature) {
   try {
     return new Promise((resolve, reject) => {
       $.post(url, {
-        signature,
+        signature: signature,
         publicAddress: window.localStorage.getItem('IntMediumAddress')
       })
       .then((result) => {
