@@ -231,6 +231,7 @@ $('.signTxBtn').on('click', function() {
     // Sign the transaction with private key
     let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
     let decoded = new TextDecoder().decode(ab)
+    const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
     web3js.eth.accounts.signTransaction(
         JSON.parse(decoded),
         window.localStorage.getItem('IntMediumPrivateKey'),
