@@ -20,6 +20,7 @@ $('#createTxValueForm').hide()
 $('#createTxDataForm').hide()
 $('#createTxGasLimitForm').hide()
 $('#successBanner').hide()
+$('#errorBanner').hide()
 
 if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
     alert('Your browser does not support credential management API')
@@ -246,10 +247,12 @@ $('.signMessageBtn').on('click', function() {
     const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
     sendAddress(callbackUrl, signature)
     $('#signMessageModal').hide()
-    alert('callback to dapp with address done')
+    alert('Address has been sent to application')
+    window.close()
 })
 
 $('.signTxBtn').on('click', function() {
+    $('#errorBanner').hide()
     // Sign the transaction with private key
     let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
     let decoded = new TextDecoder().decode(ab)
@@ -258,11 +261,16 @@ $('.signTxBtn').on('click', function() {
         JSON.parse(decoded),
         window.localStorage.getItem('IntMediumPrivateKey'),
         (err, result) => {
-            if (err) return console.error(err)
+            if (err) {
+                $('#errorText').text(err)
+                $('#errorBanner').show()
+                return console.error(err)
+            }
             web3js.eth.sendSignedTransaction(result.rawTransaction)
             sendTransaction(callbackUrl, result)
             $('#signTxModal').hide()
-            alert('callback to dapp with signed tx done')
+            alert('Transaction sent, application notified')
+            window.close()
         })
 })
 
@@ -296,6 +304,7 @@ $('#createTxType').change(function() {
 })
 
 $('.createTxBtn').on('click', function() {
+    $('#errorBanner').hide()
     // Create the transaction based on txType
     let option = $('option:selected').val()
     if (!["1", "2", "3"].includes(option)) {
@@ -324,10 +333,14 @@ $('.createTxBtn').on('click', function() {
             // Broadcast the transaction
             web3js.eth.sendSignedTransaction(result.rawTransaction,
                 (err, result) => {
-                    if (err) return console.error(err)
+                    if (err) {
+                        $('#errorText').text(err)
+                        $('#errorBanner').show()
+                        return console.error(err)
+                    }
                     $('#successBanner').show()
                 })
-            // Callback with transaction data
+            // Callback with transaction data IF callback is defined
             const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
             if (params.get('callbackUrl') !== null) {
                 console.log('Invoking callback')
