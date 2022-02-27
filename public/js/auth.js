@@ -49,13 +49,13 @@ console.log(params.get("createTx"))
  */
 $('.actionType').text('Connect')
 if (params.get("createTx") === "true") {
-    $('.actionType').text('Make transaction')
+    $('.actionType').text('Create Transaction')
 }
 if (params.get("signTx") === "true") {
-    $('.actionType').text('Sign')
+    $('.actionType').text('Sign Transaction')
 }
 if (params.get("connect") === "true") {
-    $('.actionType').text('Connect')
+    $('.actionType').text('Connect Wallet')
 }
 
 /* Initial state: Check for intMediumPrivateKey, intMediumAddress, intMediumUsername,
@@ -127,8 +127,21 @@ $('.chooseDifferentAccount').on('click', function() {
 function logOutConf () {
     // Show modal
     $('#logoutModal').show()
+    $('.logOutBtn').attr('disabled', true)
     $('.backUpKey').show()
 }
+
+$('.addressDisplay').on('click', function() {
+    // On clicking an address, copy it from localStorage to clipboard
+    navigator.clipboard.writeText(window.localStorage.getItem('IntMediumAddress'))
+    alert(`Copied address ${window.localStorage.getItem('IntMediumAddress')} to clipboard!`)
+})
+
+$('.privkeyDisplay').on('click', function() {
+    // On clicking a privkey, copy it to clipboard
+    navigator.clipboard.writeText($('#backupKeyText').val())
+    alert('Copied private key to clipboard - remember to save it!')
+})
 
 // If log out confirmed, clear localStorage & show fresh login prompt
 $('.logOutBtn').on('click', function() {
@@ -150,6 +163,8 @@ $('.backUpKey').on('click', function() {
     $('#backUpKeyText').text(window.localStorage.getItem('IntMediumPrivateKey'))
     // Hide button
     $('.backUpKey').hide()
+    // Enable log out button
+    $('.logOutBtn').attr('disabled', false)
 })
 
 function recoverModal () {
