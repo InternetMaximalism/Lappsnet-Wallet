@@ -232,7 +232,7 @@ $('.signTxBtn').on('click', function() {
     let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
     let decoded = new TextDecoder().decode(ab)
     web3js.eth.accounts.signTransaction(
-        decoded,
+        JSON.parse(decoded),
         window.localStorage.getItem('IntMediumPrivateKey'),
         (err, result) => {
             if (err) return console.error(err)
