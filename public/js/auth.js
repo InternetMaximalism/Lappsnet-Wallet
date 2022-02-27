@@ -201,7 +201,10 @@ $('.continueWithAccount').on('click', function() {
     }
     // If query is to signTx, decode tx to string and show TX to sign
     if (params.get('signTx') === 'true') {
-        $('#signTxInput').val(JSON.stringify(base64.toString(escapeHTML(params.get("txData")), true), null, 2))
+        let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
+        let decoded = new TextDecoder().decode(ab)
+        let data = JSON.stringify(decoded, null, 2)
+        $('#signTxInput').val(data)
         $('#signTxModal').show()
         return
     }
@@ -226,8 +229,10 @@ $('.signMessageBtn').on('click', function() {
 
 $('.signTxBtn').on('click', function() {
     // Sign the transaction with private key
+    let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
+    let decoded = new TextDecoder().decode(ab)
     web3js.eth.accounts.signTransaction(
-        base64.toString(escapeHTML(params.get("txData"))),
+        decoded,
         window.localStorage.getItem('IntMediumPrivateKey'),
         (err, result) => {
             if (err) return console.error(err)
