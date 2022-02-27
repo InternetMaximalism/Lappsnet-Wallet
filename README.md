@@ -61,7 +61,7 @@ Start by generating a nonce for the connection attempt on the backend.
 
 Have the user open a tab to `<intmedium-identity hostname>/auth?connect=true&callbackUrl=<encodeURIComponent(callback url)>`.
 
-An example of `callback url` would be `<your-dapp hostname>/api/authentication`.
+An example of `callback url` would be `<your-dapp hostname>/api/authentication`. Make sure CORS is allowed.
 
 The user will sign the nonce with their private key, and post `{ signature, publicAddress }` to `callback url`.
 
@@ -77,7 +77,7 @@ Instructions to follow.
 
 You can also have the user create their own transaction.
 
-Have the user open a tab to `<intmedium-identity hostname>/auth?createTx-true&callbackUrl=<encodeURIComponent(callback url)`.
+Have the user open a tab to `<intmedium-identity hostname>/auth?createTx-true&callbackUrl=<encodeURIComponent(callback url)`. Make sure CORS is allowed.
 
 There, they will be able to craft their own transaction & sign it.
 
