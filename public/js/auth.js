@@ -276,7 +276,7 @@ $('.signTxBtn').on('click', function() {
                     // Update balance in UI
                     web3js.eth.getBalance(
                       userAddress,
-                      "latest",
+                      "pending",
                       function(err, res)  {
                           if (err) return console.error(err)
                           $('#esatBalance').text(web3js.utils.fromWei(res))
@@ -358,7 +358,7 @@ $('.createTxBtn').on('click', function() {
                     // Update balance in UI
                     web3js.eth.getBalance(
                       userAddress,
-                      "latest",
+                      "pending",
                       function(err, res)  {
                           if (err) return console.error(err)
                           $('#esatBalance').text(web3js.utils.fromWei(res))
