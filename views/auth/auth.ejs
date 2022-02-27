@@ -6,7 +6,7 @@
     <script src="https://unpkg.com/bignumber.js" integrity="sha256-wVL1BH6h7i/pod41XKpG/h1lPY7y6h2iR5INy5ikXvs=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/cbor-web" integrity="sha256-iey8EY2WTC5Eu4oCNnxnQwmhpWYwbYn9o4gpoyhpgE0=" crossorigin="anonymous"></script>
   </head>
-  <body>
+  <body class="hidden">
     <div id="pageContent">
       <div class="container">
         <div class="row">
@@ -256,5 +256,10 @@
     <script src="/js/networking.js" type="text/javascript"></script>
     <script src="/js/fidoTools.js" type="text/javascript"></script>
     <script src="/js/auth.js" type="text/javascript"></script>
+    <script>
+      window.onload = function(e) {
+        $('body').removeClass('hidden');
+      }
+    </script>
   </body>
 </html>

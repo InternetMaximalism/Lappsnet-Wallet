@@ -76,3 +76,7 @@ ul {
   margin-left: 1rem;
   margin-right: 1rem;
 }
+
+.hidden {
+  visibility: hidden;
+}
