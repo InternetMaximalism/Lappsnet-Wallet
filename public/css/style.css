@@ -86,3 +86,8 @@ ul {
 .hidden {
   visibility: hidden;
 }
+
+.modal {
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
