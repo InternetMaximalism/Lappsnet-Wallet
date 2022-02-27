@@ -225,9 +225,9 @@ $('.continueWithAccount').on('click', function() {
     // If query is to signTx, decode tx to string and show TX to sign
     if (params.get('signTx') === 'true') {
         let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
-        let decoded = new TextDecoder().decode(ab)
+        let decoded = new TextDecoder().decode(ab).replace(/\//g, '\\/') // XSS mitigation
         let data = JSON.stringify(decoded, null, 2)
-        $('#signTxInput').val(data)
+        $('#signTxInput').text(JSON.parse(data))
         $('#signTxModal').show()
         return
     }
@@ -285,7 +285,6 @@ $('.signTxBtn').on('click', function() {
                 })
             sendTransaction(callbackUrl, result)
             $('#signTxModal').hide()
-            alert('Transaction sent, application notified')
             window.close()
         })
 })
