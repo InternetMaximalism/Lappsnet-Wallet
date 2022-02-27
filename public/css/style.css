@@ -1,3 +1,8 @@
+html {
+  margin: 0;
+  width: 100vw;
+}
+
 body {
   margin: 0;
   width: 100vw;
@@ -6,7 +11,7 @@ body {
 }
 
 #pageContent {
-  height: 100vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,8 +35,8 @@ ul {
 
 .container {
   padding: 3.5rem 2.5rem 2rem 2.5rem;
-  max-width: 365px;
-  min-width: 300px;
+  max-width: 395px;
+  min-width: 330px;
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
@@ -39,6 +44,14 @@ ul {
 
 .btn {
   width: 100%;
+}
+
+.strongBtn {
+  text-decoration: underline;
+}
+
+.strongBtn:hover {
+  color: skyblue;
 }
 
 #logoContainer {
@@ -56,4 +69,10 @@ ul {
 
 #signInTitle {
   text-align: center;
+}
+
+.formRow {
+  width: 100%;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }

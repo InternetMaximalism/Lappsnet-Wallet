@@ -6,10 +6,10 @@
     <script src="https://unpkg.com/bignumber.js" integrity="sha256-wVL1BH6h7i/pod41XKpG/h1lPY7y6h2iR5INy5ikXvs=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/cbor-web" integrity="sha256-iey8EY2WTC5Eu4oCNnxnQwmhpWYwbYn9o4gpoyhpgE0=" crossorigin="anonymous"></script>
   </head>
-  <body class="h-100">
+  <body>
     <div id="pageContent">
       <div class="container">
-        <div class="row h-100">
+        <div class="row">
           <div class="col-sm-12 align-self-center">
               <div class="alert alert-dismissible alert-success" id="successBanner">
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -24,20 +24,20 @@
               <div id="connectLoginNotDetected">
                 <p>You are not currently signed into IntMedium.</p>
                 <ul>
-                  <li class="btn btn-success m-1 createNewAccount"><span class="actionType"></span> with a new account</li><br>
-                  <li class="btn btn-success m-1 recoverAccount">Recover account</li><br>
+                  <li class="btn btn-success m-1 createNewAccount">Create new account</li>
                 </ul>
+                <p class="m-1">Already have one? <strong class="recoverAccount strongBtn">Recover account</strong></p>
               </div>
     
               <!-- If IntMedium account detected -->
               <div id="connectLoginDetected">
                 <ul>
-                  <p>You are currently signed in as user <code id="userName-1"></code>, address <code id="address-1"></code></p>
+                  <p>You are signed in as user <code id="userName-1"></code>, address <code class="addressDisplay" id="address-1"></code></p>
                   <li class="btn btn-success m-1 continueWithAccount"><span class="actionType"></span></li><br>
-                  <li class="btn btn-warning m-1 chooseDifferentAccount">Use different account</li><br>
-                  <li class="btn btn-warning m-1 createNewAccount">Create new account</li><br>
                   <li class="btn btn-warning m-1 signOut">Sign out</li>
                 </ul>
+                <p class="m-1">Use a different one: <strong class="recoverAccount strongBtn">Recover account</strong></p>
+                <p class="m-1">Tired of this one? <strong class="createNewAccount strongBtn">Create new account</strong></p>
               </div>
           
               <!-- Register new account -->
@@ -60,7 +60,7 @@
     
               <!-- Address display -->
               <div id="address">
-                <legend id="addressText"></legend>
+                <legend class="addressDisplay" id="addressText"></legend>
               </div>
           
               <!-- Switch to different account -->
@@ -82,9 +82,9 @@
                     </div>
                     <div class="modal-body">
                       <p>You MUST back up your account before signing out, otherwise you WILL lose funds.</p>
-                      <p>Your key:</p>
+                      <p>Your key: (click to copy)</p>
                       <button type="button" class="btn btn-primary backUpKey">Show Key</button>
-                      <code id="backUpKeyText"></code>
+                      <code class="privkeyDisplay" id="backUpKeyText"></code>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-danger logOutBtn">Log out</button>
@@ -175,39 +175,67 @@
                     <div class="modal-body">
                       <form>
                         <fieldset>
-                          <legend>Create your own transaction below.</legend>
-                          <div class="form-group row" id="createTxTypeForm">
-                            <label for="createTxType">Transaction type</label>
-                            <select id="createTxType">
-                              <option default>Choose type...</option>
-                              <option value="1">Sending ESAT</option>
-                              <option value="2">Sending token</option>
-                              <option value="3">Calling contract</option>
-                            </select>
+                          <legend class="mb-3">Create your own transaction below.</legend>
+                          <div class="form-group row formRow" id="createTxTypeForm">
+                            <div class="col-sm-4">
+                              <label for="createTxType">Transaction type</label>
+                            </div>
+                            <div class="col-sm-8">
+                              <select id="createTxType">
+                                <option default>Choose type...</option>
+                                <option value="1">Sending ESAT</option>
+                                <option value="2">Sending token</option>
+                                <option value="3">Calling contract</option>
+                              </select>
+                            </div>
                           </div>
-                          <div class="form-group row" id="createTxTokenContractForm">
-                            <label for="createTxTokenContract">(Token) contract address</label>
-                            <input type="text" id="createTxTokenContract"></input>
+                          <div class="form-group row formRow" id="createTxTokenContractForm">
+                            <div class="col-sm-4">
+                              <label for="createTxTokenContract">(Token) contract address</label>
+                            </div>
+                            <div class="col-sm-8">
+                              <input type="text" id="createTxTokenContract"></input>
+                            </div>
                           </div>
-                          <div class="form-group row" id="createTxFromAddressForm">
-                            <label for="createTxFromAddress">Sender address</label>
-                            <input type="text" id="createTxFromAddress"></input>
+                          <div class="form-group row formRow" id="createTxFromAddressForm">
+                            <div class="col-sm-4">
+                              <label for="createTxFromAddress">Sender address</label>
+                            </div>
+                            <div class="col-sm-8">
+                              <input type="text" id="createTxFromAddress"></input>
+                            </div>
                           </div>
-                          <div class="form-group row" id="createTxToAddressForm">
-                            <label for="createTxToAddress">Destination address</label>
-                            <input type="text" id="createTxToAddress"></input>
+                          <div class="form-group row formRow" id="createTxToAddressForm">
+                            <div class="col-sm-4">
+                              <label for="createTxToAddress">Destination address</label>
+                            </div>
+                            <div class="col-sm-8">
+                              <input type="text" id="createTxToAddress"></input>
+                            </div>
                           </div>
-                          <div class="form-group row" id="createTxValueForm">
-                            <label for="createTxValue">Transaction Value (in tokens)</label>
-                            <input type="text" id="createTxValue"></input>
+                          <div class="form-group row formRow" id="createTxValueForm">
+                            <div class="col-sm-4">
+                              <label for="createTxValue">Transaction Value (in tokens)</label>
+                            </div>
+                            <div class="col-sm-8">
+                              <input type="text" id="createTxValue"></input>
+                            </div>
                           </div>
-                          <div class="form-group row" id="createTxDataForm">
-                            <label for="createTxData">Transaction Data</label>
-                            <input type="text" id="createTxData"></input>
+                          <div class="form-group row formRow" id="createTxDataForm">
+                            <div class="col-sm-4">
+                              <label for="createTxData">Transaction Data</label>
+                            </div>
+                            <div class="col-sm-8">
+                              <input type="text" id="createTxData"></input>
+                            </div>
                           </div>
-                          <div class="form-group row" id="createTxGasLimitForm">
-                            <label for="createTxGasLimit">Gas Limit (in wei)</label>
-                            <input type="text" id="createTxGasLimit"></input>
+                          <div class="form-group row formRow" id="createTxGasLimitForm">
+                            <div class="col-sm-4">
+                              <label for="createTxGasLimit">Gas Limit (in wei)</label>
+                            </div>
+                            <div class="col-sm-8">
+                              <input type="text" id="createTxGasLimit"></input>
+                            </div>
                           </div>
                         </fieldset>
                       </form>
