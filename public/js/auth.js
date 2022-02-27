@@ -45,11 +45,11 @@ console.log(params.get("signTx"))
 console.log(params.get("createTx"))
 
 /* Show different text based on query param.
- * Connect is default & highest priority.
- * Make transaction is lowest priority.
+ * Create transaction is default.
  */
 $('.actionType').text('Connect')
-if (params.get("createTx") === "true") {
+if (params.get("createTx") === "true" ||
+    (params.get("signTx") !== "true" && params.get("connect") !== "true")) {
     $('.actionType').text('Create Transaction')
 }
 if (params.get("signTx") === "true") {
@@ -236,8 +236,9 @@ $('.continueWithAccount').on('click', function() {
         $('#createTxModal').show()
         return
     }
-    // If no query, tell user no action was specified
-    alert('No callback orders were given. Specify connect, signTx, or createTx in the query with relevant arguments')
+    // If no query, default to createTx
+    $('#createTxModal').show()
+    return
 })
 
 $('.signMessageBtn').on('click', function() {
