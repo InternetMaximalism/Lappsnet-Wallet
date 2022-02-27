@@ -302,11 +302,11 @@ $('#createTxType').change(function() {
     }
     if (option === "2") {
         $('#createTxTokenContractForm').show()
-        $('#createTxFromAddressForm').show()
-        $('#createTxToAddressForm').hide()
+        $('#createTxFromAddressForm').hide()
+        $('#createTxToAddressForm').show()
         $('#createTxValueForm').show()
-        $('#createTxDataForm').show()
-        $('#createTxGasLimitForm').show()
+        $('#createTxDataForm').hide()
+        $('#createTxGasLimitForm').hide()
     }
     if (option === "3") {
         $('#createTxTokenContractForm').show()
@@ -318,61 +318,115 @@ $('#createTxType').change(function() {
     }
 })
 
-$('.createTxBtn').on('click', function() {
-    $('#errorBanner').hide()
-    // Create the transaction based on txType
-    let option = $('option:selected').val()
-    if (!["1", "2", "3"].includes(option)) {
-        // txTpe not selected
-        return console.error('Select valid transaction type')
-    }
-    let tx = {}
-    if (option === "1") {
-        tx.to = $('#createTxToAddress').val()
-        tx.value = web3js.utils.toWei($('#createTxValue').val())
-        tx.gas = $('#createTxGasLimit').val()
-    }
-    if (option === "2") {
-        return console.log('ERC20 transactions not yet implemented')
-    }
-    if (option === "3") {
-        return console.log('Contract invocations not yet implemented')
-    }
+$('.createTxBtn').on('click', async function() {
+    try {
+        $('#errorBanner').hide()
+        // Create the transaction based on txType
+        let option = $('option:selected').val()
+        if (!["1", "2", "3"].includes(option)) {
+            // txType not selected
+            return console.error('Select valid transaction type')
+        }
+        let tx = {}
 
-    // Sign the transaction
-    web3js.eth.accounts.signTransaction(
-        tx,
-        window.localStorage.getItem('IntMediumPrivateKey'),
-        (err, result) => {
-            if (err) return console.error(err)
-            // Broadcast the transaction
-            web3js.eth.sendSignedTransaction(result.rawTransaction,
-                (err, result) => {
-                    if (err) {
-                        $('#errorText').text(err)
-                        $('#errorBanner').show()
-                        return console.error(err)
-                    }
-                    $('#successBanner').show()
-                    
-                    // Update balance in UI
-                    web3js.eth.getBalance(
-                      userAddress,
-                      "pending",
-                      function(err, res)  {
-                          if (err) return console.error(err)
-                          $('#esatBalance').text(web3js.utils.fromWei(res))
-                      })
+        if (option === "1") {
+            tx.to = $('#createTxToAddress').val()
+            tx.value = web3js.utils.toWei($('#createTxValue').val())
+            tx.gas = $('#createTxGasLimit').val()
+        }
 
-                })
+        if (option === "2") {
+            let abi = [{
+                "type": "function",
+                "name": "transfer",
+                "constant": false,
+                "inputs": [
+                    { "name": "recipient", "type": "address" },
+                    { "name": "amount", "type": "uint256" }
+                ],
+                "outputs": [
+                    { "name": "", "type": "bool"}
+                ]
+            }]
+            let value = $('#createTxValue').val()
+            let contract = new web3js.eth.Contract(abi, $('#createTxTokenContract').val())
+            let transaction = contract.methods.transfer($('#createTxToAddress').val(), web3js.utils.toWei(value))
+
+            let gastimate = await transaction.estimateGas({ gas: 5000000, from: localStorage.getItem('IntMediumAddress') })
+            if (gastimate === 5000000) {
+                $('#errorText').text('Contract would run out of gas')
+                $('#errorBanner').show()
+                return console.error(err)
+            }
+
+            let options = {
+                from: window.localStorage.getItem('IntMediumAddress'),
+                to: contract._address,
+                data: transaction.encodeABI(),
+                gas: web3js.utils.toBN(gastimate)
+            }
+            let signedTx = await web3js.eth.accounts.signTransaction(options, window.localStorage.getItem('IntMediumPrivateKey'))
+            let receipt = await web3js.eth.sendSignedTransaction(signedTx.rawTransaction)
+            $('#successBanner').show()
+            
+            // Update ESAT balance in UI
+            let newBalance = web3js.eth.getBalance(userAddress, "pending")
+            $('#esatBalance').text(web3js.utils.fromWei(newBalance))
+
             // Callback with transaction data IF callback is defined
             const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
             if (params.get('callbackUrl') !== null) {
                 console.log('Invoking callback')
-                sendTransaction(callbackUrl, result)
+                sendTransaction(callbackUrl, receipt)
             }
-        })
-    $('#createTxModal').hide()
+            $('#createTxModal').hide()
+            return
+        }
+
+        if (option === "3") {
+            return console.log('Contract invocations not yet implemented')
+        }
+    
+        // Sign the transaction
+        web3js.eth.accounts.signTransaction(
+            tx,
+            window.localStorage.getItem('IntMediumPrivateKey'),
+            (err, result) => {
+                if (err) return console.error(err)
+                // Broadcast the transaction
+                web3js.eth.sendSignedTransaction(result.rawTransaction,
+                    (err, result) => {
+                        if (err) {
+                            $('#errorText').text(err)
+                            $('#errorBanner').show()
+                            return console.error(err)
+                        }
+                        $('#successBanner').show()
+                        
+                        // Update balance in UI
+                        web3js.eth.getBalance(
+                          userAddress,
+                          "pending",
+                          function(err, res)  {
+                              if (err) return console.error(err)
+                              $('#esatBalance').text(web3js.utils.fromWei(res))
+                          })
+    
+                    })
+                // Callback with transaction data IF callback is defined
+                const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
+                if (params.get('callbackUrl') !== null) {
+                    console.log('Invoking callback')
+                    sendTransaction(callbackUrl, result)
+                }
+            })
+        $('#createTxModal').hide()
+
+    } catch (err) {
+        $('#errorText').text(err)
+        $('#errorBanner').show()
+        console.error(err)
+    }
 })
 
 $('.cancelSignMessage').on('click', function() {
