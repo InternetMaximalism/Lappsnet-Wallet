@@ -266,7 +266,22 @@ $('.signTxBtn').on('click', function() {
                 $('#errorBanner').show()
                 return console.error(err)
             }
-            web3js.eth.sendSignedTransaction(result.rawTransaction)
+            web3js.eth.sendSignedTransaction(result.rawTransaction,
+                (err, result) => {
+                    if (err) {
+                        $('#errorText').text(err)
+                        $('#errorBanner').show()
+                        return console.error(err)
+                    }
+                    // Update balance in UI
+                    web3js.eth.getBalance(
+                      userAddress,
+                      "latest",
+                      function(err, res)  {
+                          if (err) return console.error(err)
+                          $('#esatBalance').text(web3js.utils.fromWei(res))
+                      })
+                })
             sendTransaction(callbackUrl, result)
             $('#signTxModal').hide()
             alert('Transaction sent, application notified')
@@ -339,6 +354,16 @@ $('.createTxBtn').on('click', function() {
                         return console.error(err)
                     }
                     $('#successBanner').show()
+                    
+                    // Update balance in UI
+                    web3js.eth.getBalance(
+                      userAddress,
+                      "latest",
+                      function(err, res)  {
+                          if (err) return console.error(err)
+                          $('#esatBalance').text(web3js.utils.fromWei(res))
+                      })
+
                 })
             // Callback with transaction data IF callback is defined
             const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
