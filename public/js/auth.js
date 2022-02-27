@@ -13,6 +13,13 @@ $('#recoverModal').hide()
 $('#signMessageModal').hide()
 $('#signTxModal').hide()
 $('#createTxModal').hide()
+$('#createTxTokenContractForm').hide()
+$('#createTxFromAddressForm').hide()
+$('#createTxToAddressForm').hide()
+$('#createTxValueForm').hide()
+$('#createTxDataForm').hide()
+$('#createTxGasLimitForm').hide()
+$('#successBanner').hide()
 
 if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
     alert('Your browser does not support credential management API')
@@ -210,7 +217,7 @@ $('.continueWithAccount').on('click', function() {
     }
     // If query is to createTx, show txBuilder
     if (params.get('createTx') === 'true') {
-        alert('show tx builder form')
+        $('#createTxModal').show()
         return
     }
     // If no query, tell user no action was specified
@@ -237,10 +244,82 @@ $('.signTxBtn').on('click', function() {
         window.localStorage.getItem('IntMediumPrivateKey'),
         (err, result) => {
             if (err) return console.error(err)
+            web3js.eth.sendSignedTransaction(result.rawTransaction)
             sendTransaction(callbackUrl, result)
             $('#signTxModal').hide()
             alert('callback to dapp with signed tx done')
         })
+})
+
+$('#createTxType').change(function() {
+    let option = $('option:selected').val()
+    if (option === "1") {
+        $('#createTxTokenContractForm').hide()
+        $('#createTxFromAddressForm').hide()
+        $('#createTxToAddressForm').show()
+        $('#createTxValueForm').show()
+        $('#createTxDataForm').hide()
+        $('#createTxGasLimitForm').show()
+        $('#createTxGasLimit').val('2000000')
+    }
+    if (option === "2") {
+        $('#createTxTokenContractForm').show()
+        $('#createTxFromAddressForm').show()
+        $('#createTxToAddressForm').hide()
+        $('#createTxValueForm').show()
+        $('#createTxDataForm').show()
+        $('#createTxGasLimitForm').show()
+    }
+    if (option === "3") {
+        $('#createTxTokenContractForm').show()
+        $('#createTxFromAddressForm').show()
+        $('#createTxToAddressForm').show()
+        $('#createTxValueForm').show()
+        $('#createTxDataForm').show()
+        $('#createTxGasLimitForm').show()
+    }
+})
+
+$('.createTxBtn').on('click', function() {
+    // Create the transaction based on txType
+    let option = $('option:selected').val()
+    if (!["1", "2", "3"].includes(option)) {
+        // txTpe not selected
+        return console.error('Select valid transaction type')
+    }
+    let tx = {}
+    if (option === "1") {
+        tx.to = $('#createTxToAddress').val()
+        tx.value = web3js.utils.toWei($('#createTxValue').val())
+        tx.gas = $('#createTxGasLimit').val()
+    }
+    if (option === "2") {
+        return console.log('ERC20 transactions not yet implemented')
+    }
+    if (option === "3") {
+        return console.log('Contract invocations not yet implemented')
+    }
+
+    // Sign the transaction
+    web3js.eth.accounts.signTransaction(
+        tx,
+        window.localStorage.getItem('IntMediumPrivateKey'),
+        (err, result) => {
+            if (err) return console.error(err)
+            // Broadcast the transaction
+            web3js.eth.sendSignedTransaction(result.rawTransaction,
+                (err, result) => {
+                    if (err) return console.error(err)
+                    $('#successBanner').show()
+                })
+            // Callback with transaction data
+            const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
+            if (params.get('callbackUrl') !== null) {
+                console.log('Invoking callback')
+                sendTransaction(callbackUrl, result)
+            }
+        })
+    $('#createTxModal').hide()
 })
 
 $('.cancelSignMessage').on('click', function() {
