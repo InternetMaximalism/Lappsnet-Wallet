@@ -131,8 +131,8 @@ async function createTokenTx (to, value) {
           "name": "transfer",
           "constant": false,
           "inputs": [
-              { "name": "recipient", "type": "address" },
-              { "name": "amount", "type": "uint256" }
+              { "name": "_to", "type": "address" },
+              { "name": "_value", "type": "uint256" }
           ],
           "outputs": [
               { "name": "", "type": "bool"}
