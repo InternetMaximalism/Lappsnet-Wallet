@@ -1,3 +1,24 @@
+/* newAccount.js - handles new account creation */
+$('.createNewAccount').on('click', function() {
+  // If currently logged in, log out first
+  if (window.localStorage.getItem('IntMediumPrivateKey')) {
+      // logout.logOutConf
+      return logOutConf()
+  }
+  // If not logged in, get rid of localStorage and proceed
+  window.localStorage.clear()
+  $('#connectLoginDetected').hide()
+  $('#connectLoginNotDetected').hide()
+  $('#accountRegistrationForm').show()
+})
+
+$('#newUsernameInput').on('change', function() {
+// Show spinner
+$('#registerAccountSpinner').show()
+// networking.checkUsernameAvailability
+checkUsernameAvailability($('#newUsernameInput').val())
+})
+
 $('#registerAccount').on('click', createNewAccount)
 
 async function createNewAccount () {

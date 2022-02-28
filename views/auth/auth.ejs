@@ -53,14 +53,6 @@
                 </button>
               </div>
     
-              <!-- Private key prompt -->
-              <div id="privKeyPrompt">
-                <button class="btn btn-primary" type="button" id="privKeyButton">
-                  <span id="privKeyGenCase">Create Address</span>
-                  <span id="privKeyTxCase">Sign Transaction</span>
-                </button>
-              </div>
-    
               <!-- Address display -->
               <div id="address">
                 <legend class="addressDisplay" id="addressText"></legend>
@@ -259,12 +251,19 @@
         </div>
       </div>
     </div>
-    <script src="/js/newAccount.js" type="text/javascript"></script>
-    <script src="/js/web3custom.js" type="text/javascript"></script>
-    <script src="/js/networking.js" type="text/javascript"></script>
-    <script src="/js/fidoTools.js" type="text/javascript"></script>
-    <script src="/js/auth.js" type="text/javascript"></script>
+    <script src="/js/utils/escapeHTML.js" type="text/javascript"></script>
+    <script src="/js/utils/web3custom.js" type="text/javascript"></script>
+    <script src="/js/utils/networking.js" type="text/javascript"></script>
+    <script src="/js/utils/fidoTools.js" type="text/javascript"></script>
+    <script src="/js/utils/copyAddress.js" type="text/javascript"></script>
+    <script src="/js/utils/init.js" type="text/javascript"></script>
+    <script src="/js/controllers/newAccount.js" type="text/javascript"></script>
+    <script src="/js/controllers/recoverAccount.js" type="text/javascript"></script>
+    <script src="/js/controllers/signTx.js" type="text/javascript"></script>
+    <script src="/js/controllers/createTx.js" type="text/javascript"></script>
+    <script src="/js/controllers/auth.js" type="text/javascript"></script>
     <script>
+      // Display page after all JS has loaded
       window.onload = function(e) {
         $('body').removeClass('hidden');
       }

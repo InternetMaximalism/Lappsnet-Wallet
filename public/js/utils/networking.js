@@ -1,8 +1,4 @@
-$('#newUsernameInput').on('change', function() {
-  // Show spinner
-  $('#registerAccountSpinner').show()
-  checkUsernameAvailability($('#newUsernameInput').val())
-})
+/* networking.js - handles requests to backend server */
 
 function checkUsernameAvailability (username) {
   // Query server for username availability on each input
