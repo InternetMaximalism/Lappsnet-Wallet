@@ -59,9 +59,11 @@ $('.createTxBtn').on('click', async function() {
       }
 
       if (option === "2") {
+          let abi = getAbi($('#createTxTokenContract').val())
           return createTokenTx(
               $('#createTxToAddress').val(),
-              web3js.utils.toWei($('#createTxValue').val())
+              web3js.utils.toWei($('#createTxValue').val(),
+              abi)
           )
       }
 
@@ -124,20 +126,22 @@ async function createNativeTx (to, value, gas) {
   }
 }
 
-async function createTokenTx (to, value) {
+async function createTokenTx (to, value, abi = null) {
   try {
-      let abi = [{
-          "type": "function",
-          "name": "transfer",
-          "constant": false,
-          "inputs": [
-              { "name": "_to", "type": "address" },
-              { "name": "_value", "type": "uint256" }
-          ],
-          "outputs": [
-              { "name": "", "type": "bool"}
-          ]
-      }]
+      if (abi === null) {
+        abi = [{
+            "type": "function",
+            "name": "transfer",
+            "constant": false,
+            "inputs": [
+                { "name": "_to", "type": "address" },
+                { "name": "_value", "type": "uint256" }
+            ],
+            "outputs": [
+                { "name": "", "type": "bool"}
+            ]
+        }]
+      }
       let contract = new web3js.eth.Contract(abi, $('#createTxTokenContract').val())
       let transaction = contract.methods.transfer(to, web3js.utils.toWei(value))
 
@@ -159,6 +163,8 @@ async function createTokenTx (to, value) {
       // Update ESAT balance in UI
       let newBalance = await web3js.eth.getBalance(userAddress, "pending")
       $('#esatBalance').text(web3js.utils.fromWei(newBalance))
+      // Update token balances and reflect in UI
+      tokenList = await getTokenBalances(userAddress)
 
       // Callback with transaction data IF callback is defined
       const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
@@ -178,3 +184,24 @@ async function createTokenTx (to, value) {
       $('#createTxBtn').attr('disabled', false)
   }
 }
+
+$('#collapseTokenList').on('click', '.tokenListItem', async function() {
+  try {
+      $('#createTxModal').show()
+      $('#createTxType').val("2")
+
+      $('#createTxTokenContractForm').show()
+      $('#createTxFromAddressForm').hide()
+      $('#createTxToAddressForm').show()
+      $('#createTxValueForm').show()
+      $('#createTxDataForm').hide()
+      $('#createTxGasLimitForm').hide()
+
+      let tokenData = queryTokenList(tokenList, this.id)
+      $('#createTxTokenContract').val(tokenData.contractAddress)
+      $('#createTxTokenContract').attr('disabled', 'true')
+
+  } catch (err) {
+      console.error(err)
+  }
+})
