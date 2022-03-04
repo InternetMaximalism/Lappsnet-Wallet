@@ -50,12 +50,13 @@ function queryTokenList (tokenList, symbol) {
 /* Return ABI for given verified contract */
 async function getAbi (contractAddress) {
     try {
-        let abi = await ($.get('https://explorer.intmedium.xyz/api?module=contract&action=getabi&address='.concat(contractAddress))).result
+        let abi = (await $.get('https://explorer.intmedium.xyz/api?module=contract&action=getabi&address='.concat(contractAddress))).result
         if (abi === null) {
             return null
         }
+        console.log(`ABI returned: ${abi}`)
         // Otherwise, return abi as object
-        return JSON.parse(abi)
+        return abi
     } catch (err) {
         console.error(err)
     }

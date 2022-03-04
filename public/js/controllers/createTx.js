@@ -128,6 +128,7 @@ async function createNativeTx (to, value, gas) {
 
 async function createTokenTx (to, value, abi = null) {
   try {
+    console.log(abi)
       if (abi === null) {
         abi = [{
             "type": "function",
@@ -198,6 +199,7 @@ $('#collapseTokenList').on('click', '.tokenListItem', async function() {
       $('#createTxGasLimitForm').hide()
 
       let tokenData = queryTokenList(tokenList, this.id)
+      console.log(tokenData)
       $('#createTxTokenContract').val(tokenData.contractAddress)
       $('#createTxTokenContract').attr('disabled', 'true')
 
