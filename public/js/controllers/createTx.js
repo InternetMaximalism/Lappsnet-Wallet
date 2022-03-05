@@ -46,7 +46,7 @@ $('.createTxBtn').on('click', async function() {
           $('#createTxModal').hide()
           $('#createTxSpinner').hide()
           $('#createTxBtn').attr('disabled', false)
-          return console.error('Select valid transaction type')
+          throw Error('Select valid transaction type')
       }
       let tx = {}
 
@@ -59,12 +59,11 @@ $('.createTxBtn').on('click', async function() {
       }
 
       if (option === "2") {
-          let abi = getAbi($('#createTxTokenContract').val())
+          let abi = await getAbi($('#createTxTokenContract').val())
           return createTokenTx(
               $('#createTxToAddress').val(),
-              web3js.utils.toWei($('#createTxValue').val(),
+              web3js.utils.toWei($('#createTxValue').val()),
               abi)
-          )
       }
 
       if (option === "3") {
@@ -128,21 +127,24 @@ async function createNativeTx (to, value, gas) {
 
 async function createTokenTx (to, value, abi = null) {
   try {
-    console.log(abi)
+      abi = JSON.parse(abi)
+      let defaultAbi = [{
+          "type": "function",
+          "name": "transfer",
+          "constant": false,
+          "inputs": [
+              { "name": "_to", "type": "address" },
+              { "name": "_value", "type": "uint256" }
+          ],
+          "outputs": [
+              { "name": "", "type": "bool" }
+          ]
+      }]
       if (abi === null) {
-        abi = [{
-            "type": "function",
-            "name": "transfer",
-            "constant": false,
-            "inputs": [
-                { "name": "_to", "type": "address" },
-                { "name": "_value", "type": "uint256" }
-            ],
-            "outputs": [
-                { "name": "", "type": "bool"}
-            ]
-        }]
+        abi = defaultAbi
       }
+      console.log(`DefaultABI: ${defaultAbi}`)
+      console.log(`ABI: ${abi}`)
       let contract = new web3js.eth.Contract(abi, $('#createTxTokenContract').val())
       let transaction = contract.methods.transfer(to, web3js.utils.toWei(value))
 

@@ -64,7 +64,6 @@ async function getAbi (contractAddress) {
         if (abi === null) {
             return null
         }
-        console.log(`ABI returned: ${abi}`)
         // Otherwise, return abi as object
         return abi
     } catch (err) {
