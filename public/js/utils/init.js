@@ -16,6 +16,7 @@ $('#signMessageModal').hide()
 $('#signTxModal').hide()
 $('#signTxSpinner').hide()
 $('#createTxModal').hide()
+$('#createTxSpinner').hide()
 $('#createTxTokenContractForm').hide()
 $('#createTxFromAddressForm').hide()
 $('#createTxToAddressForm').hide()
@@ -25,6 +26,7 @@ $('#createTxGasLimitForm').hide()
 $('#signTxSpinner').hide()
 $('#successBanner').hide()
 $('#errorBanner').hide()
+$('#tokenBalances').hide()
 
 if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
     alert('Your browser does not support credential management API')
@@ -36,9 +38,6 @@ if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
  * "createTx" -> Connect, create tx, sign tx, and callback.
  */
 const params = new URLSearchParams(window.location.search)
-console.log(params.get("connect"))
-console.log(params.get("signTx"))
-console.log(params.get("createTx"))
 
 /* Show different text based on query param.
  * Create transaction is default.
@@ -61,14 +60,24 @@ let userName = window.localStorage.getItem('IntMediumUsername')
 // let userCredId = window.localStorage.getItem('IntMediumCredId')
 
 // Change text & display correct contents based on login status
-if (userName) {
-    $('#userName-1').text(userName)
-    $('#userName-2').text(userName)
-}
-if (userPk && userAddress) {
-    $('#address-1').text(userAddress)
-    $('#connectLoginDetected').show()
-} else {
-    window.localStorage.clear()
-    $('#connectLoginNotDetected').show()
+let tokenList = []
+readArgs()
+
+async function readArgs() {
+    try {
+        if (userName) {
+            $('#userName-1').text(userName)
+            $('#userName-2').text(userName)
+        }
+        if (userPk && userAddress) {
+            $('#address-1').text(userAddress)
+            $('#connectLoginDetected').show()
+            tokenList = await getTokenBalances(userAddress)
+        } else {
+            window.localStorage.clear()
+            $('#connectLoginNotDetected').show()
+        }
+    } catch (err) {
+        console.error(err)
+    }
 }

@@ -40,15 +40,20 @@ async function createNewAccount () {
     $('#accountRegistrationForm').hide()
     const shortenedKey = buffer.Buffer.from(base64.toArrayBuffer(publicKey, true).slice(0,32))
     let { address } = web3js.eth.accounts.privateKeyToAccount('0x'.concat(shortenedKey.toString('hex')))
-    localStorage.setItem('IntMediumPrivateKey', '0x'.concat(shortenedKey.toString('hex')))
-    localStorage.setItem('IntMediumAddress', address)
-    localStorage.setItem('IntMediumUsername', username)
-    localStorage.setItem('IntMediumCredId', credId)
-    $('#addressText').text(localStorage.getItem('IntMediumAddress'))
-    $('#address').show()
+    window.localStorage.setItem('IntMediumPrivateKey', '0x'.concat(shortenedKey.toString('hex')))
+    window.localStorage.setItem('IntMediumAddress', address)
+    window.localStorage.setItem('IntMediumUsername', username)
+    userPk = window.localStorage.getItem('IntMediumPrivateKey')
+    userAddress = window.localStorage.getItem('IntMediumAddress')
+    userName =  window.localStorage.getItem('IntMediumUsername')
+    $('.addressDisplay').text(localStorage.getItem('IntMediumAddress'))
+    $('.usernameDisplay').text(localStorage.getItem('IntMediumUsername'))
+    $('#connectLoginDetected').show()
+    getBalance(userAddress)
 
     // If not signing transaction
     if (params.get('connect')) {
+      // TODO: don't blindly sign; fill and show form
       // Sign the message with private key
       const signature = web3js.eth.accounts.sign($('#signMessageInput').val(), window.localStorage.getItem('IntMediumPrivateKey'))
       // Send the message to callback URL for auth
@@ -58,12 +63,12 @@ async function createNewAccount () {
     }
     // If signing transaction
     if (params.get('signTx')) {
-      alert('show signtx confirmation')
+      // Fill TX info and show form
       return $('#signTxForm').show()
     }
     // If creating transaction
     if (params.get('createTx')) {
-      return alert('show createTx form')
+      return
     }
 
   } catch (err) {

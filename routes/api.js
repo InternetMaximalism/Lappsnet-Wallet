@@ -17,7 +17,6 @@ router.post('/checkUsername', async (req, res, next) => {
       'SELECT * FROM "Users" WHERE username = $1',
       [ req.body.username ]
     )
-    console.log(rows)
     if (rows.length === 0) {
       // No user with requested name, all OK
       return res.status(200).json({ available: true })
