@@ -49,7 +49,7 @@ $('.continueWithAccount').on('click', function() {
       $('#createTxModal').show()
       return
   }
-  // If no query, default to createTx
+  // If no query, show full UI
   $('#createTxModal').show()
   return
 })

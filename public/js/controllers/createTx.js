@@ -24,14 +24,6 @@ $('#createTxType').change(function() {
       $('#createTxDataForm').hide()
       $('#createTxGasLimitForm').hide()
   }
-  if (option === "3") {
-      $('#createTxTokenContractForm').show()
-      $('#createTxFromAddressForm').show()
-      $('#createTxToAddressForm').show()
-      $('#createTxValueForm').show()
-      $('#createTxDataForm').show()
-      $('#createTxGasLimitForm').show()
-  }
 })
 
 $('.createTxBtn').on('click', async function() {
@@ -41,7 +33,7 @@ $('.createTxBtn').on('click', async function() {
       $('#errorBanner').hide()
       // Create the transaction based on txType
       let option = $('option:selected').val()
-      if (!["1", "2", "3"].includes(option)) {
+      if (!["1", "2"].includes(option)) {
           // txType not selected
           $('#createTxModal').hide()
           $('#createTxSpinner').hide()
@@ -64,13 +56,6 @@ $('.createTxBtn').on('click', async function() {
               $('#createTxToAddress').val(),
               web3js.utils.toWei($('#createTxValue').val()),
               abi)
-      }
-
-      if (option === "3") {
-          $('#createTxModal').hide()
-          $('#createTxSpinner').hide()
-          $('#createTxBtn').attr('disabled', false)
-          return console.log('Contract invocations not yet implemented')
       }
 
   } catch (err) {

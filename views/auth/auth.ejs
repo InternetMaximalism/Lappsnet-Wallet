@@ -191,7 +191,6 @@
                                 <option default>Choose type...</option>
                                 <option value="1">Sending ESAT</option>
                                 <option value="2">Sending token</option>
-                                <option value="3" disabled>Calling contract</option>
                               </select>
                             </div>
                           </div>
@@ -252,6 +251,69 @@
                         Sign & Send
                       </button>
                       <button type="button" class="btn btn-secondary cancelCreateTx" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Contract call modal -->
+              <div class="modal" id="contractCallModal">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Call Contract</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form>
+                        <fieldset>
+                          <legend class="mb-3">Make a contract call.</legend>
+                          <div class="col-sm-4">
+                            <label for="contractAddress">Contract address</label>
+                          </div>
+                          <div class="col-sm-6">
+                            <input type="text" id="contractAddress"></input>
+                          </div>
+                          <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary" id="loadContract">
+                            Load</button>
+                          </div>
+                          <div id="methodList">
+
+                          </div>
+                        </fieldset>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary contractCallBtn">
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="contractCallSpinner"></span>
+                        Call</button>
+                      <button type="button" class="btn btn-secondary cancelContractCall" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Contract call confirmation modal -->
+                <div class="modal" id="confirmContractCallModal">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Confirm contract call</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Make contract call?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary confirmCallBtn">
+                          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="confirmCallSpinner"></span>
+                          Enter</button>
+                        <button type="button" class="btn btn-secondary cancelConfirmCall" data-bs-dismiss="modal">Cancel</button>
+                      </div>
                     </div>
                   </div>
                 </div>

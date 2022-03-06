@@ -27,6 +27,7 @@ $('#signTxSpinner').hide()
 $('#successBanner').hide()
 $('#errorBanner').hide()
 $('#tokenBalances').hide()
+$('#contractCallModal').hide()
 
 if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
     alert('Your browser does not support credential management API')
@@ -43,15 +44,16 @@ const params = new URLSearchParams(window.location.search)
  * Create transaction is default.
  */
 $('.actionType').text('Connect')
-if (params.get("createTx") === "true" ||
-    (params.get("signTx") !== "true" && params.get("connect") !== "true")) {
+if (params.get("createTx") === "true") {
     $('.actionType').text('Create Transaction')
-}
-if (params.get("signTx") === "true") {
+} else if (params.get("signTx") === "true") {
     $('.actionType').text('Sign Transaction')
-}
-if (params.get("connect") === "true") {
+} else if (params.get("connect") === "true") {
     $('.actionType').text('Connect Wallet')
+} else if (params.get("contractCall") === "true") {
+    // Show contract call form
+} else {
+
 }
 
 let userPk = window.localStorage.getItem('IntMediumPrivateKey')
