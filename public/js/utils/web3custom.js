@@ -3,7 +3,7 @@ let web3js;
 function initWeb3 () {
   console.log('Loading web3js')
   web3js = new Web3('https://rpc.intmedium.xyz')
-  // After web3js initialized, get user ESAT balance
+  // After web3js initialized, get user balances
   if (userAddress) {
       getBalance(userAddress)
   }
@@ -11,6 +11,7 @@ function initWeb3 () {
 
 window.addEventListener('load', initWeb3)
 
+/* Get balance of SAT token and other tokens */
 async function getBalance (address) {
     try {
         web3js.eth.getBalance(
@@ -20,11 +21,13 @@ async function getBalance (address) {
                 if (err) return console.error(err)
                 $('#esatBalance').text(web3js.utils.fromWei(res))
             })
+        getTokenBalances(address)
     } catch (err) {
         console.error(err)
     }
 }
 
+/* Get balances of tokens */
 async function getTokenBalances (address) {
     try {
         let tokenList = (await $.get('https://explorer.intmedium.xyz/api?module=account&action=tokenlist&address='.concat(address))).result

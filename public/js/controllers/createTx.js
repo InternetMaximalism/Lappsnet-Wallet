@@ -1,6 +1,10 @@
 /* createTx.js - create and sign transaction */
 // Display the fields relevant to chosen option
 
+$('.createTxTopBtn').on('click', function() {
+    $('#createTxModal').show()
+})
+
 $('.cancelCreateTx').on('click', function() {
   $('#createTxModal').hide()
 })
@@ -128,8 +132,6 @@ async function createTokenTx (to, value, abi = null) {
       if (abi === null) {
         abi = defaultAbi
       }
-      console.log(`DefaultABI: ${defaultAbi}`)
-      console.log(`ABI: ${abi}`)
       let contract = new web3js.eth.Contract(abi, $('#createTxTokenContract').val())
       let transaction = contract.methods.transfer(to, web3js.utils.toWei(value))
 

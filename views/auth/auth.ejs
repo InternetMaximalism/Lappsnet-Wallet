@@ -12,6 +12,7 @@
           <div class="col-sm-12 align-self-center">
               <div class="alert alert-success" role="alert" id="successBanner">
                 <strong>Success!</strong>
+                <p id="successMessage"></p>
               </div>
               <div class="alert alert-danger" role="alert" id="errorBanner">
                 <strong>Error!</strong>. <span id="errorText"></span>
@@ -30,12 +31,20 @@
                 <p class="m-1">Already have one? <strong class="recoverAccount strongBtn">Recover account</strong></p>
                 <p class="mt-4 text-center"><a href="/"><strong class="navBtn">About</strong></a></p>
               </div>
+
+              <!-- Continue with account? -->
+              <div id="continueWithAccountConfirmation">
+                <ul>
+                  <p>Continue as user <code class="usernameDisplay" id="userName-1"></code>, address <code class="addressDisplay" id="address-1"></code> ?</p>
+                  <li class="btn btn-success m-1 confirmAccount"><span class="actionType"></span></li><br>
+                  <li class="btn btn-secondary m-1 signOut">Sign out</li>
+              </div>
     
               <!-- If IntMedium account detected -->
               <div id="connectLoginDetected">
                 <ul>
                   <p>You are signed in as user <code class="usernameDisplay" id="userName-1"></code>, address <code class="addressDisplay" id="address-1"></code></p>
-                  <p>SAT balance: <span id="esatBalance"></span></p>
+                  <p>SAT balance: <span id="esatBalance"></span> (<a href="https://web.intmedium.xyz/" target="_blank">get more</a>)</p>
                   <div id="tokenBalances" class="m-1">
                     <p data-toggle="collapse" data-target="#collapseTokenList" aria-expanded="false" aria-controls="collapseTokenList">
                       <span id="tokenCount"></span> other tokens (<strong class="strongBtn">click to show</strong>)
@@ -44,10 +53,10 @@
                       
                     </div>
                   </div>
-                  <li class="btn btn-success m-1 continueWithAccount"><span class="actionType"></span></li><br>
-                  <li class="btn btn-warning m-1 signOut">Sign out</li>
+                  <li class="btn btn-success m-1 createTxTopBtn"><span>Create transaction</span></li><br>
+                  <li class="btn btn-primary m-1 contractCallTopBtn"><span>Make contract call</span></li><br>
+                  <li class="btn btn-secondary m-1 signOut">Sign out</li>
                 </ul>
-                <p class="m-1">Use a different one: <strong class="recoverAccount strongBtn">Recover account</strong></p>
                 <p class="m-1">Tired of this one? <strong class="createNewAccount strongBtn">Create new account</strong></p>
                 <p class="mt-4 text-center"><a href="/"><strong class="navBtn">About</strong></a></p>
               </div>
@@ -60,11 +69,6 @@
                   <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="registerAccountSpinner"></span>
                   Create account
                 </button>
-              </div>
-    
-              <!-- Address display -->
-              <div id="address">
-                <legend class="addressDisplay" id="addressText"></legend>
               </div>
           
               <!-- Switch to different account -->
@@ -80,9 +84,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">Sign out?</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"></span>
-                      </button>
+                      
                     </div>
                     <div class="modal-body">
                       <p>You MUST back up your account before signing out, otherwise you WILL lose funds.</p>
@@ -104,9 +106,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">Enter recovery key</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"></span>
-                      </button>
+                      
                     </div>
                     <div class="modal-body">
                       <p>Paste your recovery key below and press button</p>
@@ -126,9 +126,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">Sign message</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"></span>
-                      </button>
+                      
                     </div>
                     <div class="modal-body">
                       <p>Sign the below message to complete the action.</p>
@@ -149,9 +147,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">Sign transaction</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"></span>
-                      </button>
+                      
                     </div>
                     <div class="modal-body">
                       <p>Sign the below transaction?</p>
@@ -174,9 +170,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">Create transaction</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"></span>
-                      </button>
+                      
                     </div>
                     <div class="modal-body">
                       <form>
@@ -187,9 +181,9 @@
                               <label for="createTxType">Transaction type</label>
                             </div>
                             <div class="col-sm-8">
-                              <select id="createTxType">
+                              <select class="form-group form-control w-100" id="createTxType">
                                 <option default>Choose type...</option>
-                                <option value="1">Sending ESAT</option>
+                                <option value="1">Sending SAT</option>
                                 <option value="2">Sending token</option>
                               </select>
                             </div>
@@ -199,7 +193,7 @@
                               <label for="createTxTokenContract">(Token) contract address</label>
                             </div>
                             <div class="col-sm-8">
-                              <input type="text" id="createTxTokenContract"></input>
+                              <input type="text" class="form-control w-100" id="createTxTokenContract"></input>
                             </div>
                           </div>
                           <div class="form-group row formRow" id="createTxFromAddressForm">
@@ -207,7 +201,7 @@
                               <label for="createTxFromAddress">Sender address</label>
                             </div>
                             <div class="col-sm-8">
-                              <input type="text" id="createTxFromAddress"></input>
+                              <input type="text" class="form-control w-100" id="createTxFromAddress"></input>
                             </div>
                           </div>
                           <div class="form-group row formRow" id="createTxToAddressForm">
@@ -215,7 +209,7 @@
                               <label for="createTxToAddress">Destination address</label>
                             </div>
                             <div class="col-sm-8">
-                              <input type="text" id="createTxToAddress"></input>
+                              <input type="text" class="form-control w-100" id="createTxToAddress"></input>
                             </div>
                           </div>
                           <div class="form-group row formRow" id="createTxValueForm">
@@ -223,7 +217,7 @@
                               <label for="createTxValue">Transaction Value (in tokens)</label>
                             </div>
                             <div class="col-sm-8">
-                              <input type="text" id="createTxValue"></input>
+                              <input type="text" class="form-control w-100" id="createTxValue"></input>
                             </div>
                           </div>
                           <div class="form-group row formRow" id="createTxDataForm">
@@ -231,7 +225,7 @@
                               <label for="createTxData">Transaction Data</label>
                             </div>
                             <div class="col-sm-8">
-                              <input type="text" id="createTxData"></input>
+                              <input type="text" class="form-control w-100" id="createTxData"></input>
                             </div>
                           </div>
                           <div class="form-group row formRow" id="createTxGasLimitForm">
@@ -239,7 +233,7 @@
                               <label for="createTxGasLimit">Gas Limit (in wei)</label>
                             </div>
                             <div class="col-sm-8">
-                              <input type="text" id="createTxGasLimit"></input>
+                              <input type="text" class="form-control w-100" id="createTxGasLimit"></input>
                             </div>
                           </div>
                         </fieldset>
@@ -262,25 +256,35 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">Call Contract</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"></span>
-                      </button>
+                      
                     </div>
                     <div class="modal-body">
                       <form>
                         <fieldset>
                           <legend class="mb-3">Make a contract call.</legend>
-                          <div class="col-sm-4">
-                            <label for="contractAddress">Contract address</label>
+                          <div class="row">
+                            <div class="col-sm-4">
+                              <label for="contractAddress">Contract address</label>
+                            </div>
+                            <div class="col-sm-5">
+                              <input type="text" class="form-control w-100" id="contractAddress"></input>
+                            </div>
+                            <div class="col-sm-3">
+                              <button type="button" class="btn btn-primary" id="loadContract">
+                              Load</button>
+                            </div>
                           </div>
-                          <div class="col-sm-6">
-                            <input type="text" id="contractAddress"></input>
+                          <div class="row">
+                            <div class="col-sm-4">
+                              <label for="methodSelector">Choose method</label>
+                            </div>
+                            <div class="col-sm-8">
+                              <select class="form-control w-100" id="methodSelector">
+    
+                              </select>
+                            </div>
                           </div>
-                          <div class="col-sm-2">
-                            <button type="button" class="btn btn-primary" id="loadContract">
-                            Load</button>
-                          </div>
-                          <div id="methodList">
+                          <div class="m-0 p-0" id="inputList">
 
                           </div>
                         </fieldset>
@@ -294,26 +298,25 @@
                     </div>
                   </div>
                 </div>
-
-                <!-- Contract call confirmation modal -->
-                <div class="modal" id="confirmContractCallModal">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">Confirm contract call</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true"></span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <p>Make contract call?</p>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary confirmCallBtn">
-                          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="confirmCallSpinner"></span>
-                          Enter</button>
-                        <button type="button" class="btn btn-secondary cancelConfirmCall" data-bs-dismiss="modal">Cancel</button>
-                      </div>
+              </div>
+              <!-- Contract call confirmation modal -->
+              <div class="modal" id="confirmContractCallModal">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Confirm contract call</h5>
+                      
+                    </div>
+                    <div class="modal-body">
+                      <p>Make contract call?</p>
+                      <code class="confirmContractCallContents"></code>
+                      <p>Estimated gas: <code id="estimatedCallGas"></code></p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary confirmCallBtn">
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="confirmCallSpinner"></span>
+                        Enter</button>
+                      <button type="button" class="btn btn-secondary cancelConfirmCall" data-bs-dismiss="modal">Cancel</button>
                     </div>
                   </div>
                 </div>
@@ -332,6 +335,7 @@
     <script src="/js/controllers/recoverAccount.js" type="text/javascript"></script>
     <script src="/js/controllers/signTx.js" type="text/javascript"></script>
     <script src="/js/controllers/createTx.js" type="text/javascript"></script>
+    <script src="/js/controllers/contractCall.js" type="text/javascript"></script>
     <script src="/js/controllers/auth.js" type="text/javascript"></script>
     <script>
       // Display page after all JS has loaded

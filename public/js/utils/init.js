@@ -1,4 +1,7 @@
-/* init.js Initializes components on the page and checks for browser support */
+/* init.js Initializes components on the page and checks for browser support
+ * If user is logged in, handles query string to show proper form
+ * If user is not logged in, shows options to register or recover account
+ */
 
 $('#connectLoginDetected').hide()
 $('#connectLoginNotDetected').hide()
@@ -28,9 +31,39 @@ $('#successBanner').hide()
 $('#errorBanner').hide()
 $('#tokenBalances').hide()
 $('#contractCallModal').hide()
+$('#contractCallSpinner').hide()
+$('#confirmCallSpinner').hide()
+$('#continueWithAccountConfirmation').hide()
+$("#methodSelector").hide()
 
 if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
     alert('Your browser does not support credential management API')
+}
+
+// Change text & display correct contents based on login status
+let userPk = window.localStorage.getItem('IntMediumPrivateKey')
+let userAddress = window.localStorage.getItem('IntMediumAddress')
+let userName = window.localStorage.getItem('IntMediumUsername')
+let tokenList = []
+loadWalletUI()
+async function loadWalletUI () {
+    try {
+        if (!(window.localStorage.getItem('IntMediumPrivateKey')
+              && window.localStorage.getItem('IntMediumAddress'))) {
+            // Not logged in, show login prompt
+            window.localStorage.clear()
+            $('#connectLoginNotDetected').show()
+            return
+        } else {
+            // Logged in, show continuation prompt
+            $('.usernameDisplay').text(window.localStorage.getItem('IntMediumUsername'))
+            $('.addressDisplay').text(window.localStorage.getItem('IntMediumAddress'))
+            $('#continueWithAccountConfirmation').show()
+            tokenList = await getTokenBalances(window.localStorage.getItem('IntMediumAddress'))
+        }
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 /* URL query parameters: Used to determine task.
@@ -43,7 +76,7 @@ const params = new URLSearchParams(window.location.search)
 /* Show different text based on query param.
  * Create transaction is default.
  */
-$('.actionType').text('Connect')
+$('.actionType').text('Continue')
 if (params.get("createTx") === "true") {
     $('.actionType').text('Create Transaction')
 } else if (params.get("signTx") === "true") {
@@ -51,35 +84,18 @@ if (params.get("createTx") === "true") {
 } else if (params.get("connect") === "true") {
     $('.actionType').text('Connect Wallet')
 } else if (params.get("contractCall") === "true") {
-    // Show contract call form
+    $('.actionType').text('Call Contract')
 } else {
 
 }
 
-let userPk = window.localStorage.getItem('IntMediumPrivateKey')
-let userAddress = window.localStorage.getItem('IntMediumAddress')
-let userName = window.localStorage.getItem('IntMediumUsername')
-// let userCredId = window.localStorage.getItem('IntMediumCredId')
+function hideWalletOptions () {
+    $('.createTxTopBtn').hide()
+    $('.contractCallTopBtn').hide()
+    $('.continueWithAccount').hide()
+}
 
-// Change text & display correct contents based on login status
-let tokenList = []
-readArgs()
-
-async function readArgs() {
-    try {
-        if (userName) {
-            $('#userName-1').text(userName)
-            $('#userName-2').text(userName)
-        }
-        if (userPk && userAddress) {
-            $('#address-1').text(userAddress)
-            $('#connectLoginDetected').show()
-            tokenList = await getTokenBalances(userAddress)
-        } else {
-            window.localStorage.clear()
-            $('#connectLoginNotDetected').show()
-        }
-    } catch (err) {
-        console.error(err)
-    }
+function successMessage (message) {
+    $('#successBanner').show()
+    $('#successMessage').text(escapeHTML(message))
 }

@@ -1,8 +1,51 @@
-/* auth.js - handles connect wallet request */
+/* auth.js - handles user actions regarding sign in, sign up, recovery etc. */
 
-/* Initial state: Check for intMediumPrivateKey, intMediumAddress, intMediumUsername,
- * intMediumCredId in window.localStorage and show correct prompt/confirmation.
+/* When user chooses to continue with current account,
+ * hide confirmation, show wallet UI, and
+ * open relevant form
  */
+$('.confirmAccount').on('click', function() {
+  /* Hide confirmation form */
+  $('#continueWithAccountConfirmation').hide()
+  /* Show wallet UI in background */
+  $('#connectLoginDetected').show()
+
+  // If query is to connect, show nonce to sign
+  if (params.get('connect') === 'true') {
+    if (!params.get('nonce')) {
+      alert('Nonce not provided in query string')
+      return
+    }
+    $('#signMessageInput').val(escapeHTML(params.get("nonce")))
+    $('#signMessageModal').show()
+    return
+  }
+  // If query is to signTx, decode tx to string and show
+  if (params.get('signTx') === 'true') {
+    let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
+    let decoded = new TextDecoder().decode(ab).replace(/\//g, '\\/') // XSS mitigation
+    let data = JSON.stringify(decoded, null, 2)
+    $('#signTxInput').text(JSON.parse(data))
+    $('#signTxModal').show()
+    return
+  }
+  // If query is to createTx, show txBuilder
+  if (params.get('createTx') === 'true') {
+    $('#createTxModal').show()
+    return
+  }
+  // If query is to call contract, show contract call form
+  if (params.get('contractCall') === 'true') {
+    // If contractAddress is in params, plug it in
+    if (params.get('contractAddress')) {
+        getContractMethods(escapeHTML(params.get('contractAddress')))
+        return showContractCallModal({ contractAddress: escapeHTML(params.get('contractAddress'))})
+    }
+    return showContractCallModal()
+  }
+  // If no query, just show wallet UI
+  return
+})
 
 /* Cases to cover:
  * User is logged in -> (A) Create new account,
@@ -27,32 +70,6 @@
  * If signing TX, continue to sign TX UI.
  * Otherwise, callback.
  */
-
-$('.continueWithAccount').on('click', function() {
-  // If query is to connect, show nonce to sign
-  if (params.get('connect') === 'true') {
-      $('#signMessageInput').val(escapeHTML(params.get("nonce")))
-      $('#signMessageModal').show()
-      return
-  }
-  // If query is to signTx, decode tx to string and show
-  if (params.get('signTx') === 'true') {
-      let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
-      let decoded = new TextDecoder().decode(ab).replace(/\//g, '\\/') // XSS mitigation
-      let data = JSON.stringify(decoded, null, 2)
-      $('#signTxInput').text(JSON.parse(data))
-      $('#signTxModal').show()
-      return
-  }
-  // If query is to createTx, show txBuilder
-  if (params.get('createTx') === 'true') {
-      $('#createTxModal').show()
-      return
-  }
-  // If no query, show full UI
-  $('#createTxModal').show()
-  return
-})
 
 $('.signMessageBtn').on('click', function() {
   // Sign the message with private key

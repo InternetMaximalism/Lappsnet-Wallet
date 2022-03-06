@@ -79,9 +79,7 @@ $('.recoverBtn').on('click', function() {
   // Hide modal, show account
   $('#recoverModal').hide()
   $('#connectLoginNotDetected').hide()
-  $('#connectLoginDetected').show()
-  // Callback
-  alert('callback')
+  loadWalletUI()
 })
 
 $('.cancelRecovery').on('click', function() {
