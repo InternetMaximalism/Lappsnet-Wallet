@@ -67,9 +67,10 @@ You will see the result of a contract call in a success or error message at the 
 
 There are 5 operations available, all initiated by a user opening a link in a new tab.
 
-1. Connect wallet
+### Connect wallet
 
 Path: `https://<intmedium identity hostname>/auth`
+
 REQUIRED Query parameters: `connect=true`, `nonce=<nonce>`, `callbackUrl=<encodeURIComponent(callback url)>`
 
 Generate a nonce for each wallet connection attempt.
@@ -79,20 +80,24 @@ to the specified URL.
 
 Verify signature.
 
-2. Sign and broadcast transaction
+### Sign and broadcast transaction
 
 Path: `https://<intmedium-identity hostname>/auth`
+
 REQUIRED Query parameters: `signTx=true`, `txData=<base64URL encoded tx>`
+
 OPTIONAL Query parameters: `callbackUrl=<encodeURIComponent(callback url)>`
 
 The user is asked to sign and broadcast the transaction provided in the `txData` parameter.
 
 The `txhash` will be sent to the callback url if specified. Verify if necessary.
 
-3. Create transaction
+### Create transaction
 
 Path: `https://<intmedium-identity hostname>/auth`
+
 REQUIRED Query parameters: `createTx=true`
+
 OPTIONAL Query parameters: `amount=<number of tokens, NOT Wei>`, `to=<recipient address>`, `contractAddress=<ERC20 token contract>`,
 `callbackUrl=<encodeURIComponent(callback url)>`
 
@@ -103,10 +108,12 @@ All parameters given are entered in the form presented to the user, but the user
 Once the user creates, signs, and broadcasts their transaction, `txhash` will be sent to callback url if specified.
 Verify if necessary.
 
-4. Call contract (Contract MUST BE VERIFIED on [explorer](https://explorer.intmedium.xyz))
+### Call contract (Contract MUST BE VERIFIED on [explorer](https://explorer.intmedium.xyz))
 
 Path: `https://<intmedium-identity hostname>/auth`
+
 REQUIRED Query parameters: `callContract=true`
+
 OPTIONAL Query parameters: `contractAddress=<contract address>`
 
 You can send users to make contract calls on their own.
@@ -119,7 +126,7 @@ The user provides the necessary inputs, and a gas estimate is given for confirma
 The chosen method will be called using send() or call() depending on the method.
 The result is displayed to the user in a success or error banner.
 
-5. Open wallet
+### Open wallet
 
 Path: `https://<intmedium-identity hostname>/auth`
 
