@@ -65,52 +65,62 @@ You will see the result of a contract call in a success or error message at the 
 
 ## Integration instructions
 
-A dApp frontend wishing to integrate IntMedium Identity must follow these instructions:
+There are 5 operations available, all initiated by a user opening a link in a new tab.
 
 1. Connect wallet
 
-The method for connecting to a user's wallet is similar to other wallets.
+Path: `https://<intmedium identity hostname>/auth`
+REQUIRED Query parameters: `connect=true`, `nonce=<nonce>`, `callbackUrl=<encodeURIComponent(callback url)>`
 
-Start by generating a nonce for the connection attempt on the backend.
+Generate a nonce for each wallet connection attempt.
 
-Have the user open a tab to `<intmedium-identity hostname>/auth?connect=true&callbackUrl=<encodeURIComponent(callback url)>`.
+The user will follow the link, sign the nonce with their account, and a callback will return `{ signature, publicAddress }`
+to the specified URL.
 
-An example of `callback url` would be `<your-dapp hostname>/api/authentication`. Make sure CORS is allowed.
+Verify signature.
 
-The user will sign the nonce with their private key, and post `{ signature, publicAddress }` to `callback url`.
+2. Sign and broadcast transaction
 
-Verify signature, and sign user in as given address.
+Path: `https://<intmedium-identity hostname>/auth`
+REQUIRED Query parameters: `signTx=true`, `txData=<base64URL encoded tx>`
+OPTIONAL Query parameters: `callbackUrl=<encodeURIComponent(callback url)>`
 
-2. Sign transaction
+The user is asked to sign and broadcast the transaction provided in the `txData` parameter.
 
-You can pass a transaction to IntMedium Identity using query parameters, if it is not too big.
-
-Have the user open a tab to `<intmedium-identity hostname>/auth?signTx=true&txData=<base64URL encoded tx>&callbackUrl=<encodeURIComponent(callback url)>`.
-
-Once the user signs and broadcasts the transaction, `txhash` will be sent to `callback url`.
+The `txhash` will be sent to the callback url if specified. Verify if necessary.
 
 3. Create transaction
 
-You can also have the user create their own transaction.
+Path: `https://<intmedium-identity hostname>/auth`
+REQUIRED Query parameters: `createTx=true`
+OPTIONAL Query parameters: `amount=<number of tokens, NOT Wei>`, `to=<recipient address>`, `contractAddress=<ERC20 token contract>`,
+`callbackUrl=<encodeURIComponent(callback url)>`
 
-Have the user open a tab to `<intmedium-identity hostname>/auth?createTx=true`.
+The user is asked to create a transaction. Defaults to sending SATs (IntMedium's native token), unless `contractAddress` is specified.
 
-Additional arguments available: `callbackUrl=<encodeURIComponent(callback url)>`, `contractAddress=<address of ERC20 token contract>`,
-`amount=<number of tokens to send (NOT in Wei)>`, `to=<address to send tokens to>`.
+All parameters given are entered in the form presented to the user, but the user may edit these values.
 
-There, they will be able to craft/modify their own transaction, sign and broadcast it.
+Once the user creates, signs, and broadcasts their transaction, `txhash` will be sent to callback url if specified.
+Verify if necessary.
 
-If callbackUrl is specified, the transaction hash will be posted there.
-If the content of the transaction is crucial, you must verify it on your side, as the transaction can be changed by the user.
+4. Call contract (Contract MUST BE VERIFIED on [explorer](https://explorer.intmedium.xyz))
 
-4. Call contract
+Path: `https://<intmedium-identity hostname>/auth`
+REQUIRED Query parameters: `callContract=true`
+OPTIONAL Query parameters: `contractAddress=<contract address>`
 
 You can send users to make contract calls on their own.
 
-Have the user open a tab to `<intmedium-identity hostname>/auth?callContract=true`.
+If `contractAddress` is specified, the user will be shown a list of methods for that contract.
+Otherwise, the user must provide the contract address, after which a list of methods is loaded.
 
-Additional arguments available: `contractAddress=<contract account address>`.
+The user provides the necessary inputs, and a gas estimate is given for confirmation.
 
-The user will be presented with a list of methods, can fill in the arguments, and send() or call() depending on the method.
+The chosen method will be called using send() or call() depending on the method.
+The result is displayed to the user in a success or error banner.
 
-Callbacks are not supported.
+5. Open wallet
+
+Path: `https://<intmedium-identity hostname>/auth`
+
+Simply opens the wallet for the user to operate.
