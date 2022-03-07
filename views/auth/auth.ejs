@@ -181,11 +181,18 @@
                               <label for="createTxType">Transaction type</label>
                             </div>
                             <div class="col-sm-8">
-                              <select class="form-group form-control w-100" id="createTxType">
-                                <option default>Choose type...</option>
-                                <option value="1">Sending SAT</option>
-                                <option value="2">Sending token</option>
-                              </select>
+                              <div class="form-group" role="group">
+                                <div class="form-check-inline">
+                                  <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="selectTxType" id="satTxRadio" value="1">Send SAT
+                                  </label>
+                                </div>
+                                <div class="form-check-inline">
+                                  <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="selectTxType" id="tokenTxRadio" value="2">Send token
+                                  </label>
+                                </div>
+                              </div>
                             </div>
                           </div>
                           <div class="form-group row formRow" id="createTxTokenContractForm">

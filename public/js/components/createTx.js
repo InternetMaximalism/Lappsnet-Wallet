@@ -9,26 +9,30 @@ $('.cancelCreateTx').on('click', function() {
   $('#createTxModal').hide()
 })
 
-$('#createTxType').change(function() {
-  let option = $('option:selected').val()
-  if (option === "1") {
-      $('#createTxTokenContractForm').hide()
-      $('#createTxFromAddressForm').hide()
-      $('#createTxToAddressForm').show()
-      $('#createTxValueForm').show()
-      $('#createTxDataForm').hide()
-      $('#createTxGasLimitForm').show()
-      $('#createTxGasLimit').val('2000000')
-  }
-  if (option === "2") {
-      $('#createTxTokenContractForm').show()
-      $('#createTxFromAddressForm').hide()
-      $('#createTxToAddressForm').show()
-      $('#createTxValueForm').show()
-      $('#createTxDataForm').hide()
-      $('#createTxGasLimitForm').hide()
-  }
+$('input[name="selectTxType"]').change(function() {
+    let option = $('input[name="selectTxType"]:checked').val()
+    switchCreateTxFormType(option)
 })
+
+function switchCreateTxFormType (option) {
+    if (option === "1") {
+        $('#createTxTokenContractForm').hide()
+        $('#createTxFromAddressForm').hide()
+        $('#createTxToAddressForm').show()
+        $('#createTxValueForm').show()
+        $('#createTxDataForm').hide()
+        $('#createTxGasLimitForm').show()
+        $('#createTxGasLimit').val('2000000')
+    }
+    if (option === "2") {
+        $('#createTxTokenContractForm').show()
+        $('#createTxFromAddressForm').hide()
+        $('#createTxToAddressForm').show()
+        $('#createTxValueForm').show()
+        $('#createTxDataForm').hide()
+        $('#createTxGasLimitForm').hide()
+    }
+}
 
 $('.createTxBtn').on('click', async function() {
   try {
