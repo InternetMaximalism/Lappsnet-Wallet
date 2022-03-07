@@ -93,16 +93,24 @@ Once the user signs and broadcasts the transaction, `txhash` will be sent to `ca
 
 You can also have the user create their own transaction.
 
-Have the user open a tab to `<intmedium-identity hostname>/auth?createTx=true&callbackUrl=<encodeURIComponent(callback url)`.
+Have the user open a tab to `<intmedium-identity hostname>/auth?createTx=true`.
 
-There, they will be able to craft their own transaction, sign and broadcast it.
+Additional arguments available: `callbackUrl=<encodeURIComponent(callback url)>`, `contractAddress=<address of ERC20 token contract>`,
+`amount=<number of tokens to send (NOT in Wei)>`, `to=<address to send tokens to>`.
+
+There, they will be able to craft/modify their own transaction, sign and broadcast it.
 
 If callbackUrl is specified, the transaction hash will be posted there.
+If the content of the transaction is crucial, you must verify it on your side, as the transaction can be changed by the user.
 
 4. Call contract
 
 You can send users to make contract calls on their own.
 
 Have the user open a tab to `<intmedium-identity hostname>/auth?callContract=true`.
+
+Additional arguments available: `contractAddress=<contract account address>`.
+
+The user will be presented with a list of methods, can fill in the arguments, and send() or call() depending on the method.
 
 Callbacks are not supported.
