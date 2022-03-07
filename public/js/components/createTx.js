@@ -40,7 +40,7 @@ $('.createTxBtn').on('click', async function() {
       $('#createTxBtn').attr('disabled', true)
       $('#errorBanner').hide()
       // Create the transaction based on txType
-      let option = $('option:selected').val()
+      let option = $('input[name="selectTxType"]:checked').val()
       if (!["1", "2"].includes(option)) {
           // txType not selected
           $('#createTxModal').hide()
