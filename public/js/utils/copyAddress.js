@@ -1,6 +1,16 @@
 /* copyAddress.js - Copy address upon click */
 $('.addressDisplay').on('click', function() {
   // On clicking an address, copy it from localStorage to clipboard
-  navigator.clipboard.writeText(window.localStorage.getItem('IntMediumAddress'))
-  alert(`Copied address ${window.localStorage.getItem('IntMediumAddress')} to clipboard!`)
+  if (!navigator.clipboard) {
+    // Don't try anthing
+    // TODO: Is it worth implementing the deprecated execCommand('copy') method?
+  } else {
+    navigator.clipboard.writeText(window.localStorage.getItem('IntMediumAddress'))
+      .then(() => {
+        alert(`Copied address ${window.localStorage.getItem('IntMediumAddress')} to clipboard!`)
+      })
+      .catch(() => {
+        alert(`Something went wrong! Please manually copy and paste.`)
+      })
+  }
 })

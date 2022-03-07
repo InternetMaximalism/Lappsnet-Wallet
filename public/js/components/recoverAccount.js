@@ -46,8 +46,18 @@ $('.backUpKey').on('click', function() {
 // Clicking on private key copies it to clipboard
 $('.privkeyDisplay').on('click', function() {
     // On clicking a privkey, copy it to clipboard
-    navigator.clipboard.writeText($('#backupKeyText').val())
-    alert('Copied private key to clipboard - remember to save it!')
+    if (!navigator.clipboard) {
+      // Don't try anthing
+      // TODO: Is it worth implementing the deprecated execCommand('copy') method?
+    } else {
+      navigator.clipboard.writeText($('#backUpKeyText').text())
+        .then(() => {
+          alert('Copied private key to clipboard - remember to save it!')
+        })
+        .catch(() => {
+          alert(`Something went wrong! Please manually copy and paste.`)
+        })
+    }
 })
 
 $('.recoverBtn').on('click', function() {
