@@ -32,6 +32,7 @@ $('.confirmAccount').on('click', function() {
   // If query is to createTx, show txBuilder
   if (params.get('createTx') === 'true') {
     // First, check for parameters to fill
+    $('#satTxRadio').attr('checked', 'true')
     switchCreateTxFormType("1")
     if (params.get('contractAddress')) {
       $('#createTxTokenContract').val(escapeHTML(params.get('contractAddress')))
