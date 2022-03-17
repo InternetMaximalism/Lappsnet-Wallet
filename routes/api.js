@@ -215,6 +215,7 @@ router.post('/postAssertion', async (req, res, next) => {
       origin: `https://${process.env.RPID}`,
       publicKey: userRows.rows[0].pubKeyPem,
       prevCounter: userRows.rows[0].counter,
+      userHandle: userRows.rows[0].username,
       factor: 'either'
     }
     let authnResult = await f2l.assertionResult(clientAssertionResponse, assertionExpectations)
