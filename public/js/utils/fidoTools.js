@@ -16,7 +16,7 @@
 
   async function makeAssertion (assertionOptions) {
     try {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         const assertion = await navigator.credentials.get({ publicKey: assertionOptions })
         
         let { assPubkey, assUsername } = await submitAssertionToServer(assertion)
