@@ -220,10 +220,6 @@ router.post('/postAssertion', async (req, res, next) => {
     }
     let authnResult = await f2l.assertionResult(clientAssertionResponse, assertionExpectations)
 
-    console.log(`Assertion validated! authnResult.authnrData.keys():`)
-    authnResult.authnrData.forEach((value, key) => {
-      console.log("[" + key + ", " + value + "]")
-    })
     // Delete challenge
     await db.query(
       'DELETE from "Challenges" WHERE challenge = $1',
@@ -233,10 +229,10 @@ router.post('/postAssertion', async (req, res, next) => {
     // Update counter
     // Note: authnResult.counter is WRONG.
     // The correct accessor is likely authnResult.authnrData.signCount
-    console.log(`Counter: ${authnResult.authnrData.get('signCount')}`)
+    console.log(`Counter: ${authnResult.authnrData.get('counter')}`)
     let updateCounter = 0
-    if (authnResult.counter && authnResult.counter !== null) {
-      updateCounter = authnResult.counter
+    if (authnResult.authnrData.get('counter') && authnResult.authnrData.get('counter') !== null) {
+      updateCounter = authnResult.authnrData.get('counter')
     }
     await db.query(
       'UPDATE "Users" set counter = $1 WHERE username = $2',
