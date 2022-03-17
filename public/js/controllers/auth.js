@@ -114,13 +114,13 @@ $('#logIntoAccount').on('click', async function() {
   try {
     // Authenticate with server
     let assertionOptions = await submitAuthenticationRequest($('#altUsernameInput').val())
-    let pubkey = await makeAssertion(assertionOptions)
+    let { publicKey, username } = await makeAssertion(assertionOptions)
     // Authentication will return pubkey if successful
     // Recover addr and null privatekey
-    let pk = recoverPk(window.localStorage.getItem('encryptedKey'), pubkey)
+    let pk = recoverPk(window.localStorage.getItem('encryptedKey'), publicKey)
     let { address } = web3js.eth.accounts.privateKeyToAccount(pk)
     window.localStorage.setItem('addr', address)
-    window.localStorage.setItem('user', $('#altUsernameInput').val())
+    window.localStorage.setItem('user', username)
     pk = null
     
     // Show wallet UI
