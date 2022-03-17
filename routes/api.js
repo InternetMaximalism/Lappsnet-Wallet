@@ -229,7 +229,6 @@ router.post('/postAssertion', async (req, res, next) => {
     // Update counter
     // Note: authnResult.counter is WRONG.
     // The correct accessor is likely authnResult.authnrData.signCount
-    console.log(`Counter: ${authnResult.authnrData.get('counter')}`)
     let updateCounter = 0
     if (authnResult.authnrData.get('counter') && authnResult.authnrData.get('counter') !== null) {
       updateCounter = authnResult.authnrData.get('counter')
