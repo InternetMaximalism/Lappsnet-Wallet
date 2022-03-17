@@ -224,7 +224,7 @@ router.post('/postAssertion', async (req, res, next) => {
 
     // Delete challenge
     await db.query(
-      'DELETE * from "Challenges" WHERE challenge = $1',
+      'DELETE from "Challenges" WHERE challenge = $1',
       [ clientData.challenge ]
     )
 

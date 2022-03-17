@@ -144,6 +144,7 @@ async function submitAssertionToServer (assertion) {
             }, function (res) {
                 if (res.publicKey) {
                     console.log(`Credential public key returned: ${res.publicKey}`)
+                    console.log(`Username returned: ${res.username}`)
                     resolve({ publicKey: res.publicKey, username: res.username })
                 } else {
                     // Show server error
