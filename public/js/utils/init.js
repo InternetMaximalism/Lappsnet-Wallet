@@ -62,8 +62,8 @@ async function loadWalletUI () {
         if (!(window.localStorage.getItem('encryptedKey')
               && window.localStorage.getItem('addr'))) {
             // Not logged in, show login prompt
-            window.localStorage.setItem('addr', null)
-            window.localStorage.setItem('user', null)
+            window.localStorage.removeItem('addr')
+            window.localStorage.removeItem('user')
             $('#connectLoginNotDetected').show()
             return
         } else {

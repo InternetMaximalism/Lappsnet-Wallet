@@ -21,8 +21,8 @@ function logOutConf () {
 
 // If log out confirmed, clear localStorage & show fresh login prompt
 $('.logOutBtn').on('click', function() {
-  window.localStorage.setItem('user', null)
-  window.localStorage.setItem('addr', null)
+  window.localStorage.removeItem('user')
+  window.localStorage.removeItem('addr')
   $('#connectLoginDetected').hide()
   $('#logoutModal').hide()
   $('#continueWithAccountConfirmation').hide()

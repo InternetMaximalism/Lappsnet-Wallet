@@ -4,7 +4,7 @@ function initWeb3 () {
   console.log('Loading web3js')
   web3js = new Web3('https://rpc.intmedium.xyz')
   // After web3js initialized, get user balances
-  if (userAddress && userAddress !== null) {
+  if (userAddress) {
       getBalance(userAddress)
   }
 }
