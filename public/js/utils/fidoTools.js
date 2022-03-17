@@ -17,9 +17,8 @@
   async function makeAssertion (assertionOptions) {
     try {
       const assertion = await navigator.credentials.get({ publicKey: assertionOptions })
-      
-      let pubkey = await submitAssertionToServer(assertion)
-      return pubkey
+      const { assPubkey, assUsername } = await submitAssertionToServer(assertion)
+      return({ assPubkey, assUsername })
     } catch (err) {
       console.error(err)
     }
@@ -96,21 +95,41 @@
     }
   }
 
+  /* Base64 String encrypted pk, Base64 String encryption key
+   * => Hex String pk
+   */
   async function recoverPk (encryptedKey, encryptionKey) {
     try {
+      // CryptoJS can handle base64 ciphers for us
       let decrypt = CryptoJS.AES.decrypt(encryptedKey, encryptionKey)
-      let recovered = decrypt.toString(CryptoJS.enc.Utf8)
-      return recovered
+      return decrypt.toString(CryptoJS.enc.Utf8)
     } catch (err) {
       console.error(err)
     }
   }
 
+  async function authAndRecoverPk () {
+    try {
+      // Authenticate with server
+      let assertionOptions = await submitAuthenticationRequest(window.localStorage.getItem('user'))
+      let assResult = await makeAssertion(assertionOptions)
+      // Authentication will return pubkey if successful
+      // Recover addr and null privatekey
+      let pk = await recoverPk(window.localStorage.getItem('encryptedKey'), assResult.assPubkey)
+      return pk
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  /* Hex String pk to encrypt, Base64 String encryption key
+   * => Base64 String encrypted pk
+   */
   async function encryptPk (pk, encryptionKey) {
     try {
       let utf8key = CryptoJS.enc.Utf8.parse(pk)
       let encryptedKey = CryptoJS.AES.encrypt(utf8key, encryptionKey)
-      return encryptedKey
+      return encryptedKey.toString()
     } catch (err) {
       console.error(err)
     }

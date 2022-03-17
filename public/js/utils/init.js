@@ -43,7 +43,7 @@ function initComponents () {
     if (!window.localStorage.getItem('encryptedKey')) {
       $('#login').attr('hidden', 'true')
     }
-    
+
     loadWalletUI()
 }
 
@@ -62,7 +62,8 @@ async function loadWalletUI () {
         if (!(window.localStorage.getItem('encryptedKey')
               && window.localStorage.getItem('addr'))) {
             // Not logged in, show login prompt
-            window.localStorage.clear()
+            window.localStorage.removeItem('addr')
+            window.localStorage.removeItem('user')
             $('#connectLoginNotDetected').show()
             return
         } else {

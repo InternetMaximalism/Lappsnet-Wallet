@@ -87,7 +87,9 @@ $('.confirmAccount').on('click', function() {
 
 $('.signMessageBtn').on('click', function() {
   // Sign the message with private key
-  const signature = web3js.eth.accounts.sign($('#signMessageInput').val(), window.localStorage.getItem('IntMediumPrivateKey'))
+  let pk = await authAndRecoverPk()
+  const signature = web3js.eth.accounts.sign($('#signMessageInput').val(), pk)
+  pk = null
   // Send the message to callback URL for auth
   const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
   sendAddress(callbackUrl, signature)
@@ -114,9 +116,14 @@ $('#logIntoAccount').on('click', async function() {
   try {
     // Authenticate with server
     let assertionOptions = await submitAuthenticationRequest($('#altUsernameInput').val())
-    let assertion = await makeAssertion(assertionOptions)
+    let assResult = await makeAssertion(assertionOptions)
     // Authentication will return pubkey if successful
-    // Recover address from pubkey and encryptedKey
+    // Recover addr and null privatekey
+    let pk = await recoverPk(window.localStorage.getItem('encryptedKey'), assResult.assPubkey)
+    let { address } = web3js.eth.accounts.privateKeyToAccount(pk)
+    window.localStorage.setItem('addr', address)
+    window.localStorage.setItem('user', assResult.assUsername)
+    pk = null
     
     // Show wallet UI
     $('#switchAccountForm').hide()

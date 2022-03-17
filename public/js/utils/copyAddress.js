@@ -5,9 +5,9 @@ $('.addressDisplay').on('click', function() {
     // Don't try anthing
     // TODO: Is it worth implementing the deprecated execCommand('copy') method?
   } else {
-    navigator.clipboard.writeText(window.localStorage.getItem('IntMediumAddress'))
+    navigator.clipboard.writeText(window.localStorage.getItem('addr'))
       .then(() => {
-        alert(`Copied address ${window.localStorage.getItem('IntMediumAddress')} to clipboard!`)
+        alert(`Copied address ${window.localStorage.getItem('addr')} to clipboard!`)
       })
       .catch(() => {
         alert(`Something went wrong! Please manually copy and paste.`)

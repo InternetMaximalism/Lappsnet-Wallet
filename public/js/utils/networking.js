@@ -125,12 +125,28 @@ async function submitAssertionToServer (assertion) {
     try {
         return new Promise((resolve, reject) => {
             console.log('Submitting assertion...')
+            let rawId = new Uint8Array(assertion.rawId)
+            let authenticatorData = new Uint8Array(assertion.response.authenticatorData);
+            let clientDataJSON = new Uint8Array(assertion.response.clientDataJSON);
+            let signature = new Uint8Array(assertion.response.signature)
+            let assData = {
+              id: assertion.id,
+              rawId: base64.fromArrayBuffer(rawId),
+              response: {
+                authenticatorData: base64.fromArrayBuffer(authenticatorData, true),
+                clientDataJSON: base64.fromArrayBuffer(clientDataJSON, true),
+                signature: base64.fromArrayBuffer(signature)
+              }
+            }
             $.post('/api/postAssertion', {
-                assertion: JSON.stringify(assertion)
+                assertion: JSON.stringify(assData)
             }, function (res) {
                 if (res.publicKey) {
-                    console.log(`Credential public key returned: ${res.publicKey}`)
-                    resolve({ publicKey: res.publicKey, username: res.username })
+                    let assPubkey = res.publicKey
+                    let assUsername = res.username
+                    console.log(`Credential public key returned: ${assPubkey}`)
+                    console.log(`Username returned: ${assUsername}`)
+                    resolve({ assPubkey, assUsername })
                 } else {
                     // Show server error
                     console.log(`Server responded invalid data`)
@@ -138,14 +154,13 @@ async function submitAssertionToServer (assertion) {
                 }
             },
             "json")
+            .fail(function (res) {
+                console.error(`Server returned error`)
+                reject()
+            })
         })
-        .fail(function (res) {
-            console.error(`Server returned error`)
-            reject()
-        })
-
     } catch (err) {
-        
+        console.error(err)
     }
 }
 
@@ -154,7 +169,7 @@ async function sendAddress (url, signature) {
     return new Promise((resolve, reject) => {
       $.post(url, {
         signature: signature,
-        publicAddress: window.localStorage.getItem('IntMediumAddress')
+        publicAddress: window.localStorage.getItem('addr')
       })
       .then((result) => {
           console.log('Callback sent to URL')

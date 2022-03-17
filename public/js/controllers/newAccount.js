@@ -1,7 +1,7 @@
 /* newAccount.js - handles new account creation */
 $('.createNewAccount').on('click', function() {
   // If currently logged in, log out first
-  if (window.localStorage.getItem('IntMediumPrivateKey')) {
+  if (window.localStorage.getItem('encryptedKey')) {
       // logout.logOutConf
       return logOutConf()
   }

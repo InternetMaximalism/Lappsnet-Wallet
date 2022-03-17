@@ -176,60 +176,73 @@ router.post('/postAssertion', async (req, res, next) => {
   try {
     let clientAssertionResponse = JSON.parse(req.body.assertion)
     let clientData = JSON.parse(base64url.decode(clientAssertionResponse.response.clientDataJSON))
+    // rawId from base64 to Buffer to ArrayBuffer
+    let buf = base64url.toBuffer(clientAssertionResponse.rawId)
+    let abRawId = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength)
+    clientAssertionResponse.rawId = abRawId
     
     // Look up challenge
-    const { challengeRows } = await db.query(
+    const challengeRows = await db.query(
       'SELECT * FROM "Challenges" WHERE challenge = $1',
       [ clientData.challenge ]
     )
+
     // If expired or DNE, return error message
-    if (challengeRows.length === 0) {
+    if (challengeRows.rows.length === 0) {
       return res.status(404).send()
     }
 
     const now = new Date()
-    const expiry = new Date(challengeRows[0].expiration)
+    const expiry = new Date(challengeRows.rows[0].expiration)
     if (now.getTime() > expiry.getTime()) {
       return res.status(404).send()
     }
 
     // Return the credId for specified user.
-    const { userRows } = await db.query(
+    const userRows = await db.query(
       'SELECT * FROM "Users" where username = $1',
-      [ challengeRows[0].username ]
+      [ challengeRows.rows[0].username ]
     )
-
+    
     // Validate assertion
     let assertionExpectations = {
       allowCredentials: [{
-        id: userRows[0].credId,
+        id: userRows.rows[0].credId,
         type: 'public-key',
         transports: ["usb", "nfc", "ble", "internal"]
       }],
-      challenge: challengeRows[0].challenge,
+      challenge: challengeRows.rows[0].challenge,
       origin: `https://${process.env.RPID}`,
-      publicKey: userRows[0].pubKeyPem,
-      prevCounter: userRows[0].counter
+      publicKey: userRows.rows[0].pubKeyPem,
+      prevCounter: userRows.rows[0].counter,
+      userHandle: userRows.rows[0].username,
+      factor: 'either'
     }
     let authnResult = await f2l.assertionResult(clientAssertionResponse, assertionExpectations)
 
     // Delete challenge
     await db.query(
-      'DELETE * from "Challenges" WHERE challenge = $1',
+      'DELETE from "Challenges" WHERE challenge = $1',
       [ clientData.challenge ]
     )
 
     // Update counter
+    // Note: authnResult.counter is WRONG.
+    // The correct accessor is likely authnResult.authnrData.signCount
+    let updateCounter = 0
+    if (authnResult.authnrData.get('counter') && authnResult.authnrData.get('counter') !== null) {
+      updateCounter = authnResult.authnrData.get('counter')
+    }
     await db.query(
       'UPDATE "Users" set counter = $1 WHERE username = $2',
-      [ authnResult.counter, challengeRows[0].username ]
+      [ updateCounter, challengeRows.rows[0].username ]
     )
 
     // Return pubkey
-    return res.status(200).json({ publicKey: userRows[0].pubKeyBytes, username: userRows[0].username })
+    return res.status(200).json({ publicKey: userRows.rows[0].pubKeyBytes, username: userRows.rows[0].username })
 
   } catch (err) {
-    console.error()
+    console.error(err)
     return res.status(500).send()
   }
 })
