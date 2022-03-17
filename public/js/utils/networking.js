@@ -125,6 +125,8 @@ async function submitAssertionToServer (assertion) {
     try {
         return new Promise((resolve, reject) => {
             console.log('Submitting assertion...')
+            console.log(assertion)
+            console.log(JSON.stringify(assertion))
             $.post('/api/postAssertion', {
                 assertion: JSON.stringify(assertion)
             }, function (res) {
