@@ -13,7 +13,6 @@ let f2l = new Fido2Lib({
   // rpIcon: `${process.env.RPID}/img/favicon.svg`,
   challengeSize: 64,
   cryptoParams: [-7, -257],
-  authenticatorAttachment: "cross-platform",
   // authenticatorRequireResidentKey: true,
   authenticatorUserVerification: 'required'
 })
