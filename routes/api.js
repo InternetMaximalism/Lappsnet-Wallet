@@ -231,14 +231,14 @@ router.post('/postAssertion', async (req, res, next) => {
     // Update counter
     // Note: authnResult.counter is WRONG.
     // The correct accessor is likely authnResult.authnrData.signCount
-    console.log(`Counter: ${authnResult.authnrData.signCount}`)
+    console.log(`Counter: ${Buffer.from(authnResult.authnrData.get('signCount')).toString()}`)
     let updateCounter = 0
     if (authnResult.counter && authnResult.counter !== null) {
       updateCounter = authnResult.counter
     }
     await db.query(
       'UPDATE "Users" set counter = $1 WHERE username = $2',
-      [ authnResult.counter, challengeRows.rows[0].username ]
+      [ updateCounter, challengeRows.rows[0].username ]
     )
     console.log(`Counter updated!`)
 
