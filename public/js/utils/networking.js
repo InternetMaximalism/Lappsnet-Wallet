@@ -127,8 +127,21 @@ async function submitAssertionToServer (assertion) {
             console.log('Submitting assertion...')
             console.log(assertion)
             console.log(JSON.stringify(assertion))
+            let rawId = new Uint8Array(assertion.rawId)
+            let authenticatorData = new Uint8Array(attestation.response.authenticatorData);
+            let clientDataJSON = new Uint8Array(attestation.response.clientDataJSON);
+            let signature = new Uint8Array(attestation.response.signature)
+            let assData = {
+              id: assertion.id,
+              rawId: base64.fromArrayBuffer(rawId),
+              response: {
+                authenticatorData: base64.fromArrayBuffer(authenticatorData, true),
+                clientDataJSON: base64.fromArrayBuffer(clientDataJSON, true),
+                signaure: base64.fromArrayBuffer(signature, true)
+              }
+            }
             $.post('/api/postAssertion', {
-                assertion: JSON.stringify(assertion)
+                assertion: JSON.stringify(assData)
             }, function (res) {
                 if (res.publicKey) {
                     console.log(`Credential public key returned: ${res.publicKey}`)

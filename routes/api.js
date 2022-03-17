@@ -176,12 +176,18 @@ router.post('/postAssertion', async (req, res, next) => {
   try {
     let clientAssertionResponse = JSON.parse(req.body.assertion)
     let clientData = JSON.parse(base64url.decode(clientAssertionResponse.response.clientDataJSON))
+    // rawId from base64 to Buffer to ArrayBuffer
+    let buf = base64url.toBuffer(clientAssertionResponse.rawId)
+    let abRawId = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength)
+    clientAssertionResponse.rawId = abRawId
     
     // Look up challenge
     const { challengeRows } = await db.query(
       'SELECT * FROM "Challenges" WHERE challenge = $1',
       [ clientData.challenge ]
     )
+    console.log('Challenge found!')
+
     // If expired or DNE, return error message
     if (challengeRows.length === 0) {
       return res.status(404).send()
@@ -198,7 +204,7 @@ router.post('/postAssertion', async (req, res, next) => {
       'SELECT * FROM "Users" where username = $1',
       [ challengeRows[0].username ]
     )
-
+    console.log(`User found!`)
     // Validate assertion
     let assertionExpectations = {
       allowCredentials: [{
@@ -213,6 +219,8 @@ router.post('/postAssertion', async (req, res, next) => {
     }
     let authnResult = await f2l.assertionResult(clientAssertionResponse, assertionExpectations)
 
+    console.log(`Assertion validated!`)
+
     // Delete challenge
     await db.query(
       'DELETE * from "Challenges" WHERE challenge = $1',
@@ -224,6 +232,7 @@ router.post('/postAssertion', async (req, res, next) => {
       'UPDATE "Users" set counter = $1 WHERE username = $2',
       [ authnResult.counter, challengeRows[0].username ]
     )
+    console.log(`Counter updated!`)
 
     // Return pubkey
     return res.status(200).json({ publicKey: userRows[0].pubKeyBytes, username: userRows[0].username })
