@@ -125,8 +125,6 @@ async function submitAssertionToServer (assertion) {
     try {
         return new Promise((resolve, reject) => {
             console.log('Submitting assertion...')
-            console.log(assertion)
-            console.log(JSON.stringify(assertion))
             let rawId = new Uint8Array(assertion.rawId)
             let authenticatorData = new Uint8Array(assertion.response.authenticatorData);
             let clientDataJSON = new Uint8Array(assertion.response.clientDataJSON);
@@ -137,9 +135,10 @@ async function submitAssertionToServer (assertion) {
               response: {
                 authenticatorData: base64.fromArrayBuffer(authenticatorData, true),
                 clientDataJSON: base64.fromArrayBuffer(clientDataJSON, true),
-                signaure: base64.fromArrayBuffer(signature)
+                signature: base64.fromArrayBuffer(signature)
               }
             }
+            console.log(JSON.stringify(assData))
             $.post('/api/postAssertion', {
                 assertion: JSON.stringify(assData)
             }, function (res) {
