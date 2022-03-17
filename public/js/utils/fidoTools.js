@@ -18,7 +18,8 @@
     try {
       const assertion = await navigator.credentials.get({ publicKey: assertionOptions })
       
-      return (await submitAssertionToServer(assertion))
+      let { assPubkey, assUsername } = await submitAssertionToServer(assertion)
+      return { assPubkey, assUsername }
     } catch (err) {
       console.error(err)
     }
