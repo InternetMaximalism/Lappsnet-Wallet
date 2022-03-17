@@ -186,7 +186,6 @@ router.post('/postAssertion', async (req, res, next) => {
       'SELECT * FROM "Challenges" WHERE challenge = $1',
       [ clientData.challenge ]
     )
-    console.log(`Challenge ${clientData.challenge} found: ${JSON.stringify(challengeRows.rows, null, 2)}`)
 
     // If expired or DNE, return error message
     if (challengeRows.rows.length === 0) {
@@ -204,7 +203,7 @@ router.post('/postAssertion', async (req, res, next) => {
       'SELECT * FROM "Users" where username = $1',
       [ challengeRows.rows[0].username ]
     )
-    console.log(`User found!`)
+    
     // Validate assertion
     let assertionExpectations = {
       allowCredentials: [{
@@ -215,7 +214,8 @@ router.post('/postAssertion', async (req, res, next) => {
       challenge: challengeRows.rows[0].challenge,
       origin: `https://${process.env.RPID}`,
       publicKey: userRows.rows[0].pubKeyPem,
-      prevCounter: userRows.rows[0].counter
+      prevCounter: userRows.rows[0].counter,
+      factor: 'either'
     }
     let authnResult = await f2l.assertionResult(clientAssertionResponse, assertionExpectations)
 
