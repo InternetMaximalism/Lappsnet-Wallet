@@ -137,7 +137,7 @@ async function submitAssertionToServer (assertion) {
               response: {
                 authenticatorData: base64.fromArrayBuffer(authenticatorData, true),
                 clientDataJSON: base64.fromArrayBuffer(clientDataJSON, true),
-                signaure: base64.fromArrayBuffer(signature, true)
+                signaure: base64.fromArrayBuffer(signature)
               }
             }
             $.post('/api/postAssertion', {
