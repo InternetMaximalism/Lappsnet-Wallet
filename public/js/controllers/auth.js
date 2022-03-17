@@ -118,7 +118,9 @@ $('#logIntoAccount').on('click', async function() {
     // Authentication will return pubkey if successful
     // Recover addr and null privatekey
     let pk = recoverPk(window.localStorage.getItem('encryptedKey'), assResult.assPubkey)
-    let { address } = web3js.eth.accounts.privateKeyToAccount(pk)
+    console.log(pk)
+    console.log(pk.toString())
+    let { address } = web3js.eth.accounts.privateKeyToAccount(pk.toString())
     window.localStorage.setItem('addr', address)
     window.localStorage.setItem('user', assResult.assUsername)
     pk = null
