@@ -2,64 +2,75 @@
  * If user is logged in, handles query string to show proper form
  * If user is not logged in, shows options to register or recover account
  */
+initComponents()
+function initComponents () {
+    $('#connectLoginDetected').hide()
+    $('#connectLoginNotDetected').hide()
+    $('#deviceSelection').hide()
+    $('#accountRegistrationForm').hide()
+    $('#switchAccountForm').hide()
+    $('#recoverAccountForm').hide()
+    $('#registerAccountSpinner').hide()
+    $('#privKeyPrompt').hide()
+    $('#privKeyGenCase').hide()
+    $('#privKeyTxCase').hide()
+    $('#logoutModal').hide()
+    $('#recoverModal').hide()
+    $('#signMessageModal').hide()
+    $('#signTxModal').hide()
+    $('#signTxSpinner').hide()
+    $('#createTxModal').hide()
+    $('#createTxSpinner').hide()
+    $('#createTxTokenContractForm').hide()
+    $('#createTxFromAddressForm').hide()
+    $('#createTxToAddressForm').hide()
+    $('#createTxValueForm').hide()
+    $('#createTxDataForm').hide()
+    $('#createTxGasLimitForm').hide()
+    $('#signTxSpinner').hide()
+    $('#successBanner').hide()
+    $('#errorBanner').hide()
+    $('#tokenBalances').hide()
+    $('#contractCallModal').hide()
+    $('#contractCallSpinner').hide()
+    $('#confirmCallSpinner').hide()
+    $('#continueWithAccountConfirmation').hide()
+    $("#methodSelector").hide()
+    $('#backupModal').hide()
+    $('#backupFormBody').attr('action', window.location.href)
 
-$('#connectLoginDetected').hide()
-$('#connectLoginNotDetected').hide()
-$('#deviceSelection').hide()
-$('#accountRegistrationForm').hide()
-$('#switchAccountForm').hide()
-$('#recoverAccountForm').hide()
-$('#registerAccountSpinner').hide()
-$('#privKeyPrompt').hide()
-$('#privKeyGenCase').hide()
-$('#privKeyTxCase').hide()
-$('#logoutModal').hide()
-$('#recoverModal').hide()
-$('#signMessageModal').hide()
-$('#signTxModal').hide()
-$('#signTxSpinner').hide()
-$('#createTxModal').hide()
-$('#createTxSpinner').hide()
-$('#createTxTokenContractForm').hide()
-$('#createTxFromAddressForm').hide()
-$('#createTxToAddressForm').hide()
-$('#createTxValueForm').hide()
-$('#createTxDataForm').hide()
-$('#createTxGasLimitForm').hide()
-$('#signTxSpinner').hide()
-$('#successBanner').hide()
-$('#errorBanner').hide()
-$('#tokenBalances').hide()
-$('#contractCallModal').hide()
-$('#contractCallSpinner').hide()
-$('#confirmCallSpinner').hide()
-$('#continueWithAccountConfirmation').hide()
-$("#methodSelector").hide()
+    // Login is unavailable if encryptedKey is not found locally
+    if (!window.localStorage.getItem('encryptedKey')) {
+      $('#login').attr('hidden', 'true')
+    }
+    
+    loadWalletUI()
+}
 
 if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
     alert('Your browser does not support credential management API')
 }
 
 // Change text & display correct contents based on login status
-let userPk = window.localStorage.getItem('IntMediumPrivateKey')
-let userAddress = window.localStorage.getItem('IntMediumAddress')
-let userName = window.localStorage.getItem('IntMediumUsername')
+let userPk = window.localStorage.getItem('encryptedKey')
+let rawPk = null
+let userAddress = window.localStorage.getItem('addr')
+let userName = window.localStorage.getItem('user')
 let tokenList = []
-loadWalletUI()
 async function loadWalletUI () {
     try {
-        if (!(window.localStorage.getItem('IntMediumPrivateKey')
-              && window.localStorage.getItem('IntMediumAddress'))) {
+        if (!(window.localStorage.getItem('encryptedKey')
+              && window.localStorage.getItem('addr'))) {
             // Not logged in, show login prompt
             window.localStorage.clear()
             $('#connectLoginNotDetected').show()
             return
         } else {
             // Logged in, show continuation prompt
-            $('.usernameDisplay').text(window.localStorage.getItem('IntMediumUsername'))
-            $('.addressDisplay').text(window.localStorage.getItem('IntMediumAddress'))
+            $('.usernameDisplay').text(window.localStorage.getItem('user'))
+            $('.addressDisplay').text(window.localStorage.getItem('addr'))
             $('#continueWithAccountConfirmation').show()
-            tokenList = await getTokenBalances(window.localStorage.getItem('IntMediumAddress'))
+            tokenList = await getTokenBalances(window.localStorage.getItem('addr'))
         }
     } catch (err) {
         console.error(err)

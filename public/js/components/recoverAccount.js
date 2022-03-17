@@ -24,6 +24,7 @@ $('.logOutBtn').on('click', function() {
   localStorage.clear()
   $('#connectLoginDetected').hide()
   $('#logoutModal').hide()
+  $('#continueWithAccountConfirmation').hide()
   $('#connectLoginNotDetected').show()
 })
 

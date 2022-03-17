@@ -4,6 +4,8 @@
     <script src="/js/utils/base64.min.js"></script>
     <script src="https://unpkg.com/bignumber.js" integrity="sha256-wVL1BH6h7i/pod41XKpG/h1lPY7y6h2iR5INy5ikXvs=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/cbor-web" integrity="sha256-iey8EY2WTC5Eu4oCNnxnQwmhpWYwbYn9o4gpoyhpgE0=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@simplewebauthn/browser"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>
   <body class="hidden">
     <div id="pageContent">
@@ -27,6 +29,7 @@
                 <p>You are not currently signed into IntMedium.</p>
                 <ul>
                   <li class="btn btn-success m-1 createNewAccount">Create new account</li>
+                  <li class="btn btn-success m-1" id="logIn">Login by username</li>
                 </ul>
                 <p class="m-1">Already have one? <strong class="recoverAccount strongBtn">Recover account</strong></p>
                 <p class="mt-4 text-center"><a href="/"><strong class="navBtn">About</strong></a></p>
@@ -73,9 +76,9 @@
           
               <!-- Switch to different account -->
               <div id="switchAccountForm">
-                <legend>Enter username of account to log into.</legend>
-                <input id="altUsernameInput" type="text">
-                <div id="logIntoAccount">Log into account</div>
+                <legend>Enter username of account.</legend>
+                <input class="form-control w-100" id="altUsernameInput" type="text">
+                <div class="btn btn-success" id="logIntoAccount">Log into account</div>
               </div>
   
               <!-- Logout conf modal -->
@@ -328,6 +331,44 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Backup encrypted key modal -->
+              <div class="modal" id="backupModal">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Back up your key</h5>
+                    </div>
+                    <div class="modal-body">
+                      <div id="pwEntry">
+                        <p>Set a password to encrypt your backup</p>
+                        <input class="form-control w-100" type="text" id="backupPw" />
+                      </div>
+                      <div id="backupForm">
+                        <form id="backupFormBody">
+                          <fieldset>
+                            <legend class="m-3">Save this backup in your password manager:</legend>
+                            <div class="row">
+                              <div class="col-sm-4">
+                                <label for="encrypted">Backup data</label>
+                              </div>
+                              <div class="col-sm-8">
+                                <input type="password" class="form-control w-100" id="encrypted" />
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-sm-4"></div>
+                              <div class="col-sm-4">
+                                <button type="submit" class="btn btn-primary" id="saveEncrypted">Save</button>
+                              </div>
+                            </div>
+                          </fieldset>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
         </div>
       </div>
@@ -343,6 +384,7 @@
     <script src="/js/components/signTx.js" type="text/javascript"></script>
     <script src="/js/components/createTx.js" type="text/javascript"></script>
     <script src="/js/components/contractCall.js" type="text/javascript"></script>
+    <script src="/js/components/backup.js" type="text/javascript"></script>
     <script src="/js/controllers/auth.js" type="text/javascript"></script>
     <script>
       // Display page after all JS has loaded

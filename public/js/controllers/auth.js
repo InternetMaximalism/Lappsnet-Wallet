@@ -103,3 +103,27 @@ $('.cancelSignMessage').on('click', function() {
 $('.signOut').on('click', function() {
   logOutConf()
 })
+
+$('#logIn').on('click', function () {
+  // Show login form
+  $('#connectLoginNotDetected').hide()
+  $('#switchAccountForm').show()
+})
+
+$('#logIntoAccount').on('click', async function() {
+  try {
+    // Authenticate with server
+    let assertionOptions = await submitAuthenticationRequest($('#altUsernameInput').val())
+    let assertion = await makeAssertion(assertionOptions)
+    // Authentication will return pubkey if successful
+    // Recover address from pubkey and encryptedKey
+    
+    // Show wallet UI
+    $('#switchAccountForm').hide()
+    loadWalletUI()
+
+  } catch (err) {
+    console.error(err)
+  }
+
+})

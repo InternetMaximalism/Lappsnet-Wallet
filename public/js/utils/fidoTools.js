@@ -3,37 +3,37 @@
 /* Create (username, credId) pair: 
    Takes username, challenge (base64) and creates an attestation.
    The credential public key is used as IntMedium account private key. */
-   async function makeAttestation (username, challenge, timeout) {
+   async function makeAttestation (attestationOptions) {
     try {
-      const optionsObject = {
-        publicKey: {
-          rp: {
-            id: window.location.hostname,
-            name: 'IntMedium Identity'
-          },
-          user: {
-            id: buffer.Buffer.from(username),
-            name: username,
-            displayName: username,
-          },
-          pubKeyCredParams: [
-            { type: 'public-key', alg: -7 },
-            { type: 'public-key', alg: -257 }
-          ],
-          challenge: base64.toArrayBuffer(challenge, true),
-          timeout: timeout
-        }
-      }
-      const attestation = await navigator.credentials.create(optionsObject)
-      const { credId, publicKey } = await decodeFidoResponse(attestation.response.attestationObject)
-  
-      return { 
-        credId, publicKey
-      }
+      const attestation = await navigator.credentials.create({ publicKey: attestationOptions })
+      const { publicKey, username } = await submitAttestationToServer(attestation)
+      return { encryptionPublicKey: publicKey, registeredUsername: username }
   
     } catch (err) {
       console.error(err)
-      alert(err)
+    }
+  }
+
+  async function makeAssertion (assertionOptions) {
+    try {
+      const assertion = await navigator.credentials.get({ publicKey: assertionOptions })
+      
+      let pubkey = await submitAssertionToServer(assertion)
+      return pubkey
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  async function getAuthDataFromAttestation (attestation) {
+    try {
+      return new Promise((resolve, reject) => {
+        cbor.decodeFirst(attestation.response.attestationObject, { bigInt: true, preferWeb: true}, o => {
+          resolve(Object.values(o))
+        })
+      })
+    } catch (err) {
+      console.error(err)
     }
   }
   
@@ -93,5 +93,25 @@
     } catch (err) {
       console.error(err)
       reject()
+    }
+  }
+
+  async function recoverPk (encryptedKey, encryptionKey) {
+    try {
+      let decrypt = CryptoJS.AES.decrypt(encryptedKey, encryptionKey)
+      let recovered = decrypt.toString(CryptoJS.enc.Utf8)
+      return recovered
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  async function encryptPk (pk, encryptionKey) {
+    try {
+      let utf8key = CryptoJS.enc.Utf8.parse(pk)
+      let encryptedKey = CryptoJS.AES.encrypt(utf8key, encryptionKey)
+      return encryptedKey
+    } catch (err) {
+      console.error(err)
     }
   }

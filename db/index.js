@@ -14,8 +14,10 @@ const pool = new Pool({
     text: `
       CREATE TABLE IF NOT EXISTS public."Users"(
         "username" VARCHAR(100) UNIQUE NOT NULL,
-        "credId" VARCHAR(1000) UNIQUE,
-        "pubKeyBytes" VARCHAR(256),
+        "credId" VARCHAR(1000) UNIQUE NOT NULL,
+        "pubKeyBytes" VARCHAR(256) NOT NULL,
+        "pubKeyPem" VARCHAR(256) NOT NULL,
+        "counter" INTEGER NOT NULL,
         PRIMARY KEY ("username")
       );
     `,

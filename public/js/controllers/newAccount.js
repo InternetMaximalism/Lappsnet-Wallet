@@ -26,40 +26,51 @@ async function createNewAccount () {
     return
   }
   try {
+    // Create private key (remember to null web3PkObj when done)
+    let web3PkObj = web3js.eth.accounts.create()
+    rawPk = web3PkObj.privateKey
     // Request auth to server
-    const { username, challenge, timeout }
+    const attestationOptions
         = await submitRegistrationRequest($('#newUsernameInput').val())
-    // Sign attestationRequest
-    const { credId, publicKey }
-        = await makeAttestation(username, challenge, timeout)
-    // Submit credId for storage on server. localStore credId, username if successful
-    // We actually do not send the public key to server, as we want to use as private key
-    const registration
-        = await submitAttestationToServer(username, challenge, credId)
-    // show private key generation / signing prompt
+    // Sign attestation
+    const { encryptionPublicKey, registeredUsername }
+        = await makeAttestation(attestationOptions)
+    console.log(`Got encryption public key ${encryptionPublicKey}`)
+
+    // Encrypt key with encryptionPublicKey
+    let encryptedKey = await encryptPk(rawPk, encryptionPublicKey)
+    console.log(`EncryptedKey = ${encryptedKey}`)
+
+    // Store base64 encoded encryptedKey and username in localStorage
+    window.localStorage.setItem('encryptedKey', encryptedKey)
+    window.localStorage.setItem('user', registeredUsername)
+
+    // Ask user to back up key, encrypted by a password
+    // Also clears rawPk from memory
+    showBackupModal()
+
+    // Add address to localStorage
+    window.localStorage.setItem('addr', web3PkObj.address)
+    web3PkObj = null
+
+    userPk = window.localStorage.getItem('encryptedKey')
+    userAddress = window.localStorage.getItem('addr')
+    userName =  window.localStorage.getItem('user')
+    $('.addressDisplay').text(userAddress)
+    $('.usernameDisplay').text(userName)
     $('#accountRegistrationForm').hide()
-    const shortenedKey = buffer.Buffer.from(base64.toArrayBuffer(publicKey, true).slice(0,32))
-    let { address } = web3js.eth.accounts.privateKeyToAccount('0x'.concat(shortenedKey.toString('hex')))
-    window.localStorage.setItem('IntMediumPrivateKey', '0x'.concat(shortenedKey.toString('hex')))
-    window.localStorage.setItem('IntMediumAddress', address)
-    window.localStorage.setItem('IntMediumUsername', username)
-    userPk = window.localStorage.getItem('IntMediumPrivateKey')
-    userAddress = window.localStorage.getItem('IntMediumAddress')
-    userName =  window.localStorage.getItem('IntMediumUsername')
-    $('.addressDisplay').text(localStorage.getItem('IntMediumAddress'))
-    $('.usernameDisplay').text(localStorage.getItem('IntMediumUsername'))
     $('#connectLoginDetected').show()
     getBalance(userAddress)
 
     // If not signing transaction
     if (params.get('connect')) {
-      // TODO: don't blindly sign; fill and show form
-      // Sign the message with private key
-      const signature = web3js.eth.accounts.sign($('#signMessageInput').val(), window.localStorage.getItem('IntMediumPrivateKey'))
-      // Send the message to callback URL for auth
-      const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
-      sendAddress(callbackUrl, signature)
-        return alert('callback done')
+      // Show signmessage modal
+      if (!params.get('nonce')) {
+        alert('Nonce not provided in query string')
+        return
+      }
+      $('#signMessageInput').val(escapeHTML(params.get("nonce")))
+      $('#signMessageModal').show()
     }
     // If signing transaction
     if (params.get('signTx')) {
