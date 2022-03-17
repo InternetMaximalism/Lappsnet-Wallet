@@ -138,7 +138,6 @@ async function submitAssertionToServer (assertion) {
                 signature: base64.fromArrayBuffer(signature)
               }
             }
-            console.log(JSON.stringify(assData))
             $.post('/api/postAssertion', {
                 assertion: JSON.stringify(assData)
             }, function (res) {
@@ -162,7 +161,7 @@ async function submitAssertionToServer (assertion) {
         })
 
     } catch (err) {
-        
+        console.error(err)
     }
 }
 
