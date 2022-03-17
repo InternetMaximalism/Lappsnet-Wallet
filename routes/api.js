@@ -229,7 +229,7 @@ router.post('/postAssertion', async (req, res, next) => {
     return res.status(200).json({ publicKey: userRows[0].pubKeyBytes, username: userRows[0].username })
 
   } catch (err) {
-    console.error()
+    console.error(err)
     return res.status(500).send()
   }
 })
