@@ -126,7 +126,7 @@ async function submitAssertionToServer (assertion) {
         return new Promise((resolve, reject) => {
             console.log('Submitting assertion...')
             $.post('/api/postAssertion', {
-                assertion: assertion
+                assertion: JSON.stringify(assertion)
             }, function (res) {
                 if (res.publicKey) {
                     console.log(`Credential public key returned: ${res.publicKey}`)

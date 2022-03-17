@@ -153,8 +153,6 @@ router.post('/requestAuth', async (req, res, next) => {
       transports: ["usb", "nfc", "ble", "internal"]
     }]
     authnOptions.challenge = base64url(authnOptions.challenge)
-
-    console.log(authnOptions)
     
     // Store challenge, unique username
     const timeout = 5*60000
