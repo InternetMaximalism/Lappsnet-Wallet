@@ -128,9 +128,9 @@ async function submitAssertionToServer (assertion) {
             console.log(assertion)
             console.log(JSON.stringify(assertion))
             let rawId = new Uint8Array(assertion.rawId)
-            let authenticatorData = new Uint8Array(attestation.response.authenticatorData);
-            let clientDataJSON = new Uint8Array(attestation.response.clientDataJSON);
-            let signature = new Uint8Array(attestation.response.signature)
+            let authenticatorData = new Uint8Array(assertion.response.authenticatorData);
+            let clientDataJSON = new Uint8Array(assertion.response.clientDataJSON);
+            let signature = new Uint8Array(assertion.response.signature)
             let assData = {
               id: assertion.id,
               rawId: base64.fromArrayBuffer(rawId),
