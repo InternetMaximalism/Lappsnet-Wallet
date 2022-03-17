@@ -96,21 +96,27 @@
     }
   }
 
+  /* Base64 String encrypted pk, Base64 String encryption key
+   * => Hex String pk
+   */
   async function recoverPk (encryptedKey, encryptionKey) {
     try {
+      // CryptoJS can handle base64 ciphers for us
       let decrypt = CryptoJS.AES.decrypt(encryptedKey, encryptionKey)
-      let recovered = decrypt.toString(CryptoJS.enc.Utf8)
-      return recovered
+      return decrypt.toString(CryptoJS.enc.Utf8)
     } catch (err) {
       console.error(err)
     }
   }
 
+  /* Hex String pk to encrypt, Base64 String encryption key
+   * => Base64 String encrypted pk
+   */
   async function encryptPk (pk, encryptionKey) {
     try {
       let utf8key = CryptoJS.enc.Utf8.parse(pk)
       let encryptedKey = CryptoJS.AES.encrypt(utf8key, encryptionKey)
-      return encryptedKey
+      return encryptedKey.toString()
     } catch (err) {
       console.error(err)
     }
