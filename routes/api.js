@@ -196,7 +196,7 @@ router.post('/postAssertion', async (req, res, next) => {
     // Return the credId for specified user.
     const { userRows } = await db.query(
       'SELECT * FROM "Users" where username = $1',
-      [ req.body.username ]
+      [ challengeRows[0].username ]
     )
 
     // Validate assertion
@@ -221,7 +221,8 @@ router.post('/postAssertion', async (req, res, next) => {
 
     // Update counter
     await db.query(
-      // Update user.counter = new counter where user.username=req.body.username
+      'UPDATE "Users" set counter = $1 WHERE username = $2',
+      [ authnResult.counter, challengeRows[0].username ]
     )
 
     // Return pubkey
@@ -229,6 +230,7 @@ router.post('/postAssertion', async (req, res, next) => {
 
   } catch (err) {
     console.error()
+    return res.status(500).send()
   }
 })
 
