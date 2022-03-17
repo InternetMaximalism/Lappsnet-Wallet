@@ -143,9 +143,11 @@ async function submitAssertionToServer (assertion) {
                 assertion: JSON.stringify(assData)
             }, function (res) {
                 if (res.publicKey) {
-                    console.log(`Credential public key returned: ${res.publicKey}`)
-                    console.log(`Username returned: ${res.username}`)
-                    resolve({ publicKey: res.publicKey, username: res.username })
+                    let assPubkey = res.publicKey
+                    let assUsername = res.username
+                    console.log(`Credential public key returned: ${assPubkey}`)
+                    console.log(`Username returned: ${assUsername}`)
+                    resolve({ assPubkey, assUsername })
                 } else {
                     // Show server error
                     console.log(`Server responded invalid data`)

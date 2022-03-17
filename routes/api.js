@@ -220,7 +220,7 @@ router.post('/postAssertion', async (req, res, next) => {
     }
     let authnResult = await f2l.assertionResult(clientAssertionResponse, assertionExpectations)
 
-    console.log(`Assertion validated! authnResult: ${JSON.stringify(authnResult, null, 2)}`)
+    console.log(`Assertion validated! authnResult.authnrData: ${authnResult.authnrData}`)
 
     // Delete challenge
     await db.query(
@@ -240,7 +240,6 @@ router.post('/postAssertion', async (req, res, next) => {
       'UPDATE "Users" set counter = $1 WHERE username = $2',
       [ updateCounter, challengeRows.rows[0].username ]
     )
-    console.log(`Counter updated!`)
 
     // Return pubkey
     return res.status(200).json({ publicKey: userRows.rows[0].pubKeyBytes, username: userRows.rows[0].username })
