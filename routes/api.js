@@ -182,40 +182,40 @@ router.post('/postAssertion', async (req, res, next) => {
     clientAssertionResponse.rawId = abRawId
     
     // Look up challenge
-    const { challengeRows } = await db.query(
+    const challengeRows = await db.query(
       'SELECT * FROM "Challenges" WHERE challenge = $1',
       [ clientData.challenge ]
     )
-    console.log(`Challenge ${clientData.challenge} found: ${JSON.stringify(challengeRows, null, 2)}`)
+    console.log(`Challenge ${clientData.challenge} found: ${JSON.stringify(challengeRows.rows, null, 2)}`)
 
     // If expired or DNE, return error message
-    if (challengeRows.length === 0) {
+    if (challengeRows.rows.length === 0) {
       return res.status(404).send()
     }
 
     const now = new Date()
-    const expiry = new Date(challengeRows[0].expiration)
+    const expiry = new Date(challengeRows.rows[0].expiration)
     if (now.getTime() > expiry.getTime()) {
       return res.status(404).send()
     }
 
     // Return the credId for specified user.
-    const { userRows } = await db.query(
+    const userRows = await db.query(
       'SELECT * FROM "Users" where username = $1',
-      [ challengeRows[0].username ]
+      [ challengeRows.rows[0].username ]
     )
     console.log(`User found!`)
     // Validate assertion
     let assertionExpectations = {
       allowCredentials: [{
-        id: userRows[0].credId,
+        id: userRows.rows[0].credId,
         type: 'public-key',
         transports: ["usb", "nfc", "ble", "internal"]
       }],
-      challenge: challengeRows[0].challenge,
+      challenge: challengeRows.rows[0].challenge,
       origin: `https://${process.env.RPID}`,
-      publicKey: userRows[0].pubKeyPem,
-      prevCounter: userRows[0].counter
+      publicKey: userRows.rows[0].pubKeyPem,
+      prevCounter: userRows.rows[0].counter
     }
     let authnResult = await f2l.assertionResult(clientAssertionResponse, assertionExpectations)
 
@@ -230,12 +230,12 @@ router.post('/postAssertion', async (req, res, next) => {
     // Update counter
     await db.query(
       'UPDATE "Users" set counter = $1 WHERE username = $2',
-      [ authnResult.counter, challengeRows[0].username ]
+      [ authnResult.counter, challengeRows.rows[0].username ]
     )
     console.log(`Counter updated!`)
 
     // Return pubkey
-    return res.status(200).json({ publicKey: userRows[0].pubKeyBytes, username: userRows[0].username })
+    return res.status(200).json({ publicKey: userRows.rows[0].pubKeyBytes, username: userRows.rows[0].username })
 
   } catch (err) {
     console.error(err)
