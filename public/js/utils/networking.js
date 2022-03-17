@@ -154,12 +154,11 @@ async function submitAssertionToServer (assertion) {
                 }
             },
             "json")
+            .fail(function (res) {
+                console.error(`Server returned error`)
+                reject()
+            })
         })
-        .fail(function (res) {
-            console.error(`Server returned error`)
-            reject()
-        })
-
     } catch (err) {
         console.error(err)
     }
