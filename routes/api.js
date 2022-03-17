@@ -186,7 +186,7 @@ router.post('/postAssertion', async (req, res, next) => {
       'SELECT * FROM "Challenges" WHERE challenge = $1',
       [ clientData.challenge ]
     )
-    console.log('Challenge found!')
+    console.log(`Challenge ${clientData.challenge} found: ${JSON.stringify(challengeRows, null, 2)}`)
 
     // If expired or DNE, return error message
     if (challengeRows.length === 0) {
