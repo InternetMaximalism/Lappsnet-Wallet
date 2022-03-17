@@ -38,7 +38,7 @@ async function submitRegistrationRequest (username) {
                   // Return JSON data
                   returnObject.challenge = base64.toArrayBuffer(res.challenge, true)
                   returnObject.user.id = base64.toArrayBuffer(res.user.id, true)
-                  resolve(returnObject)
+                  return resolve(returnObject)
               } else {
                   // Show server error
                   console.log(`Server responded with invalid attestationOptions`)
@@ -73,7 +73,7 @@ async function submitAttestationToServer (attestation) {
           function (res) {
               if (res.publicKey) {
                   console.log(`Credential public key returned: ${res.publicKey}`)
-                  resolve({ publicKey: res.publicKey, username: res.username })
+                  return resolve({ publicKey: res.publicKey, username: res.username })
               } else {
                   // Show server error
                   console.log(`Server responded invalid data`)
@@ -107,7 +107,7 @@ async function submitAuthenticationRequest (username) {
                     authnOptions.challenge = base64.toArrayBuffer(res.challenge, true)
                     console.log(authnOptions)
                     // Return JSON data
-                    resolve(authnOptions)
+                    return resolve(authnOptions)
                 } else {
                     // Show server error
                     console.log(`Server responded with invalid assertionOptions`)
@@ -147,7 +147,7 @@ async function submitAssertionToServer (assertion) {
                     let assUsername = res.username
                     console.log(`Credential public key returned: ${assPubkey}`)
                     console.log(`Username returned: ${assUsername}`)
-                    resolve({ assPubkey, assUsername })
+                    return resolve({ assPubkey, assUsername })
                 } else {
                     // Show server error
                     console.log(`Server responded invalid data`)

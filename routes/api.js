@@ -220,7 +220,7 @@ router.post('/postAssertion', async (req, res, next) => {
     }
     let authnResult = await f2l.assertionResult(clientAssertionResponse, assertionExpectations)
 
-    console.log(`Assertion validated! authnResult.authnrData: ${authnResult.authnrData}`)
+    console.log(`Assertion validated! authnResult.authnrData.get('signCount'): ${authnResult.authnrData.get('signCount')}`)
 
     // Delete challenge
     await db.query(
