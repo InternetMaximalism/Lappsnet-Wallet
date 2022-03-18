@@ -4,6 +4,7 @@
 $('.createTxTopBtn').on('click', function() {
     $('#createTxModal').show()
     $('input[name=selectTxType][value="1"]').prop('checked', true)
+    switchCreateTxFormType("1")
 })
 
 $('.cancelCreateTx').on('click', function() {
