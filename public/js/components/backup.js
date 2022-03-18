@@ -1,4 +1,8 @@
 /* backup.js - handle backup encrypted key modal on account creation */
+$('.backUpAccount').on('click', function() {
+  showBackupModal()
+})
+
 function showBackupModal () {
   $('#backupForm').hide()
   $('#backupModal').show()
