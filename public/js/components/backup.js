@@ -1,7 +1,16 @@
 /* backup.js - handle backup encrypted key modal on account creation */
 $('.backUpAccount').on('click', function() {
-  showBackupModal()
+  backUpAccountClickHandler()
 })
+
+async function backUpAccountClickHandler() {
+  try {
+    rawPk = await authAndRecoverPk()
+    showBackupModal()
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 function showBackupModal () {
   $('#backupForm').hide()
@@ -20,6 +29,7 @@ $('#backupPw').change(function () {
 
 async function enterEncPk () {
   let e = await encryptPk(rawPk, $('#backupPw').val())
+  rawPk = null
   $('#encrypted').val(e)
   $('#backupForm').show()
 }
