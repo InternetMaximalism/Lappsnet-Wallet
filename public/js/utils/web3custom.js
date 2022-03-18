@@ -10,7 +10,7 @@ function initWeb3 (callback) {
 async function getBalance (address) {
     try {
         web3js.eth.getBalance(
-            userAddress,
+            window.localStorage.getItem('addr'),
             "latest",
             function(err, res)  {
                 if (err) return console.error(err)
