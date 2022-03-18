@@ -87,7 +87,6 @@ $('.confirmAccount').on('click', function() {
 
 $('.signMessageBtn').on('click', function() {
   signMessageBtn()
-  window.close()
 })
 
 async function signMessageBtn () {
@@ -101,6 +100,7 @@ async function signMessageBtn () {
     sendAddress(callbackUrl, signature)
     $('#signMessageModal').hide()
     alert('Address has been sent to application')
+    window.close()
   } catch (err) {
     console.error(err)
   }
