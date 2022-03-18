@@ -61,11 +61,24 @@ if (window.localStorage.getItem('pk')) {
     showInsecureWarning()
 }
 function showInsecureWarning () {
+    let eKeyExists = !!window.localStorage.getItem('encryptedKey')
     $('#warningBanner').show()
-    $('#warningMessage').text(
-        "You are in backup mode; your private key is insecure. " +
-        "We recommend you sign out when you are done. For best security, transfer assets to a new account."
-    )
+    if (eKeyExists) {
+        $('#warningMessage').text(
+            "You are in backup mode; your private key is insecure. " +
+            "We recommend you sign out when you are done. " +
+            "Your account is still saved on your browser, so you should " +
+            "be able to log in with the correct username."
+        )
+        return
+    } else {
+        $('#warningMessage').text(
+            "You are in backup mode; your private key is insecure. " +
+            "We recommend you sign out when you are done. " +
+            "Your account is no longer saved in your browser, so we " +
+            "also recommend you transfer your assets to a new one."
+        )
+    }
 }
 
 // Change text & display correct contents based on login status
