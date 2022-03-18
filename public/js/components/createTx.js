@@ -117,6 +117,9 @@ async function createNativeTx (to, value, gas) {
       $('#createTxBtn').attr('disabled', false)
       $('#createTxModal').hide()
 
+      loadWalletUI()
+      return
+
   } catch (err) {
       console.error(err)
       $('#createTxSpinner').hide()
@@ -181,6 +184,7 @@ async function createTokenTx (to, value, abi = null) {
       $('#createTxModal').hide()
       $('#createTxSpinner').hide()
       $('#createTxBtn').attr('disabled', false)
+      loadWalletUI()
       return
   } catch (err) {
       console.error(err)
