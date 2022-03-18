@@ -3,6 +3,7 @@
 
 $('.createTxTopBtn').on('click', function() {
     $('#createTxModal').show()
+    $('input[name=selectTxType][value="1"]').prop('checked', true)
 })
 
 $('.cancelCreateTx').on('click', function() {
@@ -198,7 +199,9 @@ $('#collapseTokenList').on('click', '.tokenListItem', async function() {
 
       let tokenData = await queryTokenList(this.id)
       $('#createTxTokenContract').val(tokenData.contractAddress)
-      $('#createTxTokenContract').attr('disabled', 'true')
+      $('#createTxTokenContract').attr('disabled', true)
+
+      $('input[name=selectTxType][value="2"]').prop('checked', true)
 
   } catch (err) {
       console.error(err)
