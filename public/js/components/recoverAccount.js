@@ -39,7 +39,14 @@ $('.backUpKey').on('click', function() {
   showBackupModal()
 })
 
+/*
 $('.recoverBtn').on('click', function() {
+  accountRecoveryHandler()
+})
+*/
+
+$('#recoveryFormBody').submit(function(event) {
+  event.preventDefault()
   accountRecoveryHandler()
 })
 
