@@ -50,7 +50,7 @@ async function getTokenBalances (address) {
 
 async function getTokenList () {
     try {
-        let tokenList = (await $.get('https://explorer.intmedium.xyz/api?module=account&action=tokenlist&address='.concat(address))).result
+        let tokenList = (await $.get('https://explorer.intmedium.xyz/api?module=account&action=tokenlist&address='.concat(window.localStorage.getItem('addr')))).result
         if (tokenList.length === 0) {
             return null
         }

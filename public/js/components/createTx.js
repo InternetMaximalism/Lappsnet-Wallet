@@ -196,8 +196,7 @@ $('#collapseTokenList').on('click', '.tokenListItem', async function() {
       $('#createTxDataForm').hide()
       $('#createTxGasLimitForm').hide()
 
-      let tokenData = queryTokenList(this.id)
-      console.log(tokenData)
+      let tokenData = await queryTokenList(this.id)
       $('#createTxTokenContract').val(tokenData.contractAddress)
       $('#createTxTokenContract').attr('disabled', 'true')
 
