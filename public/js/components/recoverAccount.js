@@ -44,18 +44,22 @@ $('.recoverBtn').on('click', function() {
 })
 
 async function accountRecoveryHandler () {
-  // Decrypt key with pass phrase
-  let recoverPk = await recoverPk($('#encryptedBackup').val(), $('#yourPw').val())
-  // Get address
-  let { address } = await web3js.eth.accounts.privateKeyToAccount(recoverPk)
-  window.localStorage.setItem('pk', recoverPk)
-  window.localStorage.setItem('addr', address)
-  recoverPk = null
-  
-  // Hide modal, show account
-  $('#recoverModal').hide()
-  $('#connectLoginNotDetected').hide()
-  loadWalletUI()
+  try {
+    // Decrypt key with pass phrase
+    let recoverPk = await recoverPk($('#encryptedBackup').val(), $('#yourPw').val())
+    // Get address
+    let { address } = await web3js.eth.accounts.privateKeyToAccount(recoverPk)
+    window.localStorage.setItem('pk', recoverPk)
+    window.localStorage.setItem('addr', address)
+    recoverPk = null
+    
+    // Hide modal, show account
+    $('#recoverModal').hide()
+    $('#connectLoginNotDetected').hide()
+    loadWalletUI()
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 $('.cancelRecovery').on('click', function() {
