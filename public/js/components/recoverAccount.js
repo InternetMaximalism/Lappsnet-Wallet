@@ -65,6 +65,7 @@ async function accountRecoveryHandler () {
     $('#recoverModal').hide()
     $('#connectLoginNotDetected').hide()
     loadWalletUI()
+    showInsecureWarning()
   } catch (err) {
     console.error(err)
   }

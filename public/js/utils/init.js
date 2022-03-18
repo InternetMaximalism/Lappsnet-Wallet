@@ -58,6 +58,9 @@ if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
 }
 
 if (window.localStorage.getItem('pk')) {
+    showInsecureWarning()
+}
+function showInsecureWarning () {
     $('#warningBanner').show()
     $('#warningMessage').text(
         "You are in backup mode; your private key is insecure. " +
