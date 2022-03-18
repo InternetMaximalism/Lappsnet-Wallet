@@ -54,7 +54,6 @@ async function signTxBtn () {
                 $('#signTxSpinner').hide()
                 $('#signTxBtn').attr('disabled', false)
                 $('#signTxModal').hide()
-                window.close()
             })
 
     } catch (err) {
