@@ -82,10 +82,12 @@ async function createNativeTx (to, value, gas) {
           to, value, gas
       }
       // Sign the transaction
+      let pk = await authAndRecoverPk()
       const signedTx = await web3js.eth.accounts.signTransaction(
           tx,
-          window.localStorage.getItem('IntMediumPrivateKey')
+          pk
       )
+      pk = null
       // Broadcast the transaction
       const receipt = await web3js.eth.sendSignedTransaction(signedTx.rawTransaction)
 
@@ -139,18 +141,20 @@ async function createTokenTx (to, value, abi = null) {
       let contract = new web3js.eth.Contract(abi, $('#createTxTokenContract').val())
       let transaction = contract.methods.transfer(to, web3js.utils.toWei(value))
 
-      let gastimate = await transaction.estimateGas({ gas: "5000000", from: localStorage.getItem('IntMediumAddress') })
+      let gastimate = await transaction.estimateGas({ gas: "5000000", from: localStorage.getItem('addr') })
       if (gastimate === 5000000) {
           throw new Error('Contract would run out of gas! Infinite loop?')
       }
 
       let options = {
-          from: window.localStorage.getItem('IntMediumAddress'),
+          from: window.localStorage.getItem('addr'),
           to: contract._address,
           data: transaction.encodeABI(),
           gas: web3js.utils.toBN(gastimate)
       }
-      let signedTx = await web3js.eth.accounts.signTransaction(options, window.localStorage.getItem('IntMediumPrivateKey'))
+      let pk = await authAndRecoverPk()
+      let signedTx = await web3js.eth.accounts.signTransaction(options, pk)
+      pk = null
       let receipt = await web3js.eth.sendSignedTransaction(signedTx.rawTransaction)
       $('#successBanner').show()
       

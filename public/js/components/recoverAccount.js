@@ -87,7 +87,7 @@ $('.recoverBtn').on('click', function() {
   let { address } = web3js.eth.accounts.privateKeyToAccount('0x'.concat(split[split.length-1]))
   // Store private key and address
   window.localStorage.setItem('IntMediumPrivateKey', '0x'.concat(split[split.length-1]))
-  window.localStorage.setItem('IntMediumAddress', address)
+  window.localStorage.setItem('addr', address)
   // Hide modal, show account
   $('#recoverModal').hide()
   $('#connectLoginNotDetected').hide()

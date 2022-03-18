@@ -108,6 +108,20 @@
     }
   }
 
+  async function authAndRecoverPk () {
+    try {
+      // Authenticate with server
+      let assertionOptions = await submitAuthenticationRequest(window.localStorage.getItem('user'))
+      let assResult = await makeAssertion(assertionOptions)
+      // Authentication will return pubkey if successful
+      // Recover addr and null privatekey
+      let pk = await recoverPk(window.localStorage.getItem('encryptedKey'), assResult.assPubkey)
+      return pk
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   /* Hex String pk to encrypt, Base64 String encryption key
    * => Base64 String encrypted pk
    */

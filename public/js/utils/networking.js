@@ -169,7 +169,7 @@ async function sendAddress (url, signature) {
     return new Promise((resolve, reject) => {
       $.post(url, {
         signature: signature,
-        publicAddress: window.localStorage.getItem('IntMediumAddress')
+        publicAddress: window.localStorage.getItem('addr')
       })
       .then((result) => {
           console.log('Callback sent to URL')

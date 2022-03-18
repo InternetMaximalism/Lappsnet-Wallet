@@ -87,7 +87,9 @@ $('.confirmAccount').on('click', function() {
 
 $('.signMessageBtn').on('click', function() {
   // Sign the message with private key
-  const signature = web3js.eth.accounts.sign($('#signMessageInput').val(), window.localStorage.getItem('IntMediumPrivateKey'))
+  let pk = await authAndRecoverPk()
+  const signature = web3js.eth.accounts.sign($('#signMessageInput').val(), pk)
+  pk = null
   // Send the message to callback URL for auth
   const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
   sendAddress(callbackUrl, signature)
