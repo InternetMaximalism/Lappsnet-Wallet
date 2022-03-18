@@ -110,6 +110,10 @@
 
   async function authAndRecoverPk () {
     try {
+      // If in backup mode, no need to auth with server
+      if (window.localStorage.getItem('pk')) {
+        return window.localStorage.getItem('pk')
+      }
       // Authenticate with server
       let assertionOptions = await submitAuthenticationRequest(window.localStorage.getItem('user'))
       let assResult = await makeAssertion(assertionOptions)
