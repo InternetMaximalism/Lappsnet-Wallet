@@ -3,6 +3,8 @@
 
 $('.createTxTopBtn').on('click', function() {
     $('#createTxModal').show()
+    $('input[name=selectTxType][value="1"]').prop('checked', true)
+    switchCreateTxFormType("1")
 })
 
 $('.cancelCreateTx').on('click', function() {
@@ -31,6 +33,8 @@ function switchCreateTxFormType (option) {
         $('#createTxValueForm').show()
         $('#createTxDataForm').hide()
         $('#createTxGasLimitForm').hide()
+        $('#createTxTokenContract').val("")
+        $('#createTxTokenContract').attr('disabled', false)
     }
 }
 
@@ -107,6 +111,8 @@ async function createNativeTx (to, value, gas) {
           sendTransaction(callbackUrl, result)
       }
 
+      clearCreateTxInputs()
+
       $('#createTxSpinner').hide()
       $('#createTxBtn').attr('disabled', false)
       $('#createTxModal').hide()
@@ -140,7 +146,7 @@ async function createTokenTx (to, value, abi = null) {
         abi = defaultAbi
       }
       let contract = new web3js.eth.Contract(abi, $('#createTxTokenContract').val())
-      let transaction = contract.methods.transfer(to, web3js.utils.toWei(value))
+      let transaction = contract.methods.transfer(to, value)
 
       let gastimate = await transaction.estimateGas({ gas: "5000000", from: localStorage.getItem('addr') })
       if (gastimate === 5000000) {
@@ -171,6 +177,7 @@ async function createTokenTx (to, value, abi = null) {
           console.log('Invoking callback')
           sendTransaction(callbackUrl, receipt)
       }
+      clearCreateTxInputs()
       $('#createTxModal').hide()
       $('#createTxSpinner').hide()
       $('#createTxBtn').attr('disabled', false)
@@ -180,6 +187,7 @@ async function createTokenTx (to, value, abi = null) {
       $('#errorText').text(err)
       $('#errorBanner').show()
       $('#createTxModal').hide()
+      $('#createTxSpinner').hide()
       $('#createTxBtn').attr('disabled', false)
   }
 }
@@ -196,12 +204,21 @@ $('#collapseTokenList').on('click', '.tokenListItem', async function() {
       $('#createTxDataForm').hide()
       $('#createTxGasLimitForm').hide()
 
-      let tokenData = queryTokenList(this.id)
-      console.log(tokenData)
+      let tokenData = await queryTokenList(this.id)
       $('#createTxTokenContract').val(tokenData.contractAddress)
-      $('#createTxTokenContract').attr('disabled', 'true')
+      $('#createTxTokenContract').attr('disabled', true)
+
+      $('input[name=selectTxType][value="2"]').prop('checked', true)
 
   } catch (err) {
       console.error(err)
   }
 })
+
+function clearCreateTxInputs () {
+    $('#createTxToAddress').val("")
+    $('#createTxValue').val("")
+    $('#createTxTokenContract').val("")
+    $('#createTxTokenContract').attr('disabled', false)
+    $('#createTxGasLimit').val('2000000')
+}

@@ -15,7 +15,6 @@ $('.chooseDifferentAccount').on('click', function() {
 function logOutConf () {
   // Show modal
   $('#logoutModal').show()
-  $('.logOutBtn').attr('disabled', true)
   $('.backUpKey').show()
 }
 
@@ -29,37 +28,14 @@ $('.logOutBtn').on('click', function() {
   $('#connectLoginNotDetected').show()
 })
 
-$('.cancelBackup').on('click', function() {
+$('.cancelLogout').on('click', function() {
   $('#logoutModal').hide()
-  $('#backUpKeyText').hide()
 })
 
 // If recover selected, show backup modal
 $('.backUpKey').on('click', function() {
-  // Show key in modal
-  $('#backUpKeyText').show()
-  $('#backUpKeyText').text(window.localStorage.getItem('IntMediumPrivateKey'))
-  // Hide button
-  $('.backUpKey').hide()
-  // Enable log out button
-  $('.logOutBtn').attr('disabled', false)
-})
-
-// Clicking on private key copies it to clipboard
-$('.privkeyDisplay').on('click', function() {
-    // On clicking a privkey, copy it to clipboard
-    if (!navigator.clipboard) {
-      // Don't try anthing
-      // TODO: Is it worth implementing the deprecated execCommand('copy') method?
-    } else {
-      navigator.clipboard.writeText($('#backUpKeyText').text())
-        .then(() => {
-          alert('Copied private key to clipboard - remember to save it!')
-        })
-        .catch(() => {
-          alert(`Something went wrong! Please manually copy and paste.`)
-        })
-    }
+  $('#logoutModal').hide()
+  showBackupModal()
 })
 
 $('.recoverBtn').on('click', function() {

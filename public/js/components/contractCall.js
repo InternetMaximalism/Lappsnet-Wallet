@@ -48,6 +48,7 @@ function showContractCallModal (args = {}) {
 
 function hideContractCallModal () {
     $('#contractCallModal').hide()
+    $('#methodSelector').hide()
 }
 
 function hideContractConfirmationModal () {
