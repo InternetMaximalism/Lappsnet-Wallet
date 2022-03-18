@@ -144,8 +144,6 @@ async function submitAssertionToServer (assertion) {
                 if (res.publicKey) {
                     let assPubkey = res.publicKey
                     let assUsername = res.username
-                    console.log(`Credential public key returned: ${assPubkey}`)
-                    console.log(`Username returned: ${assUsername}`)
                     resolve({ assPubkey, assUsername })
                 } else {
                     // Show server error

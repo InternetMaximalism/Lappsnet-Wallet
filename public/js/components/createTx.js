@@ -113,6 +113,7 @@ async function createNativeTx (to, value, gas) {
 
   } catch (err) {
       console.error(err)
+      $('#createTxSpinner').hide()
       $('#errorText').text(err)
       $('#errorBanner').show()
       $('#createTxModal').hide()
@@ -195,7 +196,7 @@ $('#collapseTokenList').on('click', '.tokenListItem', async function() {
       $('#createTxDataForm').hide()
       $('#createTxGasLimitForm').hide()
 
-      let tokenData = queryTokenList(tokenList, this.id)
+      let tokenData = queryTokenList(this.id)
       console.log(tokenData)
       $('#createTxTokenContract').val(tokenData.contractAddress)
       $('#createTxTokenContract').attr('disabled', 'true')

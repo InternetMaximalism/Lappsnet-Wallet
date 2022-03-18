@@ -48,11 +48,28 @@ async function getTokenBalances (address) {
     }
 }
 
-function queryTokenList (tokenList, symbol) {
-    console.log(tokenList)
-    return (tokenList.filter(i => {
-        return i.symbol === symbol
-    }))[0]
+async function getTokenList () {
+    try {
+        let tokenList = (await $.get('https://explorer.intmedium.xyz/api?module=account&action=tokenlist&address='.concat(address))).result
+        if (tokenList.length === 0) {
+            return null
+        }
+        return tokenList
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+async function queryTokenList (symbol) {
+    try {
+        tokenList = await getTokenList()
+        console.log(tokenList)
+        return (tokenList.filter(i => {
+            return i.symbol === symbol
+        }))[0]
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 /* Return ABI for given verified contract */
