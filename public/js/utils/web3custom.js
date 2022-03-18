@@ -1,15 +1,13 @@
 let web3js;
 
+window.addEventListener('load', e => {
+    initWeb3()
+})
+
 function initWeb3 () {
   console.log('Loading web3js')
   web3js = new Web3('https://rpc.intmedium.xyz')
-  // After web3js initialized, get user balances
-  if (userAddress) {
-      getBalance(userAddress)
-  }
 }
-
-window.addEventListener('load', initWeb3)
 
 /* Get balance of SAT token and other tokens */
 async function getBalance (address) {
@@ -40,7 +38,6 @@ async function getTokenBalances (address) {
         balancesDiv.empty()
         let ul = $('<ul>').appendTo(balancesDiv)
         tokenList.forEach(i => {
-            console.log(i)
             let li = $('<li>')
                       .text(`${escapeHTML(i.name)} (${escapeHTML(i.symbol)} - ${escapeHTML(web3js.utils.fromWei(i.balance))})`)
                       .attr('class', `tokenListItem m-1`)

@@ -2,6 +2,7 @@
  * If user is logged in, handles query string to show proper form
  * If user is not logged in, shows options to register or recover account
  */
+
 initComponents()
 function initComponents () {
     $('#connectLoginDetected').hide()
@@ -71,7 +72,7 @@ async function loadWalletUI () {
             $('.usernameDisplay').text(window.localStorage.getItem('user'))
             $('.addressDisplay').text(window.localStorage.getItem('addr'))
             $('#continueWithAccountConfirmation').show()
-            tokenList = await getTokenBalances(window.localStorage.getItem('addr'))
+            getBalance(window.localStorage.getItem('addr'))
         }
     } catch (err) {
         console.error(err)
