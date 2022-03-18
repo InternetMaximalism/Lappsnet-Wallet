@@ -36,7 +36,7 @@ async function getTokenBalances (address) {
         let ul = $('<ul>').appendTo(balancesDiv)
         tokenList.forEach(i => {
             let li = $('<li>')
-                      .text(`${escapeHTML(i.name)} (${escapeHTML(i.symbol)} - ${escapeHTML(web3js.utils.fromWei(i.balance))})`)
+                      .text(`${escapeHTML(i.name)} (${escapeHTML(web3js.utils.fromWei(i.balance))} ${escapeHTML(i.symbol)})`)
                       .attr('class', `tokenListItem m-1`)
                       .attr('id', `${escapeHTML(i.symbol)}`)
                       .appendTo(ul)

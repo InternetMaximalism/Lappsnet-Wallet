@@ -111,6 +111,8 @@ async function createNativeTx (to, value, gas) {
           sendTransaction(callbackUrl, result)
       }
 
+      clearCreateTxInputs()
+
       $('#createTxSpinner').hide()
       $('#createTxBtn').attr('disabled', false)
       $('#createTxModal').hide()
@@ -175,6 +177,7 @@ async function createTokenTx (to, value, abi = null) {
           console.log('Invoking callback')
           sendTransaction(callbackUrl, receipt)
       }
+      clearCreateTxInputs()
       $('#createTxModal').hide()
       $('#createTxSpinner').hide()
       $('#createTxBtn').attr('disabled', false)
@@ -211,3 +214,11 @@ $('#collapseTokenList').on('click', '.tokenListItem', async function() {
       console.error(err)
   }
 })
+
+function clearCreateTxInputs () {
+    $('#createTxToAddress').val("")
+    $('#createTxValue').val("")
+    $('#createTxTokenContract').val("")
+    $('#createTxTokenContract').attr('disabled', false)
+    $('#createTxGasLimit').val('2000000')
+}
