@@ -33,6 +33,8 @@ function switchCreateTxFormType (option) {
         $('#createTxValueForm').show()
         $('#createTxDataForm').hide()
         $('#createTxGasLimitForm').hide()
+        $('#createTxTokenContract').val("")
+        $('#createTxTokenContract').attr('disabled', false)
     }
 }
 
