@@ -22,6 +22,7 @@ function logOutConf () {
 $('.logOutBtn').on('click', function() {
   window.localStorage.removeItem('user')
   window.localStorage.removeItem('addr')
+  window.localStorage.removeItem('pk')
   $('#connectLoginDetected').hide()
   $('#logoutModal').hide()
   $('#continueWithAccountConfirmation').hide()
@@ -39,36 +40,23 @@ $('.backUpKey').on('click', function() {
 })
 
 $('.recoverBtn').on('click', function() {
-  // Check key is hex, 64 bytes or '0x' prefix + 64 bytes
-  console.log('Checking key')
-  let keyInput = $('#recoveryKeyInput').val().trim()
-  if (
-        ( keyInput.slice(0,2) === '0x' &&
-          keyInput.length === 66) &&
-          /[0-9A-Fa-f]{6}/g.test(keyInput.slice(2,66)
-        )
-      || 
-        ( keyInput.slice(0,2) !== '0x' && 
-          keyInput.length === 64 &&
-          /[0-9A-Fa-f]{6}/g.test(keyInput))
-      ) {
+  accountRecoveryHandler()
+})
 
-  } else {
-      console.error('Key format is wrong')
-      return alert('Key format invalid: must be 32 bytes hex, with or without 0x prefix')
-  }
-  
+async function accountRecoveryHandler () {
+  // Decrypt key with pass phrase
+  let recoverPk = await recoverPk($('#encryptedBackup').val(), $('#yourPw').val())
   // Get address
-  let split = keyInput.split('0x')
-  let { address } = web3js.eth.accounts.privateKeyToAccount('0x'.concat(split[split.length-1]))
-  // Store private key and address
-  window.localStorage.setItem('IntMediumPrivateKey', '0x'.concat(split[split.length-1]))
+  let { address } = await web3js.eth.accounts.privateKeyToAccount(recoverPk)
+  window.localStorage.setItem('pk', recoverPk)
   window.localStorage.setItem('addr', address)
+  recoverPk = null
+  
   // Hide modal, show account
   $('#recoverModal').hide()
   $('#connectLoginNotDetected').hide()
   loadWalletUI()
-})
+}
 
 $('.cancelRecovery').on('click', function() {
   $('#recoverModal').hide()

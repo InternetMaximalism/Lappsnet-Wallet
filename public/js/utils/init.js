@@ -34,6 +34,7 @@ function initComponents () {
     $('#createTxGasLimitForm').hide()
     $('#signTxSpinner').hide()
     $('#successBanner').hide()
+    $('#warningBanner').hide()
     $('#errorBanner').hide()
     $('#tokenBalances').hide()
     $('#contractCallModal').hide()
@@ -54,6 +55,14 @@ function initComponents () {
 
 if (!(navigator.credentials && navigator.credentials.preventSilentAccess)) {
     alert('Your browser does not support credential management API')
+}
+
+if (window.localStorage.getItem('pk')) {
+    $('#warningBanner').show()
+    $('#warningMessage').text(
+        "You are in backup mode; your private key is insecure. " +
+        "We recommend you sign out when you are done. For best security, transfer assets to a new account."
+    )
 }
 
 // Change text & display correct contents based on login status
