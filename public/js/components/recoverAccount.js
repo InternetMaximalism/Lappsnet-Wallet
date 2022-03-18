@@ -53,12 +53,13 @@ $('#recoveryFormBody').submit(function(event) {
 async function accountRecoveryHandler () {
   try {
     // Decrypt key with pass phrase
-    let recoverPk = await recoverPk($('#encryptedBackup').val(), $('#yourPw').val())
+    let recoveredPk = await recoverPk($('#encryptedBackup').val(), $('#yourPw').val())
     // Get address
-    let { address } = await web3js.eth.accounts.privateKeyToAccount(recoverPk)
-    window.localStorage.setItem('pk', recoverPk)
+    let { privateKey, address } = await web3js.eth.accounts.privateKeyToAccount(recoveredPk)
+    window.localStorage.setItem('pk', privateKey)
     window.localStorage.setItem('addr', address)
-    recoverPk = null
+    recoveredPk = null
+    privateKey = null
     
     // Hide modal, show account
     $('#recoverModal').hide()
