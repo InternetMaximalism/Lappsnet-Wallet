@@ -3,7 +3,11 @@
  * If user is not logged in, shows options to register or recover account
  */
 
-initComponents()
+window.addEventListener('load', e => {
+    initWeb3((w3) => {
+        initComponents()
+    })
+})
 function initComponents () {
     $('#connectLoginDetected').hide()
     $('#connectLoginNotDetected').hide()

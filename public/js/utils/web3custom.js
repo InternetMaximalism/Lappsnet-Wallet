@@ -1,12 +1,9 @@
 let web3js;
 
-window.addEventListener('load', e => {
-    initWeb3()
-})
-
-function initWeb3 () {
+function initWeb3 (callback) {
   console.log('Loading web3js')
   web3js = new Web3('https://rpc.intmedium.xyz')
+  callback(web3js)
 }
 
 /* Get balance of SAT token and other tokens */
