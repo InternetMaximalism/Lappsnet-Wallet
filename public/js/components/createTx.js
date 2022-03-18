@@ -144,7 +144,7 @@ async function createTokenTx (to, value, abi = null) {
         abi = defaultAbi
       }
       let contract = new web3js.eth.Contract(abi, $('#createTxTokenContract').val())
-      let transaction = contract.methods.transfer(to, web3js.utils.toWei(value))
+      let transaction = contract.methods.transfer(to, value)
 
       let gastimate = await transaction.estimateGas({ gas: "5000000", from: localStorage.getItem('addr') })
       if (gastimate === 5000000) {
@@ -184,6 +184,7 @@ async function createTokenTx (to, value, abi = null) {
       $('#errorText').text(err)
       $('#errorBanner').show()
       $('#createTxModal').hide()
+      $('#createTxSpinner').hide()
       $('#createTxBtn').attr('disabled', false)
   }
 }
