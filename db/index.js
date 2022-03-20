@@ -10,6 +10,7 @@ const pool = new Pool({
 
 ;(async () => {
   try {
+    console.log('Initializing DB...')
     const client = await pool.connect()
     await client.query({
       text: `
