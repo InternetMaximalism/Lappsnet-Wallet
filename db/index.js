@@ -35,7 +35,7 @@ const pool = new Pool({
   })
   console.log('Challenge table created if not exists')
   client.release()
-})
+})();
 
 module.exports = {
   query: (text, params) => pool.query(text, params)
