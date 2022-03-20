@@ -36,7 +36,6 @@ const pool = new Pool({
       );`
     })
     console.log('Challenge table created if not exists')
-    pool.release()
   } catch (err) {
     console.error(err)
   }
