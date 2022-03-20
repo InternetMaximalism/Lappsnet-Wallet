@@ -8,7 +8,7 @@ const pool = new Pool({
   }
 })
 
-;(async () => {
+(async () => {
   const client = await pool.connect()
   await client.query({
     text: `
@@ -23,6 +23,7 @@ const pool = new Pool({
     `,
     values: []
   })
+  console.log('User table created if not exists')
   await client.query({
     text: `
     CREATE TABLE IF NOT EXISTS public."Challenges"(
@@ -32,6 +33,7 @@ const pool = new Pool({
       PRIMARY KEY ("challenge")
     );`
   })
+  console.log('Challenge table created if not exists')
   client.release()
 })
 
