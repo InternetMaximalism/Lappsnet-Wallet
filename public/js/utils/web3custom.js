@@ -2,11 +2,7 @@ let web3js;
 
 function initWeb3 (callback) {
   console.log('Loading web3js')
-<<<<<<< HEAD
-  web3js = new Web3('https://rpc.intmedium.xyz')
-=======
   web3js = new Web3('https://rpc.lappsnet.io')
->>>>>>> dda440cc6bcd5d9ae98211f8692116eb98d30f36
   callback(web3js)
 }
 
@@ -54,11 +50,7 @@ async function getTokenBalances (address) {
 
 async function getTokenList () {
     try {
-<<<<<<< HEAD
-        let tokenList = (await $.get('https://explorer.intmedium.xyz/api?module=account&action=tokenlist&address='.concat(window.localStorage.getItem('addr')))).result
-=======
         let tokenList = (await $.get('https://explorer.lappsnet.io/api?module=account&action=tokenlist&address='.concat(window.localStorage.getItem('addr')))).result
->>>>>>> dda440cc6bcd5d9ae98211f8692116eb98d30f36
         if (tokenList.length === 0) {
             return null
         }
