@@ -4,6 +4,7 @@ Wallet for interacting with Lappsnet, an experimental network of smart contracts
 
 ## Table of Contents
 - [User Instructions](#user-instructions)
+- [How to Recover](#how-to-recover)
 - [Integration Instructions](#integration-instructions)
 
 ## User instructions
@@ -72,6 +73,39 @@ After entering the contract address, click 'load' to get a list of methods.
 Note: Only contracts verified on the [explorer](https://explorer.intmedium.xyz) can be called this way.
 
 You will see the result of a contract call in a success or error message at the top of the page.
+
+## How to recover
+
+There are three main cases where you may need to recover your wallet.
+
+NOTE: The last one requires your password manager to be set up on multiple devices.
+
+### Lappsnet Wallet server unavailable
+
+In case the server is unavailable, a locally hosted or cached version of Lappsnet Wallet will be sufficient to
+recover your private key.
+
+Since you cannot authenticate with the server, you must recover your private key from the encrypted backup
+stored in your password manager. Decrypt with the secret phrase you set when creating the backup.
+
+### Browser data cleared
+
+When you 'clear browsing data' from the settings menu, some browsers will delete your encrypted key.
+In such case, authenticating with our servers will not help you, as you have no key to decrypt.
+
+Recover your private key from the encrypted backup stored in your password manager.
+Decrypt with the secret phrase you set when creating the backup.
+
+### Security device lost/broken
+
+If the security device (e.g. screen lock, YubiKey) is lost or broken, you will not be able to
+authenticate with the server.
+
+Particularly, if you set up Lappsnet Wallet on your phone, you could lose or break your phone.
+
+In such case, you will need to recover from the encrypted backup stored in your password manager.
+To prevent total loss, make sure your password manager is shared among multiple devices, e.g. your
+computer or another phone.
 
 ## Integration instructions
 
