@@ -11,7 +11,7 @@ Wallet for interacting with Lappsnet, an experimental network of smart contracts
 
 ### Create key
 
-Visit `<lappsnet wallet hostname>/auth` to create an account.
+Visit `wallet.lappsnet.io/auth` to create an account.
 
 Your browser will generate a private key, which is then encrypted using your security chip.
 (Screen lock, Yubikey, etc.)
@@ -49,7 +49,7 @@ The transaction will be broadcast, and the dapp will be notified.
 
 You can also initiate transactions yourself.
 
-Follow a link to `<lappsnet wallet hostname>/auth` and you will be met with
+Follow a link to `wallet.lappsnet.io/auth` and you will be met with
 the usual account options.
 
 Once you proceed, there is a form where you can craft transactions.
@@ -70,7 +70,7 @@ Contract address may also be provided as a query string in the URL.
 
 After entering the contract address, click 'load' to get a list of methods.
 
-Note: Only contracts verified on the [explorer](https://explorer.intmedium.xyz) can be called this way.
+Note: Only contracts verified on the [explorer](https://explorer.lappsnet.io) can be called this way.
 
 You will see the result of a contract call in a success or error message at the top of the page.
 
@@ -113,7 +113,7 @@ There are 5 operations available, all initiated by a user opening a link in a ne
 
 ### Connect wallet
 
-Path: `https://<lappsnet wallet hostname>/auth`
+Path: `https://wallet.lappsnet.io/auth`
 
 REQUIRED Query parameters: `connect=true`, `nonce=<nonce>`, `callbackUrl=<encodeURIComponent(callback url)>`
 
@@ -126,7 +126,7 @@ Verify signature.
 
 ### Sign and broadcast transaction
 
-Path: `https://<lappsnet wallet hostname>/auth`
+Path: `https://wallet.lappsnet.io/auth`
 
 REQUIRED Query parameters: `signTx=true`, `txData=<base64URL encoded tx>`
 
@@ -138,7 +138,7 @@ The `txhash` will be sent to the callback url if specified. Verify if necessary.
 
 ### Create transaction
 
-Path: `https://<lappsnet wallet hostname>/auth`
+Path: `https://wallet.lappsnet.io/auth`
 
 REQUIRED Query parameters: `createTx=true`
 
@@ -154,7 +154,7 @@ Verify if necessary.
 
 ### Call contract (Contract MUST BE VERIFIED on [explorer](https://explorer.intmedium.xyz))
 
-Path: `https://<lappsnet wallet hostname>/auth`
+Path: `https://wallet.lappsnet.io/auth`
 
 REQUIRED Query parameters: `callContract=true`
 
@@ -172,6 +172,6 @@ The result is displayed to the user in a success or error banner.
 
 ### Open wallet
 
-Path: `https://<lappsnet wallet hostname>/auth`
+Path: `https://wallet.lappsnet.io/auth`
 
 Simply opens the wallet for the user to operate.

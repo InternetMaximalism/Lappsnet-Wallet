@@ -39,7 +39,7 @@ THIS IS CRUCIAL!</p>
 <p>The transaction will be broadcast, and the dapp will be notified.</p>
 <h3 id="create-transaction">Create transaction</h3>
 <p>You can also initiate transactions yourself.</p>
-<p>Follow a link to <code>&lt;lappsnet wallet hostname&gt;/auth</code> and you will be met with<br>
+<p>Follow a link to <code>wallet.lappsnet.io/auth</code> and you will be met with<br>
 the usual account options.</p>
 <p>Once you proceed, there is a form where you can craft transactions.<br>
 Choose whether you want to send SATs (the native currency of IntMedium), or other tokens.</p>
@@ -51,7 +51,7 @@ Choose whether you want to send SATs (the native currency of IntMedium), or othe
 Some operations may cost gas, while others may be free. You will be shown an estimated gas cost when confirming.</p>
 <p>Contract address may also be provided as a query string in the URL.</p>
 <p>After entering the contract address, click ‘load’ to get a list of methods.</p>
-<p>Note: Only contracts verified on the <a href="https://explorer.intmedium.xyz">explorer</a> can be called this way.</p>
+<p>Note: Only contracts verified on the <a href="https://explorer.lappsnet.io">explorer</a> can be called this way.</p>
 <p>You will see the result of a contract call in a success or error message at the top of the page.</p>
 <h2 id="how-to-recover">How to recover</h2>
 <p>There are three main cases where you may need to recover your wallet.</p>
@@ -72,20 +72,20 @@ To prevent total loss, make sure your password manager is shared among multiple 
 <h2 id="integration-instructions">Integration instructions</h2>
 <p>There are 5 operations available, all initiated by a user opening a link in a new tab.</p>
 <h3 id="connect-wallet">Connect wallet</h3>
-<p>Path: <code>https://&lt;lappsnet wallet hostname&gt;/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
 <p>REQUIRED Query parameters: <code>connect=true</code>, <code>nonce=&lt;nonce&gt;</code>, <code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></p>
 <p>Generate a nonce for each wallet connection attempt.</p>
 <p>The user will follow the link, sign the nonce with their account, and a callback will return <code>{ signature, publicAddress }</code><br>
 to the specified URL.</p>
 <p>Verify signature.</p>
 <h3 id="sign-and-broadcast-transaction">Sign and broadcast transaction</h3>
-<p>Path: <code>https://&lt;lappsnet wallet hostname&gt;/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
 <p>REQUIRED Query parameters: <code>signTx=true</code>, <code>txData=&lt;base64URL encoded tx&gt;</code></p>
 <p>OPTIONAL Query parameters: <code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></p>
 <p>The user is asked to sign and broadcast the transaction provided in the <code>txData</code> parameter.</p>
 <p>The <code>txhash</code> will be sent to the callback url if specified. Verify if necessary.</p>
 <h3 id="create-transaction-1">Create transaction</h3>
-<p>Path: <code>https://&lt;lappsnet wallet hostname&gt;/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
 <p>REQUIRED Query parameters: <code>createTx=true</code></p>
 <p>OPTIONAL Query parameters: <code>amount=&lt;number of tokens, NOT Wei&gt;</code>, <code>to=&lt;recipient address&gt;</code>, <code>contractAddress=&lt;ERC20 token contract&gt;</code>,<br>
 <code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></p>
@@ -94,7 +94,7 @@ to the specified URL.</p>
 <p>Once the user creates, signs, and broadcasts their transaction, <code>txhash</code> will be sent to callback url if specified.<br>
 Verify if necessary.</p>
 <h3 id="call-contract-contract-must-be-verified-on-explorer">Call contract (Contract MUST BE VERIFIED on <a href="https://explorer.intmedium.xyz">explorer</a>)</h3>
-<p>Path: <code>https://&lt;lappsnet wallet hostname&gt;/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
 <p>REQUIRED Query parameters: <code>callContract=true</code></p>
 <p>OPTIONAL Query parameters: <code>contractAddress=&lt;contract address&gt;</code></p>
 <p>You can send users to make contract calls on their own.</p>
@@ -104,7 +104,7 @@ Otherwise, the user must provide the contract address, after which a list of met
 <p>The chosen method will be called using send() or call() depending on the method.<br>
 The result is displayed to the user in a success or error banner.</p>
 <h3 id="open-wallet">Open wallet</h3>
-<p>Path: <code>https://&lt;lappsnet wallet hostname&gt;/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
 <p>Simply opens the wallet for the user to operate.</p>
 </div>
 </body>
