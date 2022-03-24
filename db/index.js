@@ -31,7 +31,7 @@ const pool = new Pool({
       CREATE TABLE IF NOT EXISTS public."Challenges"(
         "username" VARCHAR(100) NOT NULL,
         "challenge" VARCHAR(100) NOT NULL,
-        "exipration" VARCHAR(30) NOT NULL,
+        "expiration" VARCHAR(30) NOT NULL,
         PRIMARY KEY ("challenge")
       );`
     })
