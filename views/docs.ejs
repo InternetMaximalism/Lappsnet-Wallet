@@ -34,7 +34,7 @@ If it looks like it could be something unintended, DO NOT SIGN.</p>
 <p>Otherwise, sign it and you should be redirected to the dApp as a logged in user.</p>
 <h3 id="sign-transaction">Sign transaction</h3>
 <p>If the dApp prepares a transaction for you to sign, follow the link.</p>
-<p>Once on IntMedium Identity, check the contents of the transaction before signing.<br>
+<p>Once on Lappsnet Wallet, check the contents of the transaction before signing.<br>
 THIS IS CRUCIAL!</p>
 <p>If the transaction looks fine (destination address, amount, etc.), sign it.</p>
 <p>The transaction will be broadcast, and the dapp will be notified.</p>
@@ -43,11 +43,11 @@ THIS IS CRUCIAL!</p>
 <p>Follow a link to <code>wallet.lappsnet.io/auth</code> and you will be met with<br>
 the usual account options.</p>
 <p>Once you proceed, there is a form where you can craft transactions.<br>
-Choose whether you want to send SATs (the native currency of IntMedium), or other tokens.</p>
+Choose whether you want to send ESATs (the native currency of Lappsnet), or other tokens.</p>
 <p>TIP: Click on a token in the list of tokens you own to create a transaction for that token!</p>
 <p>Once done, the signed transaction will be submitted to the network.</p>
 <h3 id="call-contract">Call contract</h3>
-<p>You can also make contract calls directly from within IntMedium Identity!</p>
+<p>You can also make contract calls directly from within Lappsnet Wallet!</p>
 <p>For this, you must specify the contract address, method, and enter parameters as necessary.<br>
 Some operations may cost gas, while others may be free. You will be shown an estimated gas cost when confirming.</p>
 <p>Contract address may also be provided as a query string in the URL.</p>
@@ -90,7 +90,7 @@ to the specified URL.</p>
 <p>REQUIRED Query parameters: <code>createTx=true</code></p>
 <p>OPTIONAL Query parameters: <code>amount=&lt;number of tokens, NOT Wei&gt;</code>, <code>to=&lt;recipient address&gt;</code>, <code>contractAddress=&lt;ERC20 token contract&gt;</code>,<br>
 <code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></p>
-<p>The user is asked to create a transaction. Defaults to sending SATs (IntMedium’s native token), unless <code>contractAddress</code> is specified.</p>
+<p>The user is asked to create a transaction. Defaults to sending ESATs (Lappsnet’s native token), unless <code>contractAddress</code> is specified.</p>
 <p>All parameters given are entered in the form presented to the user, but the user may edit these values.</p>
 <p>Once the user creates, signs, and broadcasts their transaction, <code>txhash</code> will be sent to callback url if specified.<br>
 Verify if necessary.</p>
