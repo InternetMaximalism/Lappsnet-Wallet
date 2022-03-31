@@ -230,7 +230,7 @@ $('#redeemBtn').on('click', async function () {
     // https://github.com/bitcoinjs/bolt11
     // This is merely client-side validation, actual validation occurs on server
     let invoiceUrl = $('#redeemInvoice').val()
-    // let decoded = decode(invoiceUrl)
+    if (invoiceUrl.slice(0,4) !== 'lnbc') throw Error('Not a valid invoice')
 
     // Step zero: get pk
     let pk = await authAndRecoverPk()
@@ -243,22 +243,22 @@ $('#redeemBtn').on('click', async function () {
 
     // If invoice to too large compared to user balance, throw error.
     // This is also validated on server
-    /* let invoiceAmt = decoded.satoshis
-    let balance = await web3js.eth.accounts.getBalance()
+    let amountPart = invoiceUrl.slice(4,12).match(/^[0-9]{1,6}([munp]){1}/)[0]
+    let invoiceAmt = parseInt(amountPart.slice(0, -1))
+    let balance = await web3js.eth.getBalance(window.localStorage.getItem('addr'))
     if (balance < invoiceAmt * 1.02) {
       throw Error('Insufficient funds to pay this invoice. You must have 2% more ESATs than the invoice satoshi amount, and be able to pay the Lappsnet transaction fee.')
     }
-    */
    
     // Step one: sign invoice
-    const signature = await web3js.eth.accounts.sign($('#redeemInvoice').val(), pk)
+    const signature = await web3js.eth.sign($('#redeemInvoice').val(), pk)
 
     // Step two: send ESATs to redemption address 0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F
-    const { rawTransaction } = await web3js.eth.accounts.signTransaction(
+    const { rawTransaction } = await web3js.eth.signTransaction(
       { to: "0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F", value: (await web3js.eth.utils.toWei(invoiceAmt * 1.02)), gas: "21000" },
       pk
     )
-    const transactionHash = await web3js.eth.accounts.sendSignedTransaction(rawTransaction)
+    const transactionHash = await web3js.eth.sendSignedTransaction(rawTransaction)
 
     // Step three: call Lappsnet API with { signature, invoiceUrl, transactionHash }
     const redemptionAttempt = await submitRedemptionReq(signature, invoiceUrl, transactionHash)
