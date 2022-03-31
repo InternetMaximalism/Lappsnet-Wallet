@@ -251,7 +251,7 @@ $('#redeemBtn').on('click', async function () {
     }
    
     // Step one: sign invoice
-    const signature = await web3js.eth.sign($('#redeemInvoice').val(), pk)
+    const signature = await web3js.eth.accounts.sign($('#redeemInvoice').val(), pk)
 
     // Step two: send ESATs to redemption address 0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F
     const { rawTransaction } = await web3js.eth.signTransaction(
