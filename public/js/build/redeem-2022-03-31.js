@@ -198,10 +198,9 @@ function initComponents() {
   $('#authBtn').hide()
 
   // Redemption is unavailable if encrypted or unencrypted key is not found in browser
-  /* if (!window.localStorage.getItem('encryptedKey') && !window.localStorage.getItem('pk')) {
+  if (!window.localStorage.getItem('encryptedKey') && !window.localStorage.getItem('pk')) {
     window.location.href = '/auth'
   }
-  */
 
   getBalance()
 }
