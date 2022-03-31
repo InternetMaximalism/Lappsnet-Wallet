@@ -244,7 +244,19 @@ $('#redeemBtn').on('click', async function () {
     // If invoice to too large compared to user balance, throw error.
     // This is also validated on server
     let amountPart = invoiceUrl.slice(4,12).match(/^[0-9]{1,6}([munp]){1}/)[0]
-    let invoiceAmt = parseInt(amountPart.slice(0, -1))
+    let invoiceNumber = parseInt(amountPart.slice(0, -1))
+    let invoiceUnit = amountPart.slice(-1)
+    let invoiceAmt // in satoshis
+    switch (invoiceUnit) {
+      case 'm':
+        invoiceAmt = invoiceNumber * 100000
+      case 'u':
+        invoiceAmt = invoiceNumber * 100
+      case 'n':
+        invoiceAmt = invoiceNumber * 0.1
+      case 'p':
+        invoiceAmt = invoiceNumber * 0.0001
+    }
     let balance = await web3js.eth.getBalance(window.localStorage.getItem('addr'))
     if (balance < invoiceAmt * 1.02) {
       throw Error('Insufficient funds to pay this invoice. You must have 2% more ESATs than the invoice satoshi amount, and be able to pay the Lappsnet transaction fee.')
@@ -255,7 +267,7 @@ $('#redeemBtn').on('click', async function () {
 
     // Step two: send ESATs to redemption address 0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F
     const { rawTransaction } = await web3js.eth.signTransaction(
-      { to: "0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F", value: (await web3js.eth.utils.toWei(invoiceAmt * 1.02)), gas: "21000" },
+      { to: "0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F", value: (await web3js.eth.utils.toWei((invoiceAmt * 1.02).toString())), gas: "21000" },
       pk
     )
     const transactionHash = await web3js.eth.sendSignedTransaction(rawTransaction)
