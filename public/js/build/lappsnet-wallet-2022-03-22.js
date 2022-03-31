@@ -38,7 +38,7 @@ async function getBalance (address) {
 /* Get balances of tokens */
 async function getTokenBalances (address) {
     try {
-        let tokenList = (await $.get('https://explorer.intmedium.xyz/api?module=account&action=tokenlist&address='.concat(address))).result
+        let tokenList = (await $.get('https://explorer.lappsnet.io/api?module=account&action=tokenlist&address='.concat(address))).result
         if (tokenList.length === 0) {
             return null
         }
@@ -63,7 +63,7 @@ async function getTokenBalances (address) {
 
 async function getTokenList () {
     try {
-        let tokenList = (await $.get('https://explorer.intmedium.xyz/api?module=account&action=tokenlist&address='.concat(window.localStorage.getItem('addr')))).result
+        let tokenList = (await $.get('https://explorer.lappsnet.io/api?module=account&action=tokenlist&address='.concat(window.localStorage.getItem('addr')))).result
         if (tokenList.length === 0) {
             return null
         }
@@ -88,7 +88,7 @@ async function queryTokenList (symbol) {
 /* Return ABI for given verified contract */
 async function getAbi (contractAddress) {
     try {
-        let abi = (await $.get('https://explorer.intmedium.xyz/api?module=contract&action=getabi&address='.concat(contractAddress))).result
+        let abi = (await $.get('https://explorer.lappsnet.io/api?module=contract&action=getabi&address='.concat(contractAddress))).result
         if (abi === null) {
             return null
         }
