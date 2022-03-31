@@ -14,4 +14,8 @@ router.get('/auth', function(req, res, next) {
   res.render('auth/auth', { title: 'Lappsnet Wallet'});
 });
 
+router.get('/redeem', function(req, res, next) {
+  res.render('redeem', { title: 'Lappsnet Wallet: Redeem satoshis'})
+})
+
 module.exports = router;

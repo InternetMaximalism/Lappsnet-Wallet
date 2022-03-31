@@ -55,6 +55,11 @@ ul {
   color: lightsteelblue;
   text-decoration: underline;
 }
+.authBtn {
+  font-weight: bold;
+  color: cornflowerblue;
+  text-decoration: underline;
+}
 
 .strongBtn:hover, .navBtn:hover {
   color: skyblue;
