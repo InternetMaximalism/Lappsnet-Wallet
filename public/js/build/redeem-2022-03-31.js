@@ -33,6 +33,8 @@ async function getBalance() {
       function (err, res) {
         if (err) return console.error(err)
         $('#esatBalance').text(web3js.utils.fromWei(res))
+        $('.usernameDisplay').text(window.localStorage.getItem('user'))
+        $('.addressDisplay').text(window.localStorage.getItem('addr'))
       })
   } catch (err) {
     console.error(err)
