@@ -158,19 +158,34 @@ async function submitAssertionToServer(assertion) {
 
 async function submitRedemptionReq(signature, invoiceUrl, transactionHash) {
   try {
-    $.post('https://api.lappsnet.io/graphql', {
-      signature, invoiceUrl, transactionHash
-    }, function (res) {
-      console.log(res)
-      if (res.status(200)) {
-        console.log('Redemption processed! Check your LN wallet.')
-        resolve('Success! Check your LN wallet.')
-      } else {
+    $.ajax({
+      method: 'POST',
+      url: 'https://api.lappsnet.io/graphql',
+      contentType: 'application/json',
+      data: {
+        query: `mutation($claimReturnSatInput: ClaimReturnSatInput!) {
+          claimReturnSat(claimReturnSatInput: $claimReturnSatInput) {
+            signature invoiceUrl transactionHash
+          }
+        }`
+      },
+      variables: {
+        claimReturnSatInput: JSON.stringify({ signature, invoiceUrl, transactionHash })
+      },
+      success: function(res) {
+        if (res.status(200)) {
+          alert('Redemption processed! Check your LN wallet.')
+          resolve('Success! Check your LN wallet.')
+        } else {
+          console.log(`Server responded with error`)
+          reject()
+        }
+      },
+      error: function(err) { 
         console.log(`Server responded with error`)
         reject()
       }
-    }
-    )
+    })
   } catch (err) {
     console.error(err)
   }
