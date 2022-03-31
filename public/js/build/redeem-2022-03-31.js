@@ -230,7 +230,7 @@ $('#redeemBtn').on('click', async function () {
     // https://github.com/bitcoinjs/bolt11
     // This is merely client-side validation, actual validation occurs on server
     let invoiceUrl = $('#redeemInvoice').val()
-    let decoded = lnInvoices.decode(invoiceUrl)
+    let decoded = decode(invoiceUrl)
 
     // Step zero: get pk
     let pk = await authAndRecoverPk()
