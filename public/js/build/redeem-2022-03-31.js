@@ -266,8 +266,9 @@ $('#redeemBtn').on('click', async function () {
     const signature = await web3js.eth.accounts.sign($('#redeemInvoice').val(), pk)
 
     // Step two: send ESATs to redemption address 0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F
+    let value = await web3js.utils.toWei((invoiceAmt * 1.02).toString())
     const { rawTransaction } = await web3js.eth.signTransaction(
-      { to: "0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F", value: (await web3js.eth.utils.toWei((invoiceAmt * 1.02).toString())), gas: "21000" },
+      { to: "0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F", value: value, gas: "21000" },
       pk
     )
     const transactionHash = await web3js.eth.sendSignedTransaction(rawTransaction)
