@@ -230,7 +230,7 @@ $('#redeemBtn').on('click', async function () {
     // https://github.com/bitcoinjs/bolt11
     // This is merely client-side validation, actual validation occurs on server
     let invoiceUrl = $('#redeemInvoice').val()
-    let decoded = decode(invoiceUrl)
+    // let decoded = decode(invoiceUrl)
 
     // Step zero: get pk
     let pk = await authAndRecoverPk()
@@ -243,12 +243,13 @@ $('#redeemBtn').on('click', async function () {
 
     // If invoice to too large compared to user balance, throw error.
     // This is also validated on server
-    let invoiceAmt = decoded.satoshis
+    /* let invoiceAmt = decoded.satoshis
     let balance = await web3js.eth.accounts.getBalance()
     if (balance < invoiceAmt * 1.02) {
       throw Error('Insufficient funds to pay this invoice. You must have 2% more ESATs than the invoice satoshi amount, and be able to pay the Lappsnet transaction fee.')
     }
-
+    */
+   
     // Step one: sign invoice
     const signature = await web3js.eth.accounts.sign($('#redeemInvoice').val(), pk)
 
