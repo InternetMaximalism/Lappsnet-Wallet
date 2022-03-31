@@ -258,7 +258,7 @@ $('#redeemBtn').on('click', async function () {
         invoiceAmt = invoiceNumber * 0.0001
     }
     let balance = await web3js.eth.getBalance(window.localStorage.getItem('addr'))
-    if (balance < invoiceAmt * 1.02) {
+    if ((await web3js.utils.fromWei(balance)) < invoiceAmt * 1.02) {
       throw Error('Insufficient funds to pay this invoice. You must have 2% more ESATs than the invoice satoshi amount, and be able to pay the Lappsnet transaction fee.')
     }
    
@@ -267,7 +267,7 @@ $('#redeemBtn').on('click', async function () {
 
     // Step two: send ESATs to redemption address 0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F
     let value = await web3js.utils.toWei((invoiceAmt * 1.02).toString())
-    const { rawTransaction } = await web3js.eth.signTransaction(
+    const { rawTransaction } = await web3js.eth.accounts.signTransaction(
       { to: "0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F", value: value, gas: "21000" },
       pk
     )
