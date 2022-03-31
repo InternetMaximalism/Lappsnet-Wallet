@@ -15,7 +15,7 @@ let web3js;
 
 function initWeb3 (callback) {
   console.log('Loading web3js')
-  web3js = new Web3('https://rpc.intmedium.xyz')
+  web3js = new Web3('https://rpc.lappsnet.io')
   callback(web3js)
 }
 
