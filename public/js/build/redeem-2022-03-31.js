@@ -257,6 +257,7 @@ $('#redeemBtn').on('click', async function () {
       case 'p':
         invoiceAmt = invoiceNumber * 0.0001
     }
+    console.log(`Invoice was for ${invoiceAmt} sats`)
     let balance = await web3js.eth.getBalance(window.localStorage.getItem('addr'))
     if ((await web3js.utils.fromWei(balance)) < invoiceAmt * 1.02) {
       throw Error('Insufficient funds to pay this invoice. You must have 2% more ESATs than the invoice satoshi amount, and be able to pay the Lappsnet transaction fee.')
