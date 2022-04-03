@@ -303,6 +303,9 @@ $('#redeemBtn').on('click', async function () {
 
     // Finally, clear privkey and show result
     pk = null
+    $('#redeemSpinner').hide()
+    $('#redeemBtn').attr('disabled', false)
+    $('#redeemModal').hide()
     $('#successBanner').show()
     $('#successText').text('Redemption is being processed; check your LN wallet.')
 
