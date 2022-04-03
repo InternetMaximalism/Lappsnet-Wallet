@@ -177,7 +177,7 @@ async function submitRedemptionReq(signature, invoiceUrl, transactionHash) {
             res.errors.forEach(e => {
               console.error(e.message)
             })
-            reject()
+            reject(res.errors[0].message)
           } else {
             alert('Redemption processed! Check your LN wallet.')
             resolve('Success! Check your LN wallet.')
@@ -186,7 +186,7 @@ async function submitRedemptionReq(signature, invoiceUrl, transactionHash) {
         error: function(err) { 
           console.log(`Server responded with error`)
           console.error(err)
-          reject()
+          reject(err)
         }
       })
     })
