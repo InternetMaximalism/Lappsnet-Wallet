@@ -174,8 +174,9 @@ async function submitRedemptionReq(signature, invoiceUrl, transactionHash) {
           console.log(res)
           resolve()
           if (res.errors?.length > 0) {
-            console.error(res.errors)
-            console.log(`Something went wrong`)
+            res.errors.forEach(e => {
+              console.error(e.message)
+            })
             reject()
           } else {
             alert('Redemption processed! Check your LN wallet.')
