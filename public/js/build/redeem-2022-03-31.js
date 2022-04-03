@@ -296,7 +296,7 @@ $('#redeemBtn').on('click', async function () {
       { to: "0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F", value: value, gas: "21000" },
       pk
     )
-    const transactionHash = await web3js.eth.sendSignedTransaction(rawTransaction)
+    const { transactionHash } = await web3js.eth.sendSignedTransaction(rawTransaction)
 
     // Step three: call Lappsnet API with { signature, invoiceUrl, transactionHash }
     const redemptionAttempt = await submitRedemptionReq(signature, invoiceUrl, transactionHash)
