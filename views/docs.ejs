@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <!-- Generated using StackEdit https://stackedit.io -->
 <head>
@@ -13,94 +13,178 @@
 <p>Wallet for interacting with Lappsnet, an experimental network of smart contracts for Lightning Network users.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
-<li><a href="#user-instructions">User Instructions</a></li>
-<li><a href="#how-to-recover">How to recover</a></li>
-<li><a href="#integration-instructions">Integration Instructions</a></li>
+<li><a href="#user-instructions">Using the wallet</a></li>
+<li><a href="#how-to-withdraw-to-ln">How to withdraw to LN</a></li>
+<li><a href="#how-to-get-esat-tokens">How to get ESAT tokens</a></li>
+<li><a href="#how-to-recover">How to Recover</a></li>
+<li><a href="#developer-instructions">Developer Instructions</a></li>
 </ul>
 <h2 id="user-instructions">User instructions</h2>
 <h3 id="create-key">Create key</h3>
-<p>Visit <code>wallet.lappsnet.io/auth</code> to create an account.</p>
-<p>Your browser will generate a private key, which is then encrypted using your security chip.<br>
-(Screen lock, Yubikey, etc.)</p>
+<p>Visit <a href="https://wallet.lappsnet.io/auth">https://wallet.lappsnet.io/auth</a> to create an account.</p>
+<p>Your browser will generate a private key, which is then encrypted using your security chip. (Screen lock, Yubikey, etc.)</p>
 <p>You register a username with Lappsnet Wallet’s servers, which stores the encryption key for you.<br>
 The encrypted private key is stored in your browser.</p>
 <p>Finally, back up your private key, secured by a password, in your password manager.</p>
-<h3 id="connect-wallet-to-dapp">Connect wallet to dApp</h3>
-<p>Click on the ‘Connect’ button provided by the dApp.</p>
-<p>Once on Lappsnet Wallet, you will be asked whether to continue with the current account.</p>
-<p>Once you choose your option, you will be shown the message to sign.</p>
+<h3 id="connecting-to-dapps">Connecting to dapps</h3>
+<p>Connecting to dApps is done by signing a message provided by the dapp.</p>
 <p>It should look something like <code>nonce: asdfasdfasdf</code> or <code>asdfasdfasdf</code>.<br>
-If it looks like it could be something unintended, DO NOT SIGN.</p>
+If it looks like it could be a transaction or authorization, DO NOT SIGN.</p>
 <p>Otherwise, sign it and you should be redirected to the dApp as a logged in user.</p>
-<h3 id="sign-transaction">Sign transaction</h3>
-<p>If the dApp prepares a transaction for you to sign, follow the link.</p>
+<h3 id="signing-transactions">Signing transactions</h3>
+<p>Some dApps may prepare a transaction for you to sign.</p>
 <p>Once on Lappsnet Wallet, check the contents of the transaction before signing.<br>
-THIS IS CRUCIAL!</p>
+<em>THIS IS CRUCIAL!</em></p>
 <p>If the transaction looks fine (destination address, amount, etc.), sign it.</p>
 <p>The transaction will be broadcast, and the dapp will be notified.</p>
 <h3 id="create-transaction">Create transaction</h3>
-<p>You can also initiate transactions yourself.</p>
-<p>Follow a link to <code>wallet.lappsnet.io/auth</code> and you will be met with<br>
-the usual account options.</p>
-<p>Once you proceed, there is a form where you can craft transactions.<br>
-Choose whether you want to send ESATs (the native currency of Lappsnet), or other tokens.</p>
-<p>TIP: Click on a token in the list of tokens you own to create a transaction for that token!</p>
-<p>Once done, the signed transaction will be submitted to the network.</p>
+<p>You can also initiate transactions yourself, from <a href="https://wallet.lappsnet.io/auth">https://wallet.lappsnet.io/auth</a>.</p>
+<p>Choose whether you want to send ESATs (the native currency of Lappsnet), or other tokens.</p>
+<p>TIP: Clicking on a token in the list will open a create transaction form for that token!</p>
 <h3 id="call-contract">Call contract</h3>
-<p>You can also make contract calls directly from within Lappsnet Wallet!</p>
+<p>You can also make contract calls directly from within Lappsnet Wallet.</p>
 <p>For this, you must specify the contract address, method, and enter parameters as necessary.<br>
 Some operations may cost gas, while others may be free. You will be shown an estimated gas cost when confirming.</p>
-<p>Contract address may also be provided as a query string in the URL.</p>
 <p>After entering the contract address, click ‘load’ to get a list of methods.</p>
 <p>Note: Only contracts verified on the <a href="https://explorer.lappsnet.io">explorer</a> can be called this way.</p>
 <p>You will see the result of a contract call in a success or error message at the top of the page.</p>
+<h2 id="how-to-withdraw-to-ln">How to withdraw to LN</h2>
+<p>Visit the <a href="https://wallet.lappsnet.io/redeem">Redeem page</a> while you are logged into your lappsnet wallet.<br>
+You will be asked to provide an invoice where the amount is <code>100 sats &lt;= amount in sats &lt; (ESAT balance / 1.02)</code></p>
+<p>Note that we charge a 2% fee on withdrawals to cover any potential Lightning Network fees.<br>
+Therefore, the withdrawal rate is <code>100 satoshi : 102 ESAT</code>.</p>
+<p>If all routes to your wallet cost more than 2% in fees, the withdrawal will fail.</p>
+<p>You can also withdraw to LN while logged in using your recovery key.</p>
+<h2 id="how-to-get-esat-tokens">How to get ESAT tokens</h2>
+<p>Visit the <a href="https://web.lappsnet.io/">Lappsnet website</a> to purchase ESAT tokens at a rate of <code>100 ESAT : 100 satoshi</code>.</p>
 <h2 id="how-to-recover">How to recover</h2>
-<p>There are three main cases where you may need to recover your wallet.</p>
-<p>NOTE: The last one requires your password manager to be set up on multiple devices.</p>
+<p>When you create your wallet, you will be asked to enter a passphrase to encrypt a backup key.<br>
+Store the encrypted key in your password manager when prompted. (<em>Not the passphrase!</em>)</p>
+<p>You can also initiate a fresh backup at any time while logged in.</p>
+<p>Unable to log into your wallet? Here is a troubleshooting guide:</p>
 <h3 id="lappsnet-wallet-server-unavailable">Lappsnet Wallet server unavailable</h3>
-<p>In case the server is unavailable, a locally hosted or cached version of Lappsnet Wallet will be sufficient to recover your private key.</p>
-<p>Since you cannot authenticate with the server, you must recover your private key from the encrypted backup stored in your password manager. Decrypt with the secret phrase you set when creating the backup.</p>
+<p>If the Lappsnet servers are down, you will have to run a local or cached version of Lappsnet wallet to recover your account.</p>
+<p>Use the ‘recover account’ option, and enter your encrypted private key (saved in your password manager) and passphrase.</p>
 <h3 id="browser-data-cleared">Browser data cleared</h3>
-<p>When you 'clear browsing data' from the settings menu, some browsers will delete your encrypted key.<br>
-In such case, authenticating with our servers will not help you, as you have no key to decrypt.</p>
-<p>Recover your private key from the encrypted backup stored in your password manager.<br>
-Decrypt with the secret phrase you set when creating the backup.</p>
-<h3 id="security-device-lost-broken">Security device lost/broken</h3>
-<p>If the security device (e.g. screen lock, YubiKey) is lost or broken, you will not be able to authenticate with the server.</p>
-<p>Particularly, if you set up Lappsnet Wallet on your phone, you could lose or break your phone.</p>
-<p>In such case, you will need to recover from the encrypted backup stored in your password manager.<br>
-To prevent total loss, make sure your password manager is shared among multiple devices, e.g. your computer or another phone.</p>
-<h2 id="integration-instructions">Integration instructions</h2>
+<p>Clearing browsing data may delete your local key.<br>
+In such case, you will not be able to recover your account by authenticating with our servers.</p>
+<p>Use the ‘recover account’ option, and enter your encrypted private key (saved in your password manager) and passphrase.</p>
+<h3 id="security-device-lostbroken">Security device lost/broken</h3>
+<p>If the security device (e.g. screen lock, YubiKey) is lost or broken, you will not be able to authenticate with the server. This may include hard resets of your device!</p>
+<p>Use the ‘recover account’ option, and enter your encrypted private key (saved in your password manager) and passphrase.</p>
+<p>For maximum safety, make sure your password manager data is stored on multiple devices.</p>
+<h2 id="developer-instructions">Developer instructions</h2>
 <p>There are 5 operations available, all initiated by a user opening a link in a new tab.</p>
 <h3 id="connect-wallet">Connect wallet</h3>
 <p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
-<p>REQUIRED Query parameters: <code>connect=true</code>, <code>nonce=&lt;nonce&gt;</code>, <code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></p>
-<p>Generate a nonce for each wallet connection attempt.</p>
-<p>The user will follow the link, sign the nonce with their account, and a callback will return <code>{ signature, publicAddress }</code><br>
-to the specified URL.</p>
-<p>Verify signature.</p>
+
+<table>
+<thead>
+<tr>
+<th>parameter</th>
+<th>required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect=true</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>nonce=&lt;nonce&gt;</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></td>
+<td>YES</td>
+</tr>
+</tbody>
+</table><p>Generate a nonce for each wallet connection attempt. The nonce should preferably be human-readable.</p>
+<p>The user will follow the link, sign the nonce with their account, and a callback will return <code>{ signature, publicAddress }</code>to the specified URL.</p>
 <h3 id="sign-and-broadcast-transaction">Sign and broadcast transaction</h3>
 <p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
-<p>REQUIRED Query parameters: <code>signTx=true</code>, <code>txData=&lt;base64URL encoded tx&gt;</code></p>
-<p>OPTIONAL Query parameters: <code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></p>
-<p>The user is asked to sign and broadcast the transaction provided in the <code>txData</code> parameter.</p>
+
+<table>
+<thead>
+<tr>
+<th>parameter</th>
+<th>required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>signTx=true</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>txData=&lt;base64URL encoded tx&gt;</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></td>
+<td>no</td>
+</tr>
+</tbody>
+</table><p>The user is asked to sign and broadcast the transaction provided in the <code>txData</code> parameter.</p>
 <p>The <code>txhash</code> will be sent to the callback url if specified. Verify if necessary.</p>
 <h3 id="create-transaction-1">Create transaction</h3>
 <p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
-<p>REQUIRED Query parameters: <code>createTx=true</code></p>
-<p>OPTIONAL Query parameters: <code>amount=&lt;number of tokens, NOT Wei&gt;</code>, <code>to=&lt;recipient address&gt;</code>, <code>contractAddress=&lt;ERC20 token contract&gt;</code>,<br>
-<code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></p>
-<p>The user is asked to create a transaction. Defaults to sending ESATs (Lappsnet’s native token), unless <code>contractAddress</code> is specified.</p>
+
+<table>
+<thead>
+<tr>
+<th>parameter</th>
+<th>required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>createTx=true</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>amount=&lt;number of tokens, NOT Wei&gt;</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>to=&lt;recipient address&gt;</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>contractAddress=&lt;ERC20 token contract&gt;</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></td>
+<td>no</td>
+</tr>
+</tbody>
+</table><p>The user is asked to create a transaction. Defaults to sending ESATs (Lappsnet’s native token), unless <code>contractAddress</code> is specified.</p>
 <p>All parameters given are entered in the form presented to the user, but the user may edit these values.</p>
-<p>Once the user creates, signs, and broadcasts their transaction, <code>txhash</code> will be sent to callback url if specified.<br>
-Verify if necessary.</p>
-<h3 id="call-contract-contract-must-be-verified-on-explorer">Call contract (Contract MUST BE VERIFIED on <a href="https://explorer.lappsnet.io">explorer</a>)</h3>
+<p>Once the user creates, signs, and broadcasts their transaction, <code>txhash</code> will be sent to callback url if specified.</p>
+<h3 id="call-contract-1">Call contract</h3>
+<p>(<em>Contract MUST BE VERIFIED</em> on <a href="https://explorer.Lappsnet.xyz">explorer</a>)</p>
 <p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
-<p>REQUIRED Query parameters: <code>callContract=true</code></p>
-<p>OPTIONAL Query parameters: <code>contractAddress=&lt;contract address&gt;</code></p>
-<p>You can send users to make contract calls on their own.</p>
-<p>If <code>contractAddress</code> is specified, the user will be shown a list of methods for that contract.<br>
-Otherwise, the user must provide the contract address, after which a list of methods is loaded.</p>
+
+<table>
+<thead>
+<tr>
+<th>parameter</th>
+<th>required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>callContract=true</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>contractAddress=&lt;contract address&gt;</code></td>
+<td>no</td>
+</tr>
+</tbody>
+</table><p>You can send users to make contract calls on their own.</p>
+<p>If <code>contractAddress</code> is specified, the user will be shown a list of methods for that contract, with corresponding input fields.</p>
 <p>The user provides the necessary inputs, and a gas estimate is given for confirmation.</p>
 <p>The chosen method will be called using send() or call() depending on the method.<br>
 The result is displayed to the user in a success or error banner.</p>
