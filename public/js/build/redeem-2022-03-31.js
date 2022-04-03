@@ -158,33 +158,34 @@ async function submitAssertionToServer(assertion) {
 
 async function submitRedemptionReq(signature, invoiceUrl, transactionHash) {
   try {
-    $.ajax({
-      method: 'POST',
-      url: 'https://api.lappsnet.io/graphql',
-      contentType: 'application/json',
-      data: {
-        query: `mutation($claimReturnSatInput: ClaimReturnSatInput!) {
-          claimReturnSat(claimReturnSatInput: $claimReturnSatInput) {
-            signature invoiceUrl transactionHash
+    return new Promise((resolve, reject) => {
+      var inputs = { signature, invoiceUrl, transactionHash }
+      $.ajax({
+        method: 'POST',
+        url: 'https://api.lappsnet.io/graphql',
+        contentType: 'application/json',
+        body: JSON.stringify({
+          query: `mutation ClaimReturnSat($inputs: String!) {
+            claimReturnSat(input: $inputs) {
+              signature invoiceUrl transactionHash
+            }
+          }`,
+          variables: { inputs }
+        }),
+        success: function(res) {
+          if (res.status(200)) {
+            alert('Redemption processed! Check your LN wallet.')
+            resolve('Success! Check your LN wallet.')
+          } else {
+            console.log(`Server responded with error`)
+            reject()
           }
-        }`
-      },
-      variables: {
-        claimReturnSatInput: JSON.stringify({ signature, invoiceUrl, transactionHash })
-      },
-      success: function(res) {
-        if (res.status(200)) {
-          alert('Redemption processed! Check your LN wallet.')
-          resolve('Success! Check your LN wallet.')
-        } else {
+        },
+        error: function(err) { 
           console.log(`Server responded with error`)
           reject()
         }
-      },
-      error: function(err) { 
-        console.log(`Server responded with error`)
-        reject()
-      }
+      })
     })
   } catch (err) {
     console.error(err)
