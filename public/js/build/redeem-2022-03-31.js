@@ -159,30 +159,32 @@ async function submitAssertionToServer(assertion) {
 async function submitRedemptionReq(signature, invoiceUrl, transactionHash) {
   try {
     return new Promise((resolve, reject) => {
-      var inputs = { signature, invoiceUrl, transactionHash }
+      var input = { signature, invoiceUrl, transactionHash }
       $.ajax({
         method: 'POST',
         url: 'https://api.lappsnet.io/graphql',
         contentType: 'application/json',
-        body: JSON.stringify({
-          query: `mutation ClaimReturnSat($inputs: String!) {
-            claimReturnSat(input: $inputs) {
-              signature invoiceUrl transactionHash
-            }
+        data: JSON.stringify({
+          query: `mutation($input: ClaimReturnSatInput!) {
+            claimReturnSat(input: $input)
           }`,
-          variables: { inputs }
+          variables: { input }
         }),
         success: function(res) {
-          if (res.status(200)) {
+          console.log(res)
+          resolve()
+          if (res.errors?.length > 0) {
+            console.error(res.errors)
+            console.log(`Something went wrong`)
+            reject()
+          } else {
             alert('Redemption processed! Check your LN wallet.')
             resolve('Success! Check your LN wallet.')
-          } else {
-            console.log(`Server responded with error`)
-            reject()
           }
         },
         error: function(err) { 
           console.log(`Server responded with error`)
+          console.error(err)
           reject()
         }
       })
@@ -245,7 +247,7 @@ $('#redeemBtn').on('click', async function () {
     // Uses bitcoinjs/bolt11. Thanks contributors & MIT license.
     // https://github.com/bitcoinjs/bolt11
     // This is merely client-side validation, actual validation occurs on server
-    let invoiceUrl = $('#redeemInvoice').val()
+    let invoiceUrl = $('#redeemInvoice').val().trim()
     if (invoiceUrl.slice(0,4) !== 'lnbc') throw Error('Not a valid invoice')
 
     // Step zero: get pk
@@ -283,7 +285,9 @@ $('#redeemBtn').on('click', async function () {
     }
    
     // Step one: sign invoice
-    const signature = await web3js.eth.accounts.sign($('#redeemInvoice').val(), pk)
+    await web3js.eth.accounts.wallet.add(pk)
+    const signature = await web3js.eth.sign(invoiceUrl, window.localStorage.getItem('addr'))
+    await web3js.eth.accounts.wallet.remove(window.localStorage.getItem('addr'))
 
     // Step two: send ESATs to redemption address 0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F
     let value = await web3js.utils.toWei((invoiceAmt * 1.02).toString())
