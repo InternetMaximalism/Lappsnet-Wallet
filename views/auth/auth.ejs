@@ -5,6 +5,7 @@
     <script src="https://unpkg.com/bignumber.js" integrity="sha256-wVL1BH6h7i/pod41XKpG/h1lPY7y6h2iR5INy5ikXvs=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/cbor-web" integrity="sha256-iey8EY2WTC5Eu4oCNnxnQwmhpWYwbYn9o4gpoyhpgE0=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/@simplewebauthn/browser"></script>
+    <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>
   <body class="hidden">
@@ -51,11 +52,12 @@
               <!-- If Lappsnet account detected -->
               <div id="connectLoginDetected">
                 <ul>
-                  <p>You are signed in as user <code class="usernameDisplay" id="userName-1"></code>, address <code class="addressDisplay" id="address-1"></code></p>
-                  <p>ESAT balance: <span id="esatBalance"></span> (<a href="https://web.lappsnet.io/" target="_blank">get more</a>)</p>
+                  <h5 class="ml-2">Welcome, <code class="usernameDisplay" id="userName-1"></code></h5>
+                  <h3 class="text-center border rounded-pill" id="esats"><span id="esatBalance"></span> ESAT</h3>
+                  <p class="text-center"><code class="addressDisplay" id="address-1"></code> <span class="iconify" data-icon="akar-icons:copy" style="color: #e83e8c;"></span></p>
                   <div id="tokenBalances" class="m-1">
                     <p data-toggle="collapse" data-target="#collapseTokenList" aria-expanded="false" aria-controls="collapseTokenList">
-                      <span id="tokenCount"></span> other tokens (<strong class="strongBtn">click to show</strong>)
+                      <span id="tokenCount"></span> other tokens <span class="iconify" data-icon="akar-icons:chevron-down"></span>
                     </p>
                     <div class="collapse" id="collapseTokenList">
                       
@@ -66,6 +68,7 @@
                   <li class="btn btn-secondary m-1 signOut">Sign out</li>
                 </ul>
                 <p class="m-1">Want peace of mind? <strong class="backUpAccount strongBtn">Back up account</strong></p>
+                <p class="m-1">Need ESAT? <a href="https://web.lappsnet.io/" target="_blank"><strong class="strongBtn">Get more</strong></a></p>
                 <p class="mt-4 text-center"><a href="/redeem"><strong class="navBtn">Withdraw to LN</strong></a></p>
                 <p class="mt-4 text-center"><a href="/"><strong class="navBtn">About</strong></a></p>
                 <p class="mt-4 text-center"><a href="/docs"><strong class="navBtn">Documentation</strong></a></p>

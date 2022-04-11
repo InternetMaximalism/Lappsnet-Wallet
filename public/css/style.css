@@ -8,6 +8,7 @@ body {
   width: 100vw;
   display: block;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: rgb(62, 66, 71);
 }
 
 #pageContent {
@@ -47,6 +48,7 @@ ul {
 }
 
 .strongBtn {
+  color: rgb(62, 66, 71);
   text-decoration: underline;
 }
 

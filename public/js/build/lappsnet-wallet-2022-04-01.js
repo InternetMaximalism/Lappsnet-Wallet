@@ -50,7 +50,7 @@ async function getTokenBalances (address) {
         tokenList.forEach(i => {
             let li = $('<li>')
                       .text(`${escapeHTML(i.name)} (${escapeHTML(web3js.utils.fromWei(i.balance))} ${escapeHTML(i.symbol)})`)
-                      .attr('class', `tokenListItem m-1`)
+                      .attr('class', `tokenListItem m-1 border rounded-pill`)
                       .attr('id', `${escapeHTML(i.symbol)}`)
                       .appendTo(ul)
         })
@@ -1026,7 +1026,7 @@ try {
 }
 
 $('#collapseTokenList').on('click', '.tokenListItem', async function() {
-try {
+  try {
     $('#createTxModal').show()
     $('#createTxType').val("2")
 
@@ -1043,9 +1043,15 @@ try {
 
     $('input[name=selectTxType][value="2"]').prop('checked', true)
 
-} catch (err) {
+  } catch (err) {
     console.error(err)
-}
+  }
+})
+
+$('#esats').on('click', function() {
+  $('#createTxModal').show()
+  $('input[name=selectTxType][value="1"]').prop('checked', true)
+  switchCreateTxFormType("1")
 })
 
 function clearCreateTxInputs () {
