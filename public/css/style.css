@@ -27,6 +27,10 @@ ul {
   padding-inline-start: 0;
 }
 
+li {
+  list-style-type: none;
+}
+
 @media (min-width: 512px) {
   .container {
     border: 2px skyblue solid;
