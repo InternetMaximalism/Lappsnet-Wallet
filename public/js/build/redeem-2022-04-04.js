@@ -239,26 +239,11 @@ $('.cancelRedemption').on('click', function () {
   $('#redeemSpinner').hide()
 })
 
-$('#redeemBtn').on('click', async function () {
+/* Parse invoiceUrl. If valid, returns proper ESAT amount to send. Otherwise, throws error */
+async function parseInvoice (invoiceUrl) {
   try {
-    $('#redeemSpinner').show()
-    $('#redeemBtn').attr('disabled', true)
-
-    // If invoiceUrl is invalid, throw error.
-    // Uses bitcoinjs/bolt11. Thanks contributors & MIT license.
-    // https://github.com/bitcoinjs/bolt11
-    // This is merely client-side validation, actual validation occurs on server
-    let invoiceUrl = $('#redeemInvoice').val().trim()
+    // If invoice does not start with lnbc, it's clearly not a mainnet LN invoice
     if (invoiceUrl.slice(0,4) !== 'lnbc') throw Error('Not a valid invoice')
-
-    // Step zero: get pk
-    let pk = await authAndRecoverPk()
-    
-    // If no address stored locally, get address from pk
-    if (window.localStorage.getItem('addr') === null) {
-      let addr = await web3js.eth.accounts.privateKeyToAccount(pk)
-      window.localStorage.setItem('addr', addr)
-    }
 
     // If invoice to too large compared to user balance, throw error.
     // This is also validated on server
@@ -284,6 +269,41 @@ $('#redeemBtn').on('click', async function () {
     if ((await web3js.utils.fromWei(balance)) < invoiceAmt * 1.02) {
       throw Error('Insufficient funds to pay this invoice. You must have 2% more ESATs than the invoice satoshi amount, and be able to pay the Lappsnet transaction fee.')
     }
+    return invoiceAmt * 1.02
+  } catch (err) {
+    throw err
+  }
+}
+
+$('#redeemInvoice').change(async function() {
+  try {
+    let esatAmt = await parseInvoice($('#redeemInvoice').val().trim())
+    $('#sendEsatAmt').val(esatAmt)
+  } catch (err) {
+    $('#sendEsatAmt').val(err)
+    console.error(err)
+  }
+})
+
+$('#redeemBtn').on('click', async function () {
+  try {
+    $('#redeemSpinner').show()
+    $('#redeemBtn').attr('disabled', true)
+
+    // If invoiceUrl is invalid, throw error.
+    // Uses bitcoinjs/bolt11. Thanks contributors & MIT license.
+    // https://github.com/bitcoinjs/bolt11
+    // This is merely client-side validation, actual validation occurs on server
+    let esatAmt = await parseInvoice($('redeemInvoice').val().trim())
+
+    // Step zero: get pk
+    let pk = await authAndRecoverPk()
+    
+    // If no address stored locally, get address from pk
+    if (window.localStorage.getItem('addr') === null) {
+      let addr = await web3js.eth.accounts.privateKeyToAccount(pk)
+      window.localStorage.setItem('addr', addr)
+    }
    
     // Step one: sign invoice
     await web3js.eth.accounts.wallet.add(pk)
@@ -291,7 +311,7 @@ $('#redeemBtn').on('click', async function () {
     await web3js.eth.accounts.wallet.remove(window.localStorage.getItem('addr'))
 
     // Step two: send ESATs to redemption address 0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F
-    let value = await web3js.utils.toWei((invoiceAmt * 1.02).toString())
+    let value = await web3js.utils.toWei((esatAmt).toString())
     const { rawTransaction } = await web3js.eth.accounts.signTransaction(
       { to: "0x8e35ec29bA08C2aEDD20f9d20b450f189d69687F", value: value, gas: "21000" },
       pk
