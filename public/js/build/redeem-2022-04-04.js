@@ -294,7 +294,8 @@ $('#redeemBtn').on('click', async function () {
     // Uses bitcoinjs/bolt11. Thanks contributors & MIT license.
     // https://github.com/bitcoinjs/bolt11
     // This is merely client-side validation, actual validation occurs on server
-    let esatAmt = await parseInvoice($('#redeemInvoice').val().trim())
+    let invoiceUrl = $('#redeemInvoice').val().trim()
+    let esatAmt = await parseInvoice(invoiceUrl)
 
     // Step zero: get pk
     let pk = await authAndRecoverPk()
