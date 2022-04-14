@@ -6,10 +6,13 @@ This repository contains an Express server (backend) and EJS + Javascript files 
 In production, `views/wallet.ejs` view loads `lappsnet-wallet-2022-04-01.js` and `base64.min.js`.
 
 For review, a new folder `public/js/refactor/wallet` contains a more organized collection of JS files.
-In this branch, these are included in the page via `<script src="/js/refactor/wallet/***.js">` instead of the production monofile.
+In this branch, these are included in the page via many `<script src="/js/refactor/wallet/***.js">` instead of the production monofile.
 
 ## Redeem page (ESAT->sats)
-In production, `views/redeem.ejs` view loads `redeem-2022-04-04.js` and `base64.min.js`
+In production, `views/redeem.ejs` view loads `redeem-2022-04-04.js` and `base64.min.js`.
+
+For review, a new folder `public/js/refactor/redeem` contains a more organized collection of JS files.
+In this branch, these are included in the page via many `<script src="/js/refactor/redeem/***.js">` instead of the production monofile.
 
 ## Other pages
 `views/index.ejs` is the static top page for the domain, explaining what Lappsnet Wallet is.
