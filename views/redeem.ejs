@@ -1,7 +1,6 @@
 <%- include('./head.ejs') %>
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="https://bundle.run/buffer@6.0.3" integrity="sha256-mJ/D02tDcbdmt1Pd5nDI6EWDmvFo5LOYWAP7AGxCE20=" crossorigin="anonymous"></script>
-    <script src="/js/utils/base64.min.js"></script>
     <script src="https://unpkg.com/bignumber.js" integrity="sha256-wVL1BH6h7i/pod41XKpG/h1lPY7y6h2iR5INy5ikXvs=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/@simplewebauthn/browser"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -87,7 +86,12 @@
         </div>
       </div>
     </div>
-    <script src="/js/build/redeem-2022-04-04.js"></script>
+    <script src="/js/refactor/redeem/index.js"></script>
+    <script src="/js/refactor/redeem/utils/base64.min.js"></script>
+    <script src="/js/refactor/redeem/utils/esatBalance.js"></script>
+    <script src="/js/refactor/redeem/utils/fido.js"></script>
+    <script src="/js/refactor/redeem/utils/parseInvoice.js"></script>
+    <script src="/js/refactor/redeem/utils/requestSats.js"></script>
     <script>
       // Display page after all JS has loaded
       window.onload = function(e) {
