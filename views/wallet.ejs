@@ -1,7 +1,6 @@
-<%- include('../head.ejs') %>
+<%- include('./head.ejs') %>
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src="https://bundle.run/buffer@6.0.3" integrity="sha256-mJ/D02tDcbdmt1Pd5nDI6EWDmvFo5LOYWAP7AGxCE20=" crossorigin="anonymous"></script>
-    <script src="/js/utils/base64.min.js"></script>
     <script src="https://unpkg.com/bignumber.js" integrity="sha256-wVL1BH6h7i/pod41XKpG/h1lPY7y6h2iR5INy5ikXvs=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/cbor-web" integrity="sha256-iey8EY2WTC5Eu4oCNnxnQwmhpWYwbYn9o4gpoyhpgE0=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/@simplewebauthn/browser"></script>
@@ -25,7 +24,7 @@
                 <strong>Error!</strong>. <span id="errorText"></span>
               </div>
               <div id="logoContainer">
-                <%- include('../logo.ejs') %>
+                <%- include('./logo.ejs') %>
               </div>
               <h2 id="signInTitle">Lappsnet Wallet</h2>
           
@@ -406,7 +405,8 @@
         </div>
       </div>
     </div>
-    <script src="/js/build/lappsnet-wallet-2022-04-01.js"></script>
+    <script src="/js/refactor/wallet/lappsnet-wallet-2022-04-01.js"></script>
+    <script src="/js/refactor/wallet/utils/base64.min.js"></script>
     <script>
       // Display page after all JS has loaded
       window.onload = function(e) {
