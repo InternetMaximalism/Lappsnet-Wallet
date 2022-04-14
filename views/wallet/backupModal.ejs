@@ -1,0 +1,36 @@
+<div class="modal" id="backupModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Back up your key</h5>
+      </div>
+      <div class="modal-body">
+        <div id="pwEntry">
+          <p>Set a password to encrypt your backup</p>
+          <input class="form-control w-100" type="text" id="backupPw" />
+        </div>
+        <div id="backupForm">
+          <form id="backupFormBody">
+            <fieldset>
+              <legend class="m-3">Save this backup in your password manager:</legend>
+              <div class="row">
+                <div class="col-sm-4">
+                  <label for="encrypted">Backup data</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="password" class="form-control w-100" id="encrypted" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                  <button type="submit" class="btn btn-primary" id="saveEncrypted">Save</button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

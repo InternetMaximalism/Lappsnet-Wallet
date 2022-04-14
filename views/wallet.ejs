@@ -29,378 +29,43 @@
               <h2 id="signInTitle">Lappsnet Wallet</h2>
           
               <!-- If not currently logged into Lappsnet -->
-              <div id="connectLoginNotDetected">
-                <p>You are not currently signed into Lappsnet.</p>
-                <ul>
-                  <li class="btn btn-success m-1 createNewAccount">Create new account</li>
-                  <li class="btn btn-success m-1" id="logIn">Login by username</li>
-                </ul>
-                <p class="m-1">Can't login? <strong class="recoverAccount strongBtn">Recover account</strong></p>
-                <p class="mt-4 text-center"><a href="/"><strong class="navBtn">About</strong></a></p>
-                <p class="mt-4 text-center"><a href="/docs"><strong class="navBtn">Documentation</strong></a></p>
-              </div>
+              <%- include('./wallet/connectLoginNotDetected.ejs') %>
 
               <!-- Continue with account? -->
-              <div id="continueWithAccountConfirmation">
-                <ul>
-                  <p>Continue as user <code class="usernameDisplay" id="userName-1"></code>, address <code class="addressDisplay" id="address-1"></code> ?</p>
-                  <li class="btn btn-success m-1 confirmAccount"><span class="actionType"></span></li><br>
-                  <li class="btn btn-secondary m-1 signOut">Sign out</li>
-              </div>
+              <%- include('./wallet/continueWithAccountConfirmation.ejs') %>
     
               <!-- If Lappsnet account detected -->
-              <div id="connectLoginDetected">
-                <ul>
-                  <h5 class="ml-2">Welcome, <code class="usernameDisplay" id="userName-1"></code></h5>
-                  <h3 class="text-center border rounded-pill" id="esats"><span id="esatBalance"></span> ESAT</h3>
-                  <p class="text-center"><code class="addressDisplay" id="address-1"></code> <span class="iconify" data-icon="akar-icons:copy" style="color: #e83e8c;"></span></p>
-                  <div id="tokenBalances" class="m-1">
-                    <p data-toggle="collapse" data-target="#collapseTokenList" aria-expanded="false" aria-controls="collapseTokenList">
-                      <span id="tokenCount"></span> other tokens <span class="iconify" data-icon="akar-icons:chevron-down"></span>
-                    </p>
-                    <div class="collapse" id="collapseTokenList">
-                      
-                    </div>
-                  </div>
-                  <li class="btn btn-success m-1 createTxTopBtn"><span>Create transaction</span></li><br>
-                  <li class="btn btn-primary m-1 contractCallTopBtn"><span>Make contract call</span></li><br>
-                  <li class="btn btn-secondary m-1 signOut">Sign out</li>
-                </ul>
-                <p class="m-1">Want peace of mind? <strong class="backUpAccount strongBtn">Back up account</strong></p>
-                <p class="m-1">Need ESAT? <a href="https://web.lappsnet.io/" target="_blank"><strong class="strongBtn">Get more</strong></a></p>
-                <p class="mt-4 text-center"><a href="/redeem"><strong class="navBtn">Withdraw to LN</strong></a></p>
-                <p class="mt-4 text-center"><a href="/"><strong class="navBtn">About</strong></a></p>
-                <p class="mt-4 text-center"><a href="/docs"><strong class="navBtn">Documentation</strong></a></p>
-              </div>
-          
+              <%- include('./wallet/connectLoginDetected.ejs') %>
+              
               <!-- Register new account -->
-              <div id="accountRegistrationForm">
-                <legend>Request a unique username.</legend>
-                <input class="w-100 form-control" id="newUsernameInput" name="username" type="text">
-                <button class="btn btn-disabled" type="button" id="registerAccount">
-                  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="registerAccountSpinner"></span>
-                  Create account
-                </button>
-              </div>
+              <%- include('./wallet/accountRegistrationForm.ejs') %>
           
               <!-- Switch to different account -->
-              <div id="switchAccountForm">
-                <legend>Enter username of account.</legend>
-                <input class="form-control w-100" id="altUsernameInput" type="text">
-                <div class="btn btn-success" id="logIntoAccount">Log into account</div>
-              </div>
+              <%- include('./wallet/switchAccountForm.ejs') %>
   
               <!-- Logout conf modal -->
-              <div class="modal" id="logoutModal">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Sign out?</h5>
-                      
-                    </div>
-                    <div class="modal-body">
-                      <p>We strongly suggest you back up your account before signing out.</p>
-                      <p>If your browser data is cleared, this is the only way to recover your account.</p>
-                      <button type="button" class="btn btn-primary backUpKey">Back up</button>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-danger logOutBtn">Log out</button>
-                      <button type="button" class="btn btn-secondary cancelLogout" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <%- include('./wallet/logoutModal.ejs') %>
   
               <!-- Recovery modal -->
-              <div class="modal" id="recoverModal">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Enter recovery key</h5>
-                      
-                    </div>
-                    <div class="modal-body">
-                      <form id="recoveryFormBody">
-                        <fieldset>
-                          <legend class="m-3">Paste your recovery key below and press button</legend>
-                          <div class="row">
-                            <div class="col-sm-4">
-                              <label for="encryptedBackup">Backup data</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <input type="password" class="form-control w-100" id="encryptedBackup" />
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-sm-4">
-                              <label for="yourPw">Pass phrase</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <input type="text" class="form-control w-100" id="yourPw" />
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                              <button type="submit" class="btn btn-primary" id="recoverBtn">Recover account</button>
-                            </div>
-                          </div>
-                        </fieldset>
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary cancelRecovery" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <%- include('./wallet/recoverModal.ejs') %>
   
               <!-- Sign message modal -->
-              <div class="modal" id="signMessageModal">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Sign message</h5>
-                      
-                    </div>
-                    <div class="modal-body">
-                      <p>Sign the below message to complete the action.</p>
-                      <p>Do NOT sign the message if it looks complicated!</p>
-                      <textarea id="signMessageInput" disabled></textarea>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary signMessageBtn">Sign & Return</button>
-                      <button type="button" class="btn btn-secondary cancelSignMessage" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <%- include('./wallet/signMessageModal.ejs') %>
   
               <!-- Sign transaction modal -->
-              <div class="modal" id="signTxModal">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Sign transaction</h5>
-                      
-                    </div>
-                    <div class="modal-body">
-                      <p>Sign the below transaction?</p>
-                      <p>Make sure the transaction is what you intended!</p>
-                      <pre><code class="codeBlock" id="signTxInput"></code></pre>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary signTxBtn">
-                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="signTxSpinner"></span>
-                        Sign & Send</button>
-                      <button type="button" class="btn btn-secondary cancelSignTx" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <%- include('./wallet/signTxModal.ejs') %>
   
               <!-- Create transaction modal -->
-              <div class="modal" id="createTxModal">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Create transaction</h5>
-                      
-                    </div>
-                    <div class="modal-body">
-                      <form>
-                        <fieldset>
-                          <legend class="mb-3">Create your own transaction below.</legend>
-                          <div class="form-group row formRow" id="createTxTypeForm">
-                            <div class="col-sm-4">
-                              <label for="createTxType">Transaction type</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <div class="form-group" role="group">
-                                <div class="form-check-inline">
-                                  <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="selectTxType" id="satTxRadio" value="1">Send ESAT
-                                  </label>
-                                </div>
-                                <div class="form-check-inline">
-                                  <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="selectTxType" id="tokenTxRadio" value="2">Send token
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="form-group row formRow" id="createTxTokenContractForm">
-                            <div class="col-sm-4">
-                              <label for="createTxTokenContract">(Token) contract address</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <input type="text" class="form-control w-100" id="createTxTokenContract"></input>
-                            </div>
-                          </div>
-                          <div class="form-group row formRow" id="createTxFromAddressForm">
-                            <div class="col-sm-4">
-                              <label for="createTxFromAddress">Sender address</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <input type="text" class="form-control w-100" id="createTxFromAddress"></input>
-                            </div>
-                          </div>
-                          <div class="form-group row formRow" id="createTxToAddressForm">
-                            <div class="col-sm-4">
-                              <label for="createTxToAddress">Destination address</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <input type="text" class="form-control w-100" id="createTxToAddress"></input>
-                            </div>
-                          </div>
-                          <div class="form-group row formRow" id="createTxValueForm">
-                            <div class="col-sm-4">
-                              <label for="createTxValue">Transaction Value (in tokens)</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <input type="text" class="form-control w-100" id="createTxValue"></input>
-                            </div>
-                          </div>
-                          <div class="form-group row formRow" id="createTxDataForm">
-                            <div class="col-sm-4">
-                              <label for="createTxData">Transaction Data</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <input type="text" class="form-control w-100" id="createTxData"></input>
-                            </div>
-                          </div>
-                          <div class="form-group row formRow" id="createTxGasLimitForm">
-                            <div class="col-sm-4">
-                              <label for="createTxGasLimit">Gas Limit (in wei)</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <input type="text" class="form-control w-100" id="createTxGasLimit"></input>
-                            </div>
-                          </div>
-                        </fieldset>
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary createTxBtn">
-                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="createTxSpinner"></span>
-                        Sign & Send
-                      </button>
-                      <button type="button" class="btn btn-secondary cancelCreateTx" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <%- include('./wallet/createTxModal.ejs') %>
 
               <!-- Contract call modal -->
-              <div class="modal" id="contractCallModal">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Call Contract</h5>
-                      
-                    </div>
-                    <div class="modal-body">
-                      <form>
-                        <fieldset>
-                          <legend class="mb-3">Make a contract call.</legend>
-                          <div class="row">
-                            <div class="col-sm-4">
-                              <label for="contractAddress">Contract address</label>
-                            </div>
-                            <div class="col-sm-5">
-                              <input type="text" class="form-control w-100" id="contractAddress"></input>
-                            </div>
-                            <div class="col-sm-3">
-                              <button type="button" class="btn btn-primary" id="loadContract">
-                              Load</button>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-sm-4">
-                              <label for="methodSelector">Choose method</label>
-                            </div>
-                            <div class="col-sm-8">
-                              <select class="form-control w-100" id="methodSelector">
-    
-                              </select>
-                            </div>
-                          </div>
-                          <div class="m-0 p-0" id="inputList">
-
-                          </div>
-                        </fieldset>
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary contractCallBtn">
-                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="contractCallSpinner"></span>
-                        Call</button>
-                      <button type="button" class="btn btn-secondary cancelContractCall" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <%- include('./wallet/contractCallModal.ejs') %>
+              
               <!-- Contract call confirmation modal -->
-              <div class="modal" id="confirmContractCallModal">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Confirm contract call</h5>
-                      
-                    </div>
-                    <div class="modal-body">
-                      <p>Make contract call?</p>
-                      <code class="confirmContractCallContents"></code>
-                      <p>Estimated gas: <code id="estimatedCallGas"></code></p>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary confirmCallBtn">
-                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="confirmCallSpinner"></span>
-                        Enter</button>
-                      <button type="button" class="btn btn-secondary cancelConfirmCall" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <%- include('./wallet/confirmContractCallModal.ejs') %>
 
               <!-- Backup encrypted key modal -->
-              <div class="modal" id="backupModal">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Back up your key</h5>
-                    </div>
-                    <div class="modal-body">
-                      <div id="pwEntry">
-                        <p>Set a password to encrypt your backup</p>
-                        <input class="form-control w-100" type="text" id="backupPw" />
-                      </div>
-                      <div id="backupForm">
-                        <form id="backupFormBody">
-                          <fieldset>
-                            <legend class="m-3">Save this backup in your password manager:</legend>
-                            <div class="row">
-                              <div class="col-sm-4">
-                                <label for="encrypted">Backup data</label>
-                              </div>
-                              <div class="col-sm-8">
-                                <input type="password" class="form-control w-100" id="encrypted" />
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-sm-4"></div>
-                              <div class="col-sm-4">
-                                <button type="submit" class="btn btn-primary" id="saveEncrypted">Save</button>
-                              </div>
-                            </div>
-                          </fieldset>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <%- include('./wallet/backupModal.ejs') %>
             </div>
         </div>
       </div>

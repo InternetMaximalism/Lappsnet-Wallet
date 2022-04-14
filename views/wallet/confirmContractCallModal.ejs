@@ -1,0 +1,21 @@
+<div class="modal" id="confirmContractCallModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm contract call</h5>
+        
+      </div>
+      <div class="modal-body">
+        <p>Make contract call?</p>
+        <code class="confirmContractCallContents"></code>
+        <p>Estimated gas: <code id="estimatedCallGas"></code></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary confirmCallBtn">
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="confirmCallSpinner"></span>
+          Enter</button>
+        <button type="button" class="btn btn-secondary cancelConfirmCall" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

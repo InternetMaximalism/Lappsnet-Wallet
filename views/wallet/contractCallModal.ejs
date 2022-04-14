@@ -1,0 +1,48 @@
+<div class="modal" id="contractCallModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Call Contract</h5>
+        
+      </div>
+      <div class="modal-body">
+        <form>
+          <fieldset>
+            <legend class="mb-3">Make a contract call.</legend>
+            <div class="row">
+              <div class="col-sm-4">
+                <label for="contractAddress">Contract address</label>
+              </div>
+              <div class="col-sm-5">
+                <input type="text" class="form-control w-100" id="contractAddress"></input>
+              </div>
+              <div class="col-sm-3">
+                <button type="button" class="btn btn-primary" id="loadContract">
+                Load</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4">
+                <label for="methodSelector">Choose method</label>
+              </div>
+              <div class="col-sm-8">
+                <select class="form-control w-100" id="methodSelector">
+
+                </select>
+              </div>
+            </div>
+            <div class="m-0 p-0" id="inputList">
+
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary contractCallBtn">
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" id="contractCallSpinner"></span>
+          Call</button>
+        <button type="button" class="btn btn-secondary cancelContractCall" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

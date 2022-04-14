@@ -1,0 +1,42 @@
+<div class="modal" id="recoverModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enter recovery key</h5>
+        
+      </div>
+      <div class="modal-body">
+        <form id="recoveryFormBody">
+          <fieldset>
+            <legend class="m-3">Paste your recovery key below and press button</legend>
+            <div class="row">
+              <div class="col-sm-4">
+                <label for="encryptedBackup">Backup data</label>
+              </div>
+              <div class="col-sm-8">
+                <input type="password" class="form-control w-100" id="encryptedBackup" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4">
+                <label for="yourPw">Pass phrase</label>
+              </div>
+              <div class="col-sm-8">
+                <input type="text" class="form-control w-100" id="yourPw" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary" id="recoverBtn">Recover account</button>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary cancelRecovery" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
