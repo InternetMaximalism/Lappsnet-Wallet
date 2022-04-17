@@ -11,7 +11,7 @@ router.get('/docs', function(req, res, next) {
 });
 
 router.get('/auth', function(req, res, next) {
-  res.redirect('/wallet');
+  res.render('wallet', { title: 'Lappsnet Wallet'});
 });
 
 router.get('/wallet', function(req, res, next) {
