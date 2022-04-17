@@ -175,7 +175,7 @@ In such case, you will not be able to recover your account by authenticating wit
 </tbody>
 </table><p>The user is asked to create a transaction. Defaults to sending ESATs (Lappsnet’s native token), unless <code>contractAddress</code> is specified.</p>
 <p>All parameters given are entered in the form presented to the user, but the user may edit these values.</p>
-<p>Once the user creates, signs, and broadcasts their transaction, <code>txhash</code> will be POSTed to callback url if specified.</p>
+<p>Once the user creates, signs, and broadcasts their transaction, <code>{ txhash }</code> will be POSTed to callback url if specified.</p>
 <p>If <code>callbackMethod=GET</code> is specified, instead of a POST callback, the user will be redirected to <code>${callbackUrl}?txhash=${&lt;transactionHash&gt;}</code></p>
 <h3 id="call-contract-1">Call contract</h3>
 <p>(<em>Contract MUST BE VERIFIED</em> on <a href="https://explorer.Lappsnet.xyz">explorer</a>)</p>
