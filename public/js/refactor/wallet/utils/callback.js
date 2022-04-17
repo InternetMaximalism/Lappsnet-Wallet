@@ -12,7 +12,7 @@ async function sendAddress(url, signature) {
       return new Promise((resolve, reject) => {
         $.post(url, {
           signature: signature,
-          publicAddress: window.localStorage.getItem('addr')
+          address: window.localStorage.getItem('addr')
         })
           .then((result) => {
             console.log('Callback sent to URL')
@@ -35,7 +35,7 @@ async function sendTransaction(url, transactionHash) {
       // default: POST request
       return new Promise((resolve, reject) => {
         $.post(url, {
-          signedTx: transactionHash
+          txhash: transactionHash
         })
           .then((result) => {
             console.log('Signed TX sent to URL')
