@@ -105,7 +105,7 @@ async function createNativeTx(to, value, gas) {
 
     // Update balance in UI
     const newBalance = await web3js.eth.getBalance(
-      userAddress,
+      window.localStorage.getItem('addr'),
       "pending"
     )
     $('#esatBalance').text(web3js.utils.fromWei(newBalance))
@@ -180,10 +180,10 @@ async function createTokenTx(to, value, abi = null) {
     successMessageBanner()
 
     // Update ESAT balance in UI
-    let newBalance = await web3js.eth.getBalance(userAddress, "pending")
+    let newBalance = await web3js.eth.getBalance(window.localStorage.getItem('addr'), "pending")
     $('#esatBalance').text(web3js.utils.fromWei(newBalance))
     // Update token balances and update UI
-    await getTokenBalances(userAddress)
+    await getTokenBalances(window.localStorage.getItem('addr'))
 
     // Callback with transaction data IF callback is defined
     const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
