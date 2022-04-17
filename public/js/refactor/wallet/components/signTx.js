@@ -22,7 +22,6 @@ async function signTxBtn() {
     // Sign the transaction with private key
     let ab = base64.toArrayBuffer(escapeHTML(params.get("txData")), true)
     let decoded = new TextDecoder().decode(ab)
-    const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
     let pk = await authAndDecryptPk()
     let { rawTransaction } = await web3js.eth.accounts.signTransaction(
       JSON.parse(decoded),
@@ -42,7 +41,8 @@ async function signTxBtn() {
       })
 
     // Callback
-    if (callbackUrl) {
+    const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
+    if (callbackUrl !== 'null') {
       sendTransaction(callbackUrl, sendResult)
     }
     // Reset signTx modal and hide

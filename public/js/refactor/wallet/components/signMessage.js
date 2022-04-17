@@ -19,6 +19,7 @@ async function signMessageBtn() {
     pk = null
     // Send the message to callback URL for auth. callbackUrl is REQUIRED
     const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
+    if (callbackUrl === 'null') throw Error('callbackUrl MUST be defined')
     sendAddress(callbackUrl, signature)
     // Close modal, alert user, close window (*only if opened by JS)
     $('#signMessageModal').hide()
