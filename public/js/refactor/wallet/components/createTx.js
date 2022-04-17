@@ -112,7 +112,7 @@ async function createNativeTx(to, value, gas) {
 
     // Callback with transaction data IF callback is defined
     const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
-    if (callbackUrl) {
+    if (callbackUrl !== 'null') {
       sendTransaction(callbackUrl, result)
       alert('Callback sent to application!')
     }
@@ -187,7 +187,7 @@ async function createTokenTx(to, value, abi = null) {
 
     // Callback with transaction data IF callback is defined
     const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
-    if (params.get('callbackUrl') !== null) {
+    if (params.get('callbackUrl') !== 'null') {
       console.log('Invoking callback')
       sendTransaction(callbackUrl, receipt)
     }
