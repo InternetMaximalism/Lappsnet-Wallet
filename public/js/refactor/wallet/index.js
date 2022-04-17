@@ -93,11 +93,11 @@ function initComponents () {
     $('#login').attr('hidden', 'true')
   }
 
-  loadWalletUI()
+  loadWalletUI(true)
 }
 
 // Change text & display correct contents based on login status
-async function loadWalletUI () {
+async function loadWalletUI (firstLoad = false) {
   try {
     // Both encryptedKey and address should exist, or pk should exist, else log in
       if (!window.localStorage.getItem('pk') &&
@@ -112,8 +112,13 @@ async function loadWalletUI () {
           // Logged in, show continuation prompt
           $('.usernameDisplay').text(window.localStorage.getItem('user'))
           $('.addressDisplay').text(window.localStorage.getItem('addr'))
-          $('#continueWithAccountConfirmation').show()
           getBalance(web3js, window.localStorage.getItem('addr'))
+          if (firstLoad) {
+            $('#continueWithAccountConfirmation').show()
+            return
+          } else {
+            $('#connectLoginDetected').show()
+          }
       }
   } catch (err) {
       console.error(err)
