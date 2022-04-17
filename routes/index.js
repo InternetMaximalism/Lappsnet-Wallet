@@ -11,7 +11,11 @@ router.get('/docs', function(req, res, next) {
 });
 
 router.get('/auth', function(req, res, next) {
-  res.render('wallet', { title: 'Lappsnet Wallet'});
+  // Note: this redirect will not work if port must be specified (e.g. localhost:3000)
+  let URL = require('url').URL
+  let newUrl = new URL(`${req.protocol}://${req.hostname}${req.originalUrl}`)
+  newUrl.pathname = 'wallet'
+  res.redirect(newUrl.href)
 });
 
 router.get('/wallet', function(req, res, next) {
@@ -21,5 +25,14 @@ router.get('/wallet', function(req, res, next) {
 router.get('/redeem', function(req, res, next) {
   res.render('redeem', { title: 'Lappsnet Wallet: Redeem satoshis'})
 })
+
+/*
+router.get('/test', function(req, res, next) {
+  let URL = require('url').URL
+  let newUrl = new URL(`${req.protocol}://${req.hostname}${req.originalUrl}`)
+  newUrl.pathname = 'wallet'
+  res.redirect(newUrl.href)
+})
+*/
 
 module.exports = router;
