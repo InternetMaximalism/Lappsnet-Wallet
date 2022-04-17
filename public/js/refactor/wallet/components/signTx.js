@@ -43,7 +43,7 @@ async function signTxBtn() {
     // Callback
     const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
     if (callbackUrl !== 'null') {
-      sendTransaction(callbackUrl, sendResult)
+      sendTransaction(callbackUrl, sendResult.transactionHash)
     }
     // Reset signTx modal and hide
     $('#signTxSpinner').hide()

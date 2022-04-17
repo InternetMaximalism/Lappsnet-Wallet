@@ -25,17 +25,17 @@ async function sendAddress(url, signature) {
 }
 
 /* sendTransaction - called as callback for 'signTx' and 'createTx' */
-async function sendTransaction(url, transaction) {
+async function sendTransaction(url, transactionHash) {
   try {
     if (params.get("callbackMethod") === "GET") {
       // if callbackMethod=GET, open callback URL with params
-      window.location.href = `${url}?txhash=${transaction}`
+      window.location.href = `${url}?txhash=${transactionHash}`
       return
     } else {
       // default: POST request
       return new Promise((resolve, reject) => {
         $.post(url, {
-          signedTx: transaction
+          signedTx: transactionHash
         })
           .then((result) => {
             console.log('Signed TX sent to URL')
