@@ -28,7 +28,7 @@ function switchCreateTxFormType(option) {
     $('#createTxValueForm').show()
     $('#createTxDataForm').hide()
     $('#createTxGasLimitForm').show()
-    $('#createTxGasLimit').val('2000000')
+    $('#createTxGasLimit').val('21000')
   }
   if (option === "2") {
     $('#createTxTokenContractForm').show()
