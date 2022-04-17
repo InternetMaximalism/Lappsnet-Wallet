@@ -136,7 +136,7 @@ In such case, you will not be able to recover your account by authenticating wit
 </tbody>
 </table><p>The user is asked to sign and broadcast the transaction provided in the <code>txData</code> parameter.</p>
 <p>The <code>{ txhash }</code> will be POSTed to the callback url if specified. Verify if necessary.</p>
-<p>If <code>callbackMethod=GET</code> is specified, instead of a POST callback, the user will be redirected to <code>${callbackUrl}?txhash=${&lt;transactionHash&gt;}</code></p>
+<p>If <code>callbackMethod=GET</code> is specified, instead of a POST callback, the user will be redirected to <code>${callbackUrl}?txhash=${transactionHash}</code></p>
 <h3 id="create-transaction-1">Create transaction</h3>
 <p>Path: <code>https://wallet.lappsnet.io/wallet</code></p>
 
@@ -176,7 +176,7 @@ In such case, you will not be able to recover your account by authenticating wit
 </table><p>The user is asked to create a transaction. Defaults to sending ESATs (Lappsnet’s native token), unless <code>contractAddress</code> is specified.</p>
 <p>All parameters given are entered in the form presented to the user, but the user may edit these values.</p>
 <p>Once the user creates, signs, and broadcasts their transaction, <code>{ txhash }</code> will be POSTed to callback url if specified.</p>
-<p>If <code>callbackMethod=GET</code> is specified, instead of a POST callback, the user will be redirected to <code>${callbackUrl}?txhash=${&lt;transactionHash&gt;}</code></p>
+<p>If <code>callbackMethod=GET</code> is specified, instead of a POST callback, the user will be redirected to <code>${callbackUrl}?txhash=${transactionHash}</code></p>
 <h3 id="call-contract-1">Call contract</h3>
 <p>(<em>Contract MUST BE VERIFIED</em> on <a href="https://explorer.Lappsnet.xyz">explorer</a>)</p>
 <p>Path: <code>https://wallet.lappsnet.io/wallet</code></p>
