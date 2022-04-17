@@ -13,7 +13,7 @@ Wallet for interacting with Lappsnet, an experimental network of smart contracts
 
 ### Create key
 
-Visit [https://wallet.lappsnet.io/auth](https://wallet.lappsnet.io/auth) to create an account.
+Visit [https://wallet.lappsnet.io/wallet](https://wallet.lappsnet.io/wallet) to create an account.
 
 Your browser will generate a private key, which is then encrypted using your security chip. (Screen lock, Yubikey, etc.)
 
@@ -44,7 +44,7 @@ The transaction will be broadcast, and the dapp will be notified.
 
 ### Create transaction
 
-You can also initiate transactions yourself, from [https://wallet.lappsnet.io/auth](https://wallet.lappsnet.io/auth).
+You can also initiate transactions yourself, from [https://wallet.lappsnet.io/wallet](https://wallet.lappsnet.io/wallet).
 
 Choose whether you want to send ESATs (the native currency of Lappsnet), or other tokens.
 
@@ -115,7 +115,7 @@ There are 5 operations available, all initiated by a user opening a link in a ne
 
 ### Connect wallet
 
-Path: `https://wallet.lappsnet.io/auth`
+Path: `https://wallet.lappsnet.io/wallet`
 
 | parameter | required? |
 | --- | --- |
@@ -128,11 +128,11 @@ Generate a nonce for each wallet connection attempt. The nonce should preferably
 
 The user will follow the link, sign the nonce with their account, and a callback will POST `{ signature, address }` to the specified URL.
 
-If `callbackMethod=GET` is specified, instead of a POST callback, the user will be redirected to `${callbackUrl}?address=${address}&signature=${signature}>`.
+If `callbackMethod=GET` is specified, instead of a POST callback, the user will be redirected to `${callbackUrl}?address=${address}&signature=${signature}`.
 
 ### Sign and broadcast transaction
 
-Path: `https://wallet.lappsnet.io/auth`
+Path: `https://wallet.lappsnet.io/wallet`
 
 | parameter | required? |
 | --- | --- |
@@ -145,11 +145,11 @@ The user is asked to sign and broadcast the transaction provided in the `txData`
 
 The `{ txhash }` will be POSTed to the callback url if specified.
 
-If `callbackMethod=GET` is specified, instead of a POST callback, the user will be redirected to `${callbackUrl}?txhash=${transactionHash}>`.
+If `callbackMethod=GET` is specified, instead of a POST callback, the user will be redirected to `${callbackUrl}?txhash=${<transactionHash>}`.
 
 ### Create transaction
 
-Path: `https://wallet.lappsnet.io/auth`
+Path: `https://wallet.lappsnet.io/wallet`
 
 | parameter | required? |
 | --- | --- |
@@ -165,13 +165,13 @@ All parameters given are entered in the form presented to the user, but the user
 
 Once the user creates, signs, and broadcasts their transaction, `{ txhash }` will be POSTed to callback url if specified.
 
-If `callbackMethod=GET` is specified, instead of a POST callback, the user will be redirected to `${callbackUrl}?txhash=${transactionHash}>`.
+If `callbackMethod=GET` is specified, instead of a POST callback, the user will be redirected to `${callbackUrl}?txhash=${<transactionHash>}`.
 
 ### Call contract
 
 (*Contract MUST BE VERIFIED* on [explorer](https://explorer.Lappsnet.xyz))
 
-Path: `https://wallet.lappsnet.io/auth`
+Path: `https://wallet.lappsnet.io/wallet`
 
 | parameter | required? |
 | --- | --- |
@@ -189,6 +189,6 @@ The result is displayed to the user in a success or error banner.
 
 ### Open wallet
 
-Path: `https://wallet.lappsnet.io/auth`
+Path: `https://wallet.lappsnet.io/wallet`
 
 Simply opens the wallet for the user to operate.

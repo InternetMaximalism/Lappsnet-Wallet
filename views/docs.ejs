@@ -21,7 +21,7 @@
 </ul>
 <h2 id="user-instructions">User instructions</h2>
 <h3 id="create-key">Create key</h3>
-<p>Visit <a href="https://wallet.lappsnet.io/auth">https://wallet.lappsnet.io/auth</a> to create an account.</p>
+<p>Visit <a href="https://wallet.lappsnet.io/wallet">https://wallet.lappsnet.io/wallet</a> to create an account.</p>
 <p>Your browser will generate a private key, which is then encrypted using your security chip. (Screen lock, Yubikey, etc.)</p>
 <p>You register a username with Lappsnet Wallet’s servers, which stores the encryption key for you.<br>
 The encrypted private key is stored in your browser.</p>
@@ -38,7 +38,7 @@ If it looks like it could be a transaction or authorization, DO NOT SIGN.</p>
 <p>If the transaction looks fine (destination address, amount, etc.), sign it.</p>
 <p>The transaction will be broadcast, and the dapp will be notified.</p>
 <h3 id="create-transaction">Create transaction</h3>
-<p>You can also initiate transactions yourself, from <a href="https://wallet.lappsnet.io/auth">https://wallet.lappsnet.io/auth</a>.</p>
+<p>You can also initiate transactions yourself, from <a href="https://wallet.lappsnet.io/wallet">https://wallet.lappsnet.io/wallet</a>.</p>
 <p>Choose whether you want to send ESATs (the native currency of Lappsnet), or other tokens.</p>
 <p>TIP: Clicking on a token in the list will open a create transaction form for that token!</p>
 <h3 id="call-contract">Call contract</h3>
@@ -76,7 +76,7 @@ In such case, you will not be able to recover your account by authenticating wit
 <h2 id="developer-instructions">Developer instructions</h2>
 <p>There are 5 operations available, all initiated by a user opening a link in a new tab.</p>
 <h3 id="connect-wallet">Connect wallet</h3>
-<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/wallet</code></p>
 
 <table>
 <thead>
@@ -98,11 +98,16 @@ In such case, you will not be able to recover your account by authenticating wit
 <td><code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></td>
 <td>YES</td>
 </tr>
+<tr>
+<td><code>callbackMethod=GET</code></td>
+<td>no</td>
+</tr>
 </tbody>
 </table><p>Generate a nonce for each wallet connection attempt. The nonce should preferably be human-readable.</p>
-<p>The user will follow the link, sign the nonce with their account, and a callback will return <code>{ signature, publicAddress }</code>to the specified URL.</p>
+<p>The user will follow the link, sign the nonce with their account, and a callback will POST <code>{ signature, publicAddress }</code>to the specified URL.</p>
+<p>If <code>callbackMethod=GET</code> is specified, instead of a POST callback, the user will be redirected to <code>${callbackUrl}?address=${address}&signature=${signature}</code></p>
 <h3 id="sign-and-broadcast-transaction">Sign and broadcast transaction</h3>
-<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/wallet</code></p>
 
 <table>
 <thead>
@@ -124,11 +129,16 @@ In such case, you will not be able to recover your account by authenticating wit
 <td><code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></td>
 <td>no</td>
 </tr>
+<tr>
+<td><code>callbackMethod=GET</code></td>
+<td>no</td>
+</tr>
 </tbody>
 </table><p>The user is asked to sign and broadcast the transaction provided in the <code>txData</code> parameter.</p>
-<p>The <code>txhash</code> will be sent to the callback url if specified. Verify if necessary.</p>
+<p>The <code>{ txhash }</code> will be POSTed to the callback url if specified. Verify if necessary.</p>
+<p>If <code>callbackMethod=GET</code> is specified, instead of a POST callback, the user will be redirected to <code>${callbackUrl}?txhash=${&lt;transactionHash&gt;}</code></p>
 <h3 id="create-transaction-1">Create transaction</h3>
-<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/wallet</code></p>
 
 <table>
 <thead>
@@ -158,13 +168,18 @@ In such case, you will not be able to recover your account by authenticating wit
 <td><code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></td>
 <td>no</td>
 </tr>
+<tr>
+<td><code>callbackMethod=GET</code></td>
+<td>no</td>
+</tr>
 </tbody>
 </table><p>The user is asked to create a transaction. Defaults to sending ESATs (Lappsnet’s native token), unless <code>contractAddress</code> is specified.</p>
 <p>All parameters given are entered in the form presented to the user, but the user may edit these values.</p>
-<p>Once the user creates, signs, and broadcasts their transaction, <code>txhash</code> will be sent to callback url if specified.</p>
+<p>Once the user creates, signs, and broadcasts their transaction, <code>txhash</code> will be POSTed to callback url if specified.</p>
+<p>If <code>callbackMethod=GET</code> is specified, instead of a POST callback, the user will be redirected to <code>${callbackUrl}?txhash=${&lt;transactionHash&gt;}</code></p>
 <h3 id="call-contract-1">Call contract</h3>
 <p>(<em>Contract MUST BE VERIFIED</em> on <a href="https://explorer.Lappsnet.xyz">explorer</a>)</p>
-<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/wallet</code></p>
 
 <table>
 <thead>
@@ -189,7 +204,7 @@ In such case, you will not be able to recover your account by authenticating wit
 <p>The chosen method will be called using send() or call() depending on the method.<br>
 The result is displayed to the user in a success or error banner.</p>
 <h3 id="open-wallet">Open wallet</h3>
-<p>Path: <code>https://wallet.lappsnet.io/auth</code></p>
+<p>Path: <code>https://wallet.lappsnet.io/wallet</code></p>
 <p>Simply opens the wallet for the user to operate.</p>
 </div>
 </body>
