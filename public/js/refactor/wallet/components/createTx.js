@@ -189,7 +189,7 @@ async function createTokenTx(to, value, abi = null) {
     const callbackUrl = decodeURIComponent(params.get('callbackUrl'))
     if (params.get('callbackUrl') !== 'null') {
       console.log('Invoking callback')
-      sendTransaction(callbackUrl, receipt)
+      sendTransaction(callbackUrl, receipt.transactionHash)
     }
     // Reset createTx form and close modal
     clearCreateTxInputs()
