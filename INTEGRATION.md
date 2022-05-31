@@ -19,7 +19,7 @@ Parameters should be passed as URL query params.
 |[Sign and broadcast transaction](#sign-and-broadcast-transaction)|Provide uneditable tx for `web3.eth.signTransaction(tx, address)` and `.sendSignedTransaction()`|
 |[Call contract](#call-contract)|Give a list of methods with `web3.eth.Contract.methods` for the user to call `.myMethod().call(options)` or `myMethod().send(options)` on.|
 
-### Connect wallet / Sign arbitrary data
+## Connect wallet / Sign arbitrary data
 
 Compares to: `web3.eth.accounts.sign(nonce, privateKey)`
 
