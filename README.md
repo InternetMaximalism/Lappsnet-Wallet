@@ -8,7 +8,7 @@ WalletConnect was rejected as a centralization vector, as it relies on a server 
 
 ### Deploying this site
 
-Files are in `gitbook` branch. Command `npx honkit build` to build static pages to `_book/`.
+Files are in `gitbook` branch. Command `npx honkit build . ./docs` to build static pages to `docs/`.
 
 When updating this page, `npx honkit serve` can be used for local preview.
 
