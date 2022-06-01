@@ -1,0 +1,515 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>About · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 3.7.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./#about">
+            
+                    
+                    About
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./#methods-to-implement">
+            
+                    
+                    Methods to implement
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="./">
+            
+                <a href="./#connect-wallet--sign-arbitrary-data">
+            
+                    
+                    Connect wallet / Sign arbitrary data
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="./">
+            
+                <a href="./#create-transaction">
+            
+                    
+                    Create transaction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="./">
+            
+                <a href="./#sign-and-broadcast-transaction">
+            
+                    
+                    Sign and broadcast transaction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="./">
+            
+                <a href="./#call-contract">
+            
+                    
+                    Call contract
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >About</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="about">About</h1>
+<p>Documentation for developers who want to interface with Lappsnet Wallet.</p>
+<p>dApps integration of Lappsnet Wallet should be done via a JS wrapper (to-be-developed) that implements the following requests.</p>
+<p>WalletConnect was rejected as a centralization vector, as it relies on a server provided by the wallet operator.</p>
+<h3 id="deploying-this-site">Deploying this site</h3>
+<p>Files are in <code>gitbook</code> branch. Command <code>npx honkit build</code> to build static pages to <code>_book/</code>.</p>
+<h2 id="methods-to-implement">Methods to implement</h2>
+<p>A list of methods, and their web3js counterparts.</p>
+<p>Parameters should be passed as URL query params.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Comparable web3js method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#connect-wallet--sign-arbitrary-data">Connect wallet / sign arbitrary data</a></td>
+<td>Sign a message to connect wallet, or any arbitrary data <code>web3.accounts.sign(nonce,privateKey)</code></td>
+</tr>
+<tr>
+<td><a href="#create-transaction">Create transaction</a></td>
+<td>Provide user-editable tx for <code>web3.eth.signTransaction(tx, address)</code> and <code>.sendSignedTransaction()</code></td>
+</tr>
+<tr>
+<td><a href="#sign-and-broadcast-transaction">Sign and broadcast transaction</a></td>
+<td>Provide uneditable tx for <code>web3.eth.signTransaction(tx, address)</code> and <code>.sendSignedTransaction()</code></td>
+</tr>
+<tr>
+<td><a href="#call-contract">Call contract</a></td>
+<td>Give a list of methods with <code>web3.eth.Contract.methods</code> for the user to call <code>.myMethod().call(options)</code> or <code>myMethod().send(options)</code> on.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="connect-wallet--sign-arbitrary-data">Connect wallet / Sign arbitrary data</h2>
+<p>Compares to: <code>web3.eth.accounts.sign(nonce, privateKey)</code></p>
+<p>Asks user to connect wallet by signing a message (nonce). Can also
+technically be used to sign any arbitrary data. <em>This includes sending tokens other than ESAT or ERC20,</em> although you could also use the <a href="#call-contract">Call contract</a> method which has a poorer UX.</p>
+<p><strong><em>User views the data they are asked to sign.</em></strong>
+If confirmed, POSTs address and signature.</p>
+<p>If <code>callbackMethod=GET</code> is specified, user will instead GET with
+address and signature as params. Some mitigation of replay attacks
+is desired in this case, as both the nonce and signature are publicly
+visible.</p>
+<p>Make request: <code>GET https://wallet.lappsnet.io/wallet</code></p>
+<table>
+<thead>
+<tr>
+<th>parameter</th>
+<th>required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect=true</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>nonce=&lt;nonce&gt;</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>callbackMethod=GET</code></td>
+<td>NO</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: <code>POST &lt;callbackUrl&gt;</code> with payload: <code>{ signature, address }</code></p>
+<p>Or: <code>GET &lt;callbackUrl&gt;?address=&lt;address&gt;&amp;signature=&lt;signature&gt;</code></p>
+<p><code>signature</code> is return <a href="https://web3js.readthedocs.io/en/v1.2.11/web3-eth-accounts.html#sign" target="_blank">object</a> from <code>web3.eth.accounts.sign(data, privkey)</code></p>
+<p><code>address</code> is hex-encoded address (string).</p>
+<p>The frontend should verify the signature: <code>web3.eth.accounts.recover(signature) === address</code></p>
+<h2 id="create-transaction">Create transaction</h2>
+<p>Compares to: Opening a wallet with optionally prefilled tx information,
+and <code>web3.eth.signTransaction(tx, address)</code></p>
+<p>Asks user to create a transction, optionally with pre-filled fields.</p>
+<p>If <code>callbackMethod=GET</code> is specified, user will instead GET with
+txhash as query param.</p>
+<p>Make request: <code>GET https://wallet.lappsnet.io/wallet</code></p>
+<table>
+<thead>
+<tr>
+<th>parameter</th>
+<th>required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>createTx=true</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>amount=&lt;number of tokens, NOT Wei&gt;</code></td>
+<td>NO</td>
+</tr>
+<tr>
+<td><code>to=&lt;String: recipient address&gt;</code></td>
+<td>NO</td>
+</tr>
+<tr>
+<td><code>contractAddress=&lt;ERC20 token contract address&gt;</code></td>
+<td>NO</td>
+</tr>
+<tr>
+<td><code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></td>
+<td>NO</td>
+</tr>
+<tr>
+<td><code>callbackMethod=GET</code></td>
+<td>NO</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: <code>POST &lt;callbackUrl&gt;</code> with payload <code>{ txhash }</code></p>
+<p>Or: <code>GET &lt;callbackUrl&gt;?txhash=&lt;txhash&gt;</code></p>
+<p><code>txhash</code> is 32-byte String transaction hash.</p>
+<h2 id="sign-and-broadcast-transaction">Sign and broadcast transaction</h2>
+<p>Compares to: <code>web3.eth.signTransaction(tx, address)</code></p>
+<p>If you don&apos;t want the user to be presented with an editable form,
+use this function instead of <a href="#create-transaction">create transaction</a>.</p>
+<p><em>Transaction data must be base64url encoded!</em></p>
+<p><strong><em>User views the transaction they are asked to sign.</em></strong> Then, the
+signed transaction is broadcast, and txhash is POSTed as callback.</p>
+<p>If <code>callbackMethod=GET</code> is specified, user will instead GET with
+txhash as query param.</p>
+<p>Make request: <code>GET https://wallet.lappsnet.io/wallet</code></p>
+<table>
+<thead>
+<tr>
+<th>parameter</th>
+<th>required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>signTx=true</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>txData=&lt;base64URL encoded tx&gt;</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>callbackUrl=&lt;encodeURIComponent(callback url)&gt;</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>callbackMethod=GET</code></td>
+<td>NO</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: <code>POST &lt;callbackUrl&gt;?txhash=&lt;txhash&gt;</code></p>
+<p>Or: <code>GET &lt;callbackUrl&gt;?txhash=&lt;txhash&gt;</code></p>
+<p><code>txhash</code> is 32-byte String transaction hash.</p>
+<h2 id="call-contract">Call contract</h2>
+<p>Compares to: <code>web3.eth.Contract.methods.myMethod([param, [...]]).call(options)</code> and <code>web3.eth.Contract.methods.myMethod([param, [...]]).send(options)</code></p>
+<p>Make a contract call directly from the wallet.
+Contract <strong>MUST</strong> be verified on <a href="https://explorer.lappsnet.io" target="_blank">Lappsnet Explorer</a>, as we rely on it to get ABI info.</p>
+<p>Note that this is not intuitive for many users; it may be preferable to
+<a href="#connect-wallet--sign-arbitrary-data">sign arbitrary data</a> in a
+human-readable way, and make the call() or send() on the frontend.</p>
+<p>Make request: <code>GET https://wallet.lappsnet.io/wallet</code></p>
+<table>
+<thead>
+<tr>
+<th>parameter</th>
+<th>required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>callContract=true</code></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><code>contractAddress=&lt;contract address&gt;</code></td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<p>The user must manually select the method and enter the relevant values.</p>
+<p>Returns: There is no callback to this function.</p>
+<h2 id="something-missing">Something missing?</h2>
+<p>If it is something easily addressible, please open an issue and I can probably make the fix relatively quickly. (e.g. adding callbacks for function calls, fixing discrepancies)</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"About","level":"1.1","depth":1,"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2022-06-01T04:50:34.488Z","type":"markdown"},"gitbook":{"version":"3.7.3","time":"2022-06-01T04:55:23.305Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
