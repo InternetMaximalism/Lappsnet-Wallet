@@ -159,7 +159,7 @@ of user information.
 
 ## Users DB
 
-### Users table & API
+### Users table
 
 The database schema is presented in pseudocode below. Given byte lengths are not optimized.
 
@@ -173,7 +173,7 @@ The database schema is presented in pseudocode below. Given byte lengths are not
     }
 ```
 
-### Challenges table & API
+### Challenges table
 
 FIDO challenges must expire, so each challenge issued expires after some time.
 

@@ -463,7 +463,7 @@ Even if <code>wallet.lappsnet.io</code> were down, the user can recover their ke
 <p>To authenticate users with FIDO, the <code>wallet.lappsnet.io</code> server must store a minimal amount
 of user information.</p>
 <h2 id="users-db">Users DB</h2>
-<h3 id="users-table--api">Users table &amp; API</h3>
+<h3 id="users-table">Users table</h3>
 <p>The database schema is presented in pseudocode below. Given byte lengths are not optimized.</p>
 <pre><code>    User: {
       username: varchar(100) PRIMARY_KEY UNIQUE NOT NULL,
@@ -472,7 +472,7 @@ of user information.</p>
       pubKeyPem: varchar(256) NOT NULL,
       counter: integer NOT NULL
     }
-</code></pre><h3 id="challenges-table--api">Challenges table &amp; API</h3>
+</code></pre><h3 id="challenges-table">Challenges table</h3>
 <p>FIDO challenges must expire, so each challenge issued expires after some time.</p>
 <pre><code>    Challenge: {
       challenge: varchar(100) PRIMARY_KEY NOT NULL,
@@ -602,7 +602,7 @@ then verifies assertion</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"About","level":"1.1","depth":1,"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2022-06-20T07:45:26.560Z","type":"markdown"},"gitbook":{"version":"3.7.3","time":"2022-06-20T08:11:51.852Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"About","level":"1.1","depth":1,"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2022-06-20T08:15:07.734Z","type":"markdown"},"gitbook":{"version":"3.7.3","time":"2022-06-20T08:15:24.766Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
