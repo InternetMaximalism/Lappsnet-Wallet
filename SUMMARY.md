@@ -6,3 +6,6 @@
 * [Create transaction](README.md#create-transaction)
 * [Sign and broadcast transaction](README.md#sign-and-broadcast-transaction)
 * [Call contract](README.md#call-contract)
+* [FIDO API](README.md#fido-api)
+* [User registration and auth](README.md#user-registration-and-auth)
+* [Serverside APIs](README.md#serverside-apis)
