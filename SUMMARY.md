@@ -8,4 +8,5 @@
 * [Call contract](README.md#call-contract)
 * [FIDO API](README.md#fido-api)
 * [User registration and auth](README.md#user-registration-and-auth)
+* [DB schema](README.md#users-db)
 * [Serverside APIs](README.md#serverside-apis)
